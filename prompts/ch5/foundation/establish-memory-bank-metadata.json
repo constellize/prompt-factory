@@ -1,0 +1,21 @@
+{
+  "id": "establish-memory-bank",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 5",
+  "category": "Documentation",
+  "purpose": "Establish memory bank documentation system for living project knowledge",
+  "useCase": "Maintain project context across context resets and team transitions",
+  "tags": [
+    "documentation",
+    "memory-bank",
+    "project-context",
+    "knowledge-management",
+    "stewardship",
+    "self-reflection",
+    "living-documentation",
+    "context-reset",
+    "team-transitions"
+  ],
+  "created": "2026-01-17"
+}

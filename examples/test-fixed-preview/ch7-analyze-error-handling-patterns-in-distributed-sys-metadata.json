@@ -1,0 +1,9 @@
+{
+  "id": "ch7-analyze-error-handling-patterns-in-distributed-sys",
+  "chapter": "Chapter 7",
+  "category": "Analysis",
+  "purpose": "Analyze error handling patterns in distributed systems",
+  "useCase": "When reviewing error handling approaches across services",
+  "tags": [],
+  "created": "2026-01-13"
+}

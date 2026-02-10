@@ -1,0 +1,22 @@
+{
+  "id": "rebuild-core-knowledge",
+  "version": "v1",
+  "dateVersion": "20260121",
+  "chapter": "Chapter 5",
+  "category": "Documentation",
+  "purpose": "Rebuild core memory bank files in correct dependency order",
+  "useCase": "Systematic reconstruction from foundation to current ensuring consistency and accuracy",
+  "tags": [
+    "documentation",
+    "memory-bank",
+    "stewardship",
+    "rebuild",
+    "dependency-order",
+    "architecture-discovery",
+    "consistency",
+    "validation",
+    "foundation-first",
+    "systematic-reconstruction"
+  ],
+  "created": "2026-01-21"
+}

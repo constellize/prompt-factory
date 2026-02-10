@@ -1,0 +1,22 @@
+{
+  "id": "foster-continuous-learning",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Foster continuous learning through structured reflection and proactive improvement",
+  "useCase": "Build learning culture through post-incident reviews, architecture reviews, and team development (Gate 6: Continuous Improvement)",
+  "tags": [
+    "quality",
+    "maintenance",
+    "continuous-learning",
+    "post-incident-review",
+    "architecture-review",
+    "technology-evaluation",
+    "team-development",
+    "knowledge-sharing",
+    "blameless-culture",
+    "continuous-improvement"
+  ],
+  "created": "2026-01-17"
+}

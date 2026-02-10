@@ -1,0 +1,107 @@
+{
+  "id": "book-editor-constellize",
+  "version": "v1",
+  "dateVersion": "20260111",
+  "title": "Book Editor for Constellize - First Author Preview",
+  "chapter": "General",
+  "category": "Editing",
+  "purpose": "Polish and refine book chapters while preserving author voice",
+  "useCase": "When preparing chapters for author preview, focusing on consistency, clarity, and polish",
+  "created": "2026-01-11",
+  "author": "Prompt Factory",
+  "description": "System prompt for AI editor helping prepare the Constellize book for first author preview edition. Focuses on polish, consistency, and attention to detail rather than major structural changes.",
+  "models": {
+    "recommended": [
+      "claude-opus-4",
+      "claude-sonnet-4"
+    ],
+    "supported": [
+      "claude-opus-4",
+      "claude-sonnet-4",
+      "claude-sonnet-3.5",
+      "gpt-4",
+      "gpt-4-turbo"
+    ],
+    "notes": "Requires strong instruction following and ability to maintain tone/voice"
+  },
+  "tokens": {
+    "prompt": 3200,
+    "estimated_total_per_use": 8500,
+    "notes": "Will vary based on chapter length being edited"
+  },
+  "context": {
+    "book_location": "/Users/satkinson/Work/constellize/book/",
+    "stage": "first-author-preview",
+    "tone_guide": "tone.md",
+    "constraints": [
+      "No large structural changes",
+      "Preserve author's voice",
+      "Polish and refine only"
+    ]
+  },
+  "focus_areas": [
+    "Consistency (terminology, capitalization)",
+    "Clarity (ambiguous references, flow)",
+    "Precision (vague terms, unsupported claims)",
+    "Polish (typos, grammar, phrasing)"
+  ],
+  "key_principles": [
+    "Conversational but precise tone",
+    "Grounded in real practice",
+    "Cautious and considered",
+    "Australian-flavored understatement",
+    "Direct and confident",
+    "No hype or buzzwords"
+  ],
+  "special_considerations": [
+    "Callout boxes must be consistent",
+    "Technical terms need clear definitions",
+    "Code examples must be accurate",
+    "Cross-references must be verified",
+    "CodePromptu is the running example"
+  ],
+  "success_criteria": [
+    "Fixes clear errors and inconsistencies",
+    "Improves readability without changing voice",
+    "Maintains author's intent and style",
+    "Feels like polished version of same text"
+  ],
+  "anti_patterns": [
+    "Rewriting author's voice",
+    "Adding new content or concepts",
+    "Making text formal or academic",
+    "Large structural changes",
+    "Over-editing intentional style choices"
+  ],
+  "usage": {
+    "primary": "System prompt for editing sessions",
+    "workflow": [
+      "Load system prompt",
+      "Provide chapter or section to edit",
+      "Review suggested changes",
+      "Apply accepted edits",
+      "Iterate as needed"
+    ]
+  },
+  "tags": [
+    "editing",
+    "book",
+    "technical-writing",
+    "constellize",
+    "author-preview",
+    "polish",
+    "consistency",
+    "tone-preservation"
+  ],
+  "guidelines_compliance": {
+    "context_economy": "Comprehensive but necessary for consistent editing",
+    "structural_clarity": "Clear sections with headers, examples provided",
+    "concrete_examples": "Multiple before/after examples included",
+    "behavioral_guidance": "Explicit do's and don'ts with rationale",
+    "error_prevention": "Anti-patterns and common mistakes addressed"
+  },
+  "related_files": [
+    "/Users/satkinson/Work/constellize/book/tone.md",
+    "/Users/satkinson/Work/constellize/book/ch*.md"
+  ]
+}

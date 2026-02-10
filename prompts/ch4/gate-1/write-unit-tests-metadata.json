@@ -1,0 +1,17 @@
+{
+  "id": "write-unit-tests",
+  "version": "v1",
+  "dateVersion": "20260114",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Write comprehensive unit tests for component behavior in isolation",
+  "useCase": "After code generation plan, write unit tests (Gate 1: Test Integrity)",
+  "tags": [
+    "quality",
+    "testing",
+    "unit-tests",
+    "coverage",
+    "tdd"
+  ],
+  "created": "2026-01-14"
+}

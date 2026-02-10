@@ -1,0 +1,18 @@
+{
+  "id": "detect-terminology-drift",
+  "version": "v1",
+  "dateVersion": "20260204",
+  "chapter": "Chapter 6",
+  "category": "Knowledge Management",
+  "purpose": "Identify terminology inconsistencies across team memory banks",
+  "useCase": "When teams need to collaborate and may be using different words for the same concepts",
+  "tags": [
+    "terminology",
+    "glossary",
+    "team-alignment",
+    "memory-bank",
+    "cross-team",
+    "communication"
+  ],
+  "created": "2026-02-04"
+}

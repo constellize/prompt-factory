@@ -1,0 +1,19 @@
+{
+  "id": "evolve-requirements-from-implementation",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 8",
+  "category": "Personal Practice",
+  "purpose": "Document how requirements evolved through implementation learnings",
+  "useCase": "Capture original assumptions, implementation discoveries, and evolved requirements—preserving requirement history and reasoning to enable future projects to benefit from past learning rather than repeating same discoveries",
+  "tags": [
+    "requirements",
+    "requirement-evolution",
+    "implementation-learning",
+    "discovered-constraints",
+    "requirements-management",
+    "learning-feedback-loop",
+    "informed-decisions"
+  ],
+  "created": "2026-02-01"
+}

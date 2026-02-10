@@ -1,0 +1,17 @@
+{
+  "id": "write-contract-tests",
+  "version": "v1",
+  "dateVersion": "20260114",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Write comprehensive contract tests to ensure API contracts maintained and detect breaking changes",
+  "useCase": "After code generation plan, write contract tests (Gate 1: Test Integrity)",
+  "tags": [
+    "quality",
+    "testing",
+    "contract-tests",
+    "api-contracts",
+    "breaking-changes"
+  ],
+  "created": "2026-01-14"
+}

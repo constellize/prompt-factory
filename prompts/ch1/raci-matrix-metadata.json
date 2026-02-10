@@ -1,0 +1,15 @@
+{
+  "id": "raci-matrix",
+  "chapter": "Chapter 1",
+  "category": "Analysis",
+  "purpose": "Generate RACI matrix",
+  "useCase": "When defining stakeholder responsibilities",
+  "tags": [
+    "requirements",
+    "RACI",
+    "stakeholders"
+  ],
+  "created": "2026-01-13",
+  "version": "v1",
+  "dateVersion": "20260113"
+}

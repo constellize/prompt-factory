@@ -1,0 +1,19 @@
+{
+  "id": "diagnose-adoption-obstacles",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 9",
+  "category": "Adoption",
+  "purpose": "Diagnose and resolve adoption obstacles systematically",
+  "useCase": "Identify specific adoption challenges, diagnose root causes, match to proven solutions, create action plans—removing friction and enabling successful adoption despite real obstacles teams face",
+  "tags": [
+    "adoption-obstacles",
+    "root-cause-analysis",
+    "obstacle-resolution",
+    "challenge-diagnosis",
+    "solution-patterns",
+    "context-adaptation",
+    "adoption-debugging"
+  ],
+  "created": "2026-02-01"
+}

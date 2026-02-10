@@ -1,0 +1,21 @@
+{
+  "id": "document-architectural-evolution",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 8",
+  "category": "System Health",
+  "purpose": "Preserve architectural context enabling confident system evolution",
+  "useCase": "Document architectural changes with full context—original design rationale, evolution triggers, new decisions, trade-offs, migration path, and lessons learned—so future architects understand not just current state but the journey that led there and reasons that shaped each decision",
+  "tags": [
+    "architecture",
+    "architectural-evolution",
+    "design-decisions",
+    "trade-offs",
+    "migration",
+    "system-design",
+    "preserved-context",
+    "adr",
+    "decision-documentation"
+  ],
+  "created": "2026-02-01"
+}

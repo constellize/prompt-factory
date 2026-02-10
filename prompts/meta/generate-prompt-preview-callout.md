@@ -1,0 +1,1 @@
+Generate well-structured, token-efficient prompts following Prompt Factory guidelines including XML tags, strategic capitalization, thinking frameworks, and category-appropriate output formats.

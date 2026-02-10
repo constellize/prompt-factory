@@ -1,0 +1,20 @@
+{
+  "id": "create-memory-bank-training-exercise",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 9",
+  "category": "Adoption",
+  "purpose": "Design hands-on training exercises for memory bank learning",
+  "useCase": "Create practical, real-context exercises that teach memory bank skills through doing—using real projects, including plan-prompt-proceed practice, building success experiences, enabling self-paced or facilitated learning",
+  "tags": [
+    "training",
+    "hands-on-learning",
+    "exercises",
+    "skill-building",
+    "real-context-learning",
+    "practice",
+    "facilitated-learning",
+    "self-paced"
+  ],
+  "created": "2026-02-01"
+}

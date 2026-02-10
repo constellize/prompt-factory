@@ -1,0 +1,17 @@
+{
+  "id": "implement-infrastructure-health-checks",
+  "version": "v1",
+  "dateVersion": "20260114",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Implement infrastructure health checks for databases, caches, APIs, and filesystems",
+  "useCase": "After component implementation, add infrastructure health checks (Gate 2: Health Check Completeness)",
+  "tags": [
+    "quality",
+    "health-checks",
+    "infrastructure",
+    "monitoring",
+    "gate-2"
+  ],
+  "created": "2026-01-14"
+}

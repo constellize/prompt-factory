@@ -1,0 +1,22 @@
+{
+  "id": "update-memory-bank",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 5",
+  "category": "Documentation",
+  "purpose": "Update memory bank documentation to capture session knowledge",
+  "useCase": "Preserve decisions, patterns, progress, and learnings after each work session",
+  "tags": [
+    "documentation",
+    "memory-bank",
+    "knowledge-capture",
+    "decision-documentation",
+    "pattern-documentation",
+    "progress-tracking",
+    "learning-capture",
+    "context-preservation",
+    "stewardship",
+    "session-review"
+  ],
+  "created": "2026-01-17"
+}

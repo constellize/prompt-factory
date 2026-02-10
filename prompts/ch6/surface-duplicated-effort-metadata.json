@@ -1,0 +1,18 @@
+{
+  "id": "surface-duplicated-effort",
+  "version": "v1",
+  "dateVersion": "20260204",
+  "chapter": "Chapter 6",
+  "category": "Knowledge Management",
+  "purpose": "Detect patterns suggesting teams are solving similar problems independently",
+  "useCase": "When analyzing cross-team efficiency and looking for consolidation opportunities",
+  "tags": [
+    "duplication",
+    "efficiency",
+    "cross-team",
+    "memory-bank",
+    "consolidation",
+    "collaboration"
+  ],
+  "created": "2026-02-04"
+}

@@ -1,0 +1,5 @@
+::: {.promptref title="Establish Feedback Loops" url="{SITE_BASE}/prompts/v1/establish-feedback-loops"}
+**Establish feedback loops** to surface issues quickly and guide continuous improvement. Automated feedback from CI/CD pipeline results and monitoring alerts provides instant visibility into system health. Team feedback through code reviews, retrospectives, and pair programming strengthens collective knowledge and catches issues early. User feedback via bug reports, feature requests, and usage analytics reveals how the system performs in real usage. System feedback from performance data, error logs, and health check results exposes operational patterns and potential problems.
+
+"Establish feedback loops for {{component_name}} in {{system_name}}. Configure automated feedback from CI/CD pipelines, monitoring alerts, and security scans. Establish team feedback mechanisms through code reviews, retrospectives, and pair programming. Collect user feedback via bug reporting, feature requests, and usage analytics. Gather system feedback from performance monitoring, error logging, and health checks..."
+:::

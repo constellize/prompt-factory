@@ -1,0 +1,5 @@
+::: {.promptref title="Achieve Environment Independence So Deployments Work Identically Everywhere" url="{SITE_BASE}/prompts/v1/achieve-environment-independence"}
+**Achieve environment independence** so deployment processes work identically across dev, staging, and production. The same container image and deployment scripts should work everywhere, eliminating environment-specific variations. Service discovery must function in all target environments, finding dependencies regardless of infrastructure. Database migrations need to execute reliably without manual intervention and be rollback-safe. All required dependencies must be available and accessible in target environments.
+
+"Achieve environment independence for {{component_name}} in {{system_name}}. Follow this process: Use identical deployment process with same container image across all environments. Implement service discovery using DNS-based mechanisms with retry logic. Create reliable database migrations that are versioned, idempotent, and include rollback scripts. Verify dependency availability at startup..."
+:::

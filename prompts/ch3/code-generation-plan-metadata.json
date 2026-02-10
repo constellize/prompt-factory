@@ -1,0 +1,17 @@
+{
+  "id": "code-generation-plan",
+  "version": "v1",
+  "dateVersion": "20260114",
+  "chapter": "Chapter 3",
+  "category": "Architecture",
+  "purpose": "Create implementation plan for code generation shaped by constellation context",
+  "useCase": "After implementation sketches, before writing code for a specific gap",
+  "tags": [
+    "architecture",
+    "implementation",
+    "code-generation",
+    "planning",
+    "constellation"
+  ],
+  "created": "2026-01-14"
+}

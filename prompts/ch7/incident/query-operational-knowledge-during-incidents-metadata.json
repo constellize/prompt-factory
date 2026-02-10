@@ -1,0 +1,24 @@
+{
+  "id": "query-operational-knowledge-during-incidents",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 7",
+  "category": "Operations",
+  "purpose": "Query operational knowledge efficiently during incidents to accelerate investigation",
+  "useCase": "Filter knowledge to incident-specific scope, pull targeted context without information overload, traverse dependencies, support time-sensitive decision making under pressure",
+  "tags": [
+    "operations",
+    "incident-response",
+    "knowledge-retrieval",
+    "operational-knowledge",
+    "incident-investigation",
+    "time-pressure",
+    "knowledge-filtering",
+    "dependency-traversal",
+    "runbooks",
+    "past-incidents",
+    "performance-baselines",
+    "architecture-context"
+  ],
+  "created": "2026-02-01"
+}

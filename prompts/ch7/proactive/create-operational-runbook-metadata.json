@@ -1,0 +1,22 @@
+{
+  "id": "create-operational-runbook",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 7",
+  "category": "Operations",
+  "purpose": "Create operational runbook for common operational scenarios",
+  "useCase": "Structure effective runbooks with step-by-step troubleshooting procedures, decision trees, prerequisite checks, rollback procedures, and success criteria enabling on-call engineers to respond effectively during incidents",
+  "tags": [
+    "operations",
+    "runbooks",
+    "troubleshooting",
+    "incident-response",
+    "procedures",
+    "on-call",
+    "investigation",
+    "rollback",
+    "sre",
+    "operational-knowledge"
+  ],
+  "created": "2026-02-01"
+}

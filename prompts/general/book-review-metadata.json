@@ -1,0 +1,18 @@
+{
+  "id": "book-review",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "General",
+  "category": "Review",
+  "purpose": "Review book content as a critic and editor to identify improvements",
+  "useCase": "When reviewing chapters or sections of technical books for editorial feedback",
+  "tags": [
+    "editing",
+    "review",
+    "writing",
+    "feedback",
+    "book",
+    "critique"
+  ],
+  "created": "2026-02-01"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "create-knowledge-contribution",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 8",
+  "category": "Personal Practice",
+  "purpose": "Package personal insights for team sharing and reuse",
+  "useCase": "Transform individual expertise into reusable team knowledge by creating clear problem statement, documenting solution with rationale, providing patterns and templates, integrating with existing memory bank—enabling knowledge transfer from individual to team and preventing knowledge loss",
+  "tags": [
+    "knowledge-sharing",
+    "knowledge-contribution",
+    "team-learning",
+    "patterns",
+    "templates",
+    "expertise-sharing",
+    "documentation",
+    "reusable-knowledge"
+  ],
+  "created": "2026-02-01"
+}

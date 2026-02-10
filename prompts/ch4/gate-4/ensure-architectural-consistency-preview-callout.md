@@ -1,0 +1,5 @@
+::: {.promptref title="Ensure Architectural Consistency By Following Established Patterns" url="{SITE_BASE}/prompts/v1/ensure-architectural-consistency"}
+**Ensure architectural consistency** by following established patterns documented in your memory bank. Code should use consistent naming conventions across the constellation, making it easy to navigate between components. Standard error handling and logging patterns reduce surprises and make debugging predictable. Authentication and authorization approaches should match existing implementations, avoiding unnecessary variation that increases cognitive load.
+
+"Ensure architectural consistency for {{component_name}} in {{system_name}}. Review established patterns from memory-bank/systemPatterns.md and constellation-map.md. Apply naming conventions consistently across APIs, database, and code. Implement standard error handling with ApiError class. Match logging patterns using structured JSON format with standard context fields. Align authentication using shared JWT verification module..."
+:::

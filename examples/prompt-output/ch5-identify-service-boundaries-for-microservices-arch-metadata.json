@@ -1,0 +1,14 @@
+{
+  "id": "ch5-identify-service-boundaries-for-microservices-arch",
+  "chapter": "Chapter 5",
+  "category": "Architecture",
+  "purpose": "Identify service boundaries for microservices architecture",
+  "useCase": "When designing a microservices system and need to determine logical service boundaries",
+  "tags": [
+    "microservices",
+    "boundaries",
+    "design",
+    "architecture"
+  ],
+  "created": "2026-01-12"
+}

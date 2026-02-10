@@ -1,0 +1,22 @@
+{
+  "id": "branch-memory-bank",
+  "version": "v1",
+  "dateVersion": "20260121",
+  "chapter": "Chapter 5",
+  "category": "Documentation",
+  "purpose": "Branch memory bank to explore alternative approaches safely",
+  "useCase": "Investigate alternatives while preserving production knowledge and enabling evidence-based decisions",
+  "tags": [
+    "documentation",
+    "memory-bank",
+    "knowledge-branching",
+    "exploration",
+    "hypothesis-testing",
+    "alternative-evaluation",
+    "construction-zone",
+    "parallel-knowledge",
+    "evidence-based-decisions",
+    "innovation"
+  ],
+  "created": "2026-01-21"
+}

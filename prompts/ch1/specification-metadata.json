@@ -1,0 +1,16 @@
+{
+  "id": "specification",
+  "version": "v1",
+  "dateVersion": "20260113",
+  "chapter": "Chapter 1",
+  "category": "Analysis",
+  "purpose": "Generate software specification document",
+  "useCase": "When creating detailed functional and non-functional requirements",
+  "tags": [
+    "requirements",
+    "specification",
+    "functional",
+    "non-functional"
+  ],
+  "created": "2026-01-14"
+}

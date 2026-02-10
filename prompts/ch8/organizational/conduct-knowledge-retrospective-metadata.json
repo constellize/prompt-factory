@@ -1,0 +1,20 @@
+{
+  "id": "conduct-knowledge-retrospective",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 8",
+  "category": "Organizational Learning",
+  "purpose": "Facilitate retrospective focused on organizational knowledge practices and continuous learning improvement",
+  "useCase": "After each sprint, evaluate how well team captured learnings, shared knowledge, and maintained memory bank—assessing knowledge capture quality, identifying knowledge gaps, recognizing successful knowledge transfer, and generating action items to improve organizational learning practices and compound learning effects",
+  "tags": [
+    "retrospective",
+    "knowledge-capture",
+    "knowledge-transfer",
+    "organizational-learning",
+    "memory-bank-effectiveness",
+    "learning-health",
+    "continuous-improvement",
+    "team-learning"
+  ],
+  "created": "2026-02-01"
+}

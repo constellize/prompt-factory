@@ -1,0 +1,24 @@
+{
+  "id": "write-incident-postmortem",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 7",
+  "category": "Operations",
+  "purpose": "Write incident postmortems that transform incidents into institutional learning",
+  "useCase": "Document incident timeline with decision points, capture hypotheses explored, record remediation options and rationale, analyze root cause vs contributing factors, identify systemic improvements, link to affected systems, create organizational learning",
+  "tags": [
+    "operations",
+    "incident-response",
+    "postmortem",
+    "root-cause-analysis",
+    "lessons-learned",
+    "systemic-improvements",
+    "blameless-culture",
+    "operational-knowledge",
+    "incident-prevention",
+    "organizational-learning",
+    "remediation",
+    "action-items"
+  ],
+  "created": "2026-02-01"
+}

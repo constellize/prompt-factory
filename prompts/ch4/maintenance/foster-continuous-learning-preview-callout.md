@@ -1,0 +1,5 @@
+::: {.promptref title="Foster Continuous Learning" url="{SITE_BASE}/prompts/v1/foster-continuous-learning"}
+**Foster continuous learning** through structured reflection and proactive improvement. Post-incident reviews extract lessons from failures without blame, building organizational resilience. Architecture reviews provide regular assessment of system design decisions, ensuring they remain aligned with current needs. Technology updates involve evaluating and adopting new tools and practices that improve effectiveness. Team development through skill building and knowledge sharing strengthens the collective capability.
+
+"Foster continuous learning for {{component_name}} in {{system_name}}. Conduct post-incident reviews with blameless retrospectives, timeline reconstruction, and root cause analysis. Perform architecture reviews assessing design decisions, technical debt, and scalability. Evaluate technology updates by monitoring ecosystem, running proof of concepts, and planning migrations. Invest in team development through skill gap identification, learning opportunities, and knowledge sharing..."
+:::

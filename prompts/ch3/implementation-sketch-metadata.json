@@ -1,0 +1,17 @@
+{
+  "id": "implementation-sketch",
+  "version": "v1",
+  "dateVersion": "20260114",
+  "chapter": "Chapter 3",
+  "category": "Architecture",
+  "purpose": "Sketch implementation approaches for gaps before coding",
+  "useCase": "After gap analysis and scope lock, before implementation to guide design",
+  "tags": [
+    "architecture",
+    "design",
+    "implementation",
+    "sketches",
+    "planning"
+  ],
+  "created": "2026-01-14"
+}

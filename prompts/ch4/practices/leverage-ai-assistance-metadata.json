@@ -1,0 +1,22 @@
+{
+  "id": "leverage-ai-assistance",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Leverage AI assistance to accelerate quality engineering without sacrificing rigor",
+  "useCase": "Use AI to generate tests, automate documentation, enforce quality, and accelerate deployment (Best Practices)",
+  "tags": [
+    "quality",
+    "ai-assistance",
+    "test-generation",
+    "documentation",
+    "code-review",
+    "deployment",
+    "automation",
+    "best-practices",
+    "collaboration",
+    "validation"
+  ],
+  "created": "2026-01-17"
+}

@@ -1,0 +1,5 @@
+::: {.promptref title="Pre-Commit Review" url="{SITE_BASE}/prompts/v1/pre-commit-review"}
+**Pre-commit review** prevents quality issues from entering the shared repository. Static analysis tools catch code style violations and potential bugs before they reach other developers. Unit tests must pass with appropriate coverage, ensuring that individual components behave correctly in isolation. Security scans identify high-severity vulnerabilities that could compromise the system. Dependency checks verify that no known vulnerable libraries are being introduced into the codebase.
+
+"Enforce pre-commit quality gates for {{component_name}} in {{system_name}}. Configure static analysis checks for code style consistency, bug detection patterns, and complexity thresholds. Enforce unit test requirements with minimum coverage and fast execution. Run security vulnerability scans for high-severity issues and hardcoded secrets. Validate dependency safety checking for known vulnerabilities and deprecated packages..."
+:::

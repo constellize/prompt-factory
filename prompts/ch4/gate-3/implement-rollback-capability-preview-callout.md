@@ -1,0 +1,5 @@
+::: {.promptref title="Build Rollback Capability To Recover Quickly When Deployments Fail" url="{SITE_BASE}/prompts/v1/implement-rollback-capability"}
+**Build rollback capability** to recover quickly when deployments fail. The previous version must be restorable within 5 minutes to minimize downtime during incidents. Database migrations require reversibility so schema changes can be undone safely. Configuration changes need revert procedures that restore previous working state. Test rollback procedures regularly and document them so any team member can execute them under pressure.
+
+"Implement rollback capability for {{component_name}} in {{system_name}}. Follow this process: Enable version rollback tagging all images and keeping previous versions available. Implement reversible migrations with down() functions tested in staging. Create configuration rollback versioning all changes with documented revert commands. Document and test rollback procedures quarterly with step-by-step runbooks..."
+:::

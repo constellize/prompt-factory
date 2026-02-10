@@ -1,0 +1,22 @@
+{
+  "id": "recover-from-staleness-drift",
+  "version": "v1",
+  "dateVersion": "20260121",
+  "chapter": "Chapter 5",
+  "category": "Documentation",
+  "purpose": "Recover memory bank from staleness where docs describe past not present",
+  "useCase": "Reconcile documentation with reality when memory bank has drifted from actual codebase state",
+  "tags": [
+    "documentation",
+    "memory-bank",
+    "failure-recovery",
+    "staleness-recovery",
+    "documentation-debt",
+    "accuracy-restoration",
+    "validation",
+    "prevention",
+    "code-documentation-sync",
+    "recovery-patterns"
+  ],
+  "created": "2026-01-21"
+}

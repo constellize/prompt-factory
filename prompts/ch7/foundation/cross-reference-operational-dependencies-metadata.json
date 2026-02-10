@@ -1,0 +1,22 @@
+{
+  "id": "cross-reference-operational-dependencies",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 7",
+  "category": "Operations",
+  "purpose": "Map runtime dependencies and establish bidirectional cross-references between operational and development knowledge",
+  "useCase": "Connect operational runbooks to system design, incident reports to architectural decisions, ensuring operational and development knowledge remain coherent as systems evolve",
+  "tags": [
+    "operations",
+    "dependencies",
+    "cross-references",
+    "runbooks",
+    "incidents",
+    "system-architecture",
+    "operational-knowledge",
+    "bidirectional-links",
+    "knowledge-integration",
+    "sre"
+  ],
+  "created": "2026-02-01"
+}

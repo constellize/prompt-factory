@@ -1,0 +1,17 @@
+{
+  "id": "write-integration-tests",
+  "version": "v1",
+  "dateVersion": "20260114",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Write comprehensive integration tests with constellation stars using real dependencies",
+  "useCase": "After code generation plan, write integration tests (Gate 1: Test Integrity)",
+  "tags": [
+    "quality",
+    "testing",
+    "integration-tests",
+    "constellation",
+    "contracts"
+  ],
+  "created": "2026-01-14"
+}

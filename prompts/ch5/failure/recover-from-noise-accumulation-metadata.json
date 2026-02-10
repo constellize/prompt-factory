@@ -1,0 +1,22 @@
+{
+  "id": "recover-from-noise-accumulation",
+  "version": "v1",
+  "dateVersion": "20260121",
+  "chapter": "Chapter 5",
+  "category": "Documentation",
+  "purpose": "Recover memory bank from noise where obsolete entries obscure current information",
+  "useCase": "Prune accumulated noise to restore signal-to-noise ratio when documentation has conflicting or duplicate information",
+  "tags": [
+    "documentation",
+    "memory-bank",
+    "failure-recovery",
+    "noise-reduction",
+    "information-architecture",
+    "consolidation",
+    "pruning",
+    "conflict-resolution",
+    "duplicate-removal",
+    "signal-to-noise"
+  ],
+  "created": "2026-01-21"
+}

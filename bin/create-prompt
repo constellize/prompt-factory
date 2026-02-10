@@ -1,0 +1,291 @@
+#!/usr/bin/env node
+
+/**
+ * Prompt Writer - CLI
+ *
+ * Create well-formatted prompts for inclusion in the Constellize book.
+ *
+ * Usage:
+ *   create-prompt \
+ *     --purpose "Identify service boundaries for microservices" \
+ *     --chapter "Chapter 5" \
+ *     --category "Architecture" \
+ *     --useCase "When designing microservices architecture" \
+ *     --tags "microservices,boundaries,design" \
+ *     --output ./prompts/ch5
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+// Parse arguments
+const args = process.argv.slice(2);
+const options = {};
+for (let i = 0; i < args.length; i++) {
+  if (args[i].startsWith('--')) {
+    const key = args[i].substring(2);
+    const value = args[i + 1];
+    options[key] = value;
+    i++;
+  }
+}
+
+// Validate required fields
+const required = ['purpose', 'chapter', 'category', 'useCase'];
+const missing = required.filter(field => !options[field]);
+
+if (missing.length > 0) {
+  console.error('Error: Missing required fields: ' + missing.join(', '));
+  console.error('');
+  console.error('Usage: create-prompt \\');
+  console.error('  --purpose "What the prompt does" \\');
+  console.error('  --chapter "Chapter 5" \\');
+  console.error('  --category "Architecture|Analysis|Design|Review" \\');
+  console.error('  --useCase "When to use this prompt" \\');
+  console.error('  [--id "short-id"] \\');
+  console.error('  [--version "20260113"] \\');
+  console.error('  [--description "Terse description for preview"] \\');
+  console.error('  [--context "Additional background"] \\');
+  console.error('  [--tags "tag1,tag2,tag3"] \\');
+  console.error('  [--output ./output/dir]');
+  console.error('');
+  console.error('Example:');
+  console.error('  create-prompt \\');
+  console.error('    --purpose "Identify service boundaries for microservices" \\');
+  console.error('    --chapter "Chapter 5" \\');
+  console.error('    --category "Architecture" \\');
+  console.error('    --useCase "When designing microservices architecture" \\');
+  console.error('    --id "service-boundaries" \\');
+  console.error('    --tags "microservices,boundaries" \\');
+  console.error('    --output ./prompts/ch5');
+  process.exit(1);
+}
+
+// Generate ID (use custom ID if provided, otherwise auto-generate)
+let id;
+if (options.id) {
+  id = options.id;
+} else {
+  const chapterNum = options.chapter.match(/\d+/)?.[0] || 'misc';
+  const slug = options.purpose
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 50);
+  id = `ch${chapterNum}-${slug}`;
+}
+
+// Get versions
+// - semanticVersion: Used in URLs (e.g., 'v1', 'v2') - stable for book references
+// - dateVersion: Actual date-based version (e.g., '20260113') - for website mapping
+const semanticVersion = options.version || 'v1';
+const dateVersion = new Date().toISOString().split('T')[0].replace(/-/g, '');
+
+// Build prompt following guidelines
+function buildPrompt() {
+  const sections = [];
+
+  // Add context if provided
+  if (options.context) {
+    sections.push(`<context>\n${options.context}\n</context>`);
+  }
+
+  // Main task
+  sections.push(`<task>\n${options.purpose}\n</task>`);
+
+  // Add structure based on category
+  const category = options.category.toLowerCase();
+  if (category.includes('analysis')) {
+    sections.push(`<output-format>
+Provide your analysis in this structure:
+
+1. **Current State**
+   - What exists today
+   - Key characteristics
+   - Constraints
+
+2. **Analysis**
+   - Strengths
+   - Weaknesses
+   - Opportunities for improvement
+
+3. **Recommendations**
+   - Specific actions
+   - Expected benefits
+   - Implementation considerations
+</output-format>`);
+  } else if (category.includes('design') || category.includes('architecture')) {
+    sections.push(`<output-format>
+Provide your design proposal in this structure:
+
+1. **Design Approach**
+   - Core architectural decisions
+   - Key components or services
+   - Rationale for choices
+
+2. **Trade-offs**
+   - Benefits of this approach
+   - Limitations or costs
+   - Alternative approaches considered
+
+3. **Implementation Guidance**
+   - Recommended first steps
+   - Critical dependencies
+   - Success criteria
+</output-format>`);
+  } else if (category.includes('review') || category.includes('evaluate')) {
+    sections.push(`<output-format>
+Provide your evaluation in this structure:
+
+1. **Assessment**
+   - What works well
+   - What needs improvement
+   - Critical issues
+
+2. **Specific Feedback**
+   - Issue 1: Description and suggested fix
+   - Issue 2: Description and suggested fix
+   - [Continue as needed]
+
+3. **Overall Recommendation**
+   - Summary judgment
+   - Priority improvements
+   - Long-term considerations
+</output-format>`);
+  }
+
+  // Add thinking framework
+  sections.push(`<thinking>
+Before responding:
+1. Analyze the current situation
+2. Consider constraints and trade-offs
+3. Identify potential approaches
+4. Evaluate pros and cons
+</thinking>`);
+
+  return sections.join('\n\n');
+}
+
+// Generate title
+function generateTitle(purpose) {
+  return purpose
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+    .slice(0, 60)
+    .replace(/\.$/, '');
+}
+
+// Build the prompt
+const prompt = buildPrompt();
+const title = generateTitle(options.purpose);
+const tags = options.tags ? options.tags.split(',').map(t => t.trim()) : [];
+
+// Format for book
+const bookMarkdown = `<!-- PROMPT START -->
+> **Prompt: ${title}**
+>
+> **Purpose:** ${options.purpose}
+>
+> **Use when:** ${options.useCase}
+>
+> **Category:** ${options.category}
+
+\`\`\`
+${prompt}
+\`\`\`
+
+<!-- PROMPT END -->
+<!-- METADATA: ${JSON.stringify({
+  id,
+  chapter: options.chapter,
+  category: options.category,
+  tags
+})} -->`;
+
+// Build metadata
+const metadata = {
+  id,
+  version: semanticVersion,      // e.g., 'v1' - used in book URLs
+  dateVersion: dateVersion,       // e.g., '20260113' - for website mapping
+  chapter: options.chapter,
+  category: options.category,
+  purpose: options.purpose,
+  useCase: options.useCase,
+  tags,
+  created: new Date().toISOString().split('T')[0]
+};
+
+// Build preview callout for referencing this prompt from elsewhere in the book
+// Extract content from <task> tag for unique, meaningful preview
+const promptLines = prompt.split('\n');
+const previewLines = [];
+let lineCount = 0;
+let inTask = false;
+
+for (const line of promptLines) {
+  // Detect <task> boundaries
+  if (line.trim().startsWith('<task>')) {
+    inTask = true;
+    continue;
+  }
+  if (line.trim().startsWith('</task>')) {
+    break;
+  }
+
+  // Extract content from within <task> tags only
+  if (inTask && line.trim() && lineCount < 2) {
+    previewLines.push(line.trim());
+    lineCount++;
+  }
+  if (lineCount >= 2) break;
+}
+
+const promptPreview = previewLines.join(' ');
+const description = options.description || options.purpose;
+const previewCallout = `::: {.promptref title="${title}" url="{SITE_BASE}/prompts/${semanticVersion}/${id}"}
+${description}
+
+"${promptPreview}..."
+:::`;
+
+// Output
+if (options.output) {
+  const outputDir = path.resolve(options.output);
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
+  fs.writeFileSync(path.join(outputDir, `${id}-prompt.txt`), prompt);
+  fs.writeFileSync(path.join(outputDir, `${id}-book-markdown.md`), bookMarkdown);
+  fs.writeFileSync(path.join(outputDir, `${id}-preview-callout.md`), previewCallout);
+  fs.writeFileSync(path.join(outputDir, `${id}-metadata.json`), JSON.stringify(metadata, null, 2));
+
+  console.log(`✅ Prompt created: ${id}`);
+  console.log('');
+  console.log('Files saved:');
+  console.log(`  - ${id}-prompt.txt          (raw prompt)`);
+  console.log(`  - ${id}-book-markdown.md    (paste full prompt into chapter)`);
+  console.log(`  - ${id}-preview-callout.md  (reference from other chapters)`);
+  console.log(`  - ${id}-metadata.json       (for extraction)`);
+  console.log('');
+  console.log('Next steps:');
+  console.log(`  1. Review ${id}-book-markdown.md`);
+  console.log('  2. Paste into your chapter (full prompt)');
+  console.log(`  3. Use ${id}-preview-callout.md to reference from other chapters`);
+  console.log('  4. Adjust as needed for context');
+} else {
+  console.log('=== BOOK MARKDOWN (paste full prompt into your chapter) ===');
+  console.log('');
+  console.log(bookMarkdown);
+  console.log('');
+  console.log('');
+  console.log('=== PREVIEW CALLOUT (reference from other chapters) ===');
+  console.log('');
+  console.log(previewCallout);
+  console.log('');
+  console.log('');
+  console.log('=== RAW PROMPT ===');
+  console.log('');
+  console.log(prompt);
+}

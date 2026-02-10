@@ -1,0 +1,5 @@
+::: {.promptref title="Build Container Reliability With Clean Builds, Predictable Starts, And Graceful Shutdowns" url="{SITE_BASE}/prompts/v1/build-reliable-containers"}
+**Build container reliability** that ensures Docker images build cleanly and containers start predictably. Images should build without errors or warnings that might hide problems. Containers need to start successfully with minimal resource requirements, avoiding resource exhaustion. Health checks must pass within acceptable timeframes so orchestrators know when services are ready. Graceful shutdown handling enables clean restarts without dropped connections or data loss.
+
+"Build container reliability for {{component_name}} in {{system_name}}. Follow this process: Create clean Dockerfile using official base images and multi-stage builds. Implement minimal resource requirements testing startup with 512MB RAM. Add container health checks with HEALTHCHECK instruction. Implement graceful shutdown handling SIGTERM signals..."
+:::

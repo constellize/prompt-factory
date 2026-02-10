@@ -1,0 +1,17 @@
+{
+  "id": "constellation-map",
+  "version": "v1",
+  "dateVersion": "20260113",
+  "chapter": "Chapter 3",
+  "category": "Architecture",
+  "purpose": "Map constellation of trusted components and their integration points",
+  "useCase": "When planning system architecture using existing proven components",
+  "tags": [
+    "architecture",
+    "constellation",
+    "components",
+    "integration",
+    "systemPatterns"
+  ],
+  "created": "2026-01-14"
+}

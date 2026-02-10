@@ -1,0 +1,765 @@
+---
+template_variables:
+  - name: component_name
+    description: The specific component to track quality metrics for
+    example: "PaymentProcessor"
+  - name: system_name
+    description: The name of your system
+    example: "Payment Processing System"
+---
+
+<task>
+Track quality metrics for {{component_name}} in {{system_name}} to measure system health and guide continuous improvement.
+
+Track quality through multiple dimensions of metrics that reveal system health and team effectiveness. Quality metrics like test coverage, code complexity, and technical debt show whether the codebase remains maintainable. Performance metrics including response times, throughput, and error rates indicate whether the system meets user expectations. Business metrics such as feature adoption, user satisfaction, and system reliability connect technical work to business outcomes. Process metrics like deployment frequency, lead time, and mean time to recovery reveal team velocity and operational excellence.
+
+Follow this process:
+
+1. **Define quality metrics:**
+   - Test coverage percentage (line, branch, function coverage)
+   - Code complexity metrics (cyclomatic complexity, cognitive complexity)
+   - Technical debt tracking (code smells, duplications, outdated dependencies)
+   - Code review metrics (review time, comments per review, approval rate)
+   - Static analysis violations (critical, high, medium, low severity)
+
+2. **Track performance metrics:**
+   - Response time percentiles (P50, P95, P99, max)
+   - Throughput rates (requests per second, transactions per minute)
+   - Error rates (4xx errors, 5xx errors, timeout rate)
+   - Resource utilization (CPU, memory, disk, network)
+   - Dependency health (external service latency, failure rates)
+
+3. **Measure business metrics:**
+   - Feature adoption rates (usage statistics per feature)
+   - User satisfaction indicators (NPS, CSAT, user-reported issues)
+   - System reliability (uptime percentage, SLA compliance)
+   - Business transaction success rates
+   - User experience metrics (page load time, time to interactive)
+
+4. **Monitor process metrics:**
+   - Deployment frequency (deployments per day/week)
+   - Lead time for changes (commit to production time)
+   - Mean time to recovery (MTTR from incidents)
+   - Change failure rate (percentage of deployments causing issues)
+   - Cycle time (work item start to completion)
+</task>
+
+<context>
+Component to track quality metrics:
+{{component_name}}
+
+**Standard Construction Folder Structure:**
+This prompt creates/updates:
+- `docs/metrics/quality-dashboard.md` (metric definitions and targets)
+- Metric collection configuration
+- Dashboard definitions
+- Baseline measurements
+- Trend analysis reports
+</context>
+
+<thinking>
+Before tracking quality metrics, analyze:
+1. What metrics indicate quality for this specific component?
+2. What baseline values represent current state?
+3. What target values represent desired state?
+4. What trends over time indicate improvement or degradation?
+5. Which metrics should trigger alerts vs just be monitored?
+</thinking>
+
+<output-format>
+Create quality metric tracking following these patterns:
+
+**Quality Metrics Pattern:**
+
+Track code quality and maintainability:
+
+**Metric Categories:**
+
+1. **Test Coverage:**
+   - Line coverage: Percentage of code lines executed by tests
+   - Branch coverage: Percentage of conditional branches tested
+   - Function coverage: Percentage of functions called by tests
+   - Coverage delta: Change in coverage per commit/PR
+
+2. **Code Complexity:**
+   - Cyclomatic complexity: Number of independent paths through code
+   - Cognitive complexity: Mental effort to understand code
+   - Function length: Lines of code per function
+   - File size: Lines of code per file
+   - Dependency count: Number of imports/dependencies per file
+
+3. **Technical Debt:**
+   - Code smells: Anti-patterns and bad practices
+   - Duplicate code: Percentage of duplicated code
+   - Outdated dependencies: Libraries behind current versions
+   - TODO/FIXME count: Deferred work items
+   - Dead code: Unused functions, variables, imports
+
+**Measurement Pattern:**
+```
+Quality metric collection:
+1. Automated collection:
+   - Coverage: Run during test execution
+   - Complexity: Static analysis tools
+   - Technical debt: Linting and code analysis
+   - Trends: Store metrics over time
+
+2. Baseline establishment:
+   - Current state: Measure existing system
+   - Target state: Define improvement goals
+   - Acceptable range: Min/max thresholds
+   - Tracking frequency: Daily, per-commit, per-release
+
+3. Threshold configuration:
+   - Fail build: Critical violations only
+   - Block merge: Coverage drops, complexity spikes
+   - Warn: Trending in wrong direction
+   - Track: Monitor without blocking
+```
+
+**Quality Dashboard Pattern:**
+```
+Dashboard visualization:
+- Coverage trends: Line graph over time
+- Complexity distribution: Histogram of complexity scores
+- Technical debt: Stacked area chart by category
+- Hotspots: Files with highest complexity/lowest coverage
+
+Actionable insights:
+- Identify: Files needing refactoring
+- Prioritize: Highest impact improvements
+- Track: Progress toward targets
+- Alert: Regressions or threshold breaches
+```
+
+---
+
+**Performance Metrics Pattern:**
+
+Track system performance and resource usage:
+
+**Metric Categories:**
+
+1. **Response Time:**
+   - P50 (median): Typical user experience
+   - P95: Slower but common experience
+   - P99: Worst case for most users
+   - Max: Absolute worst case
+   - Response time budget: Acceptable threshold per endpoint
+
+2. **Throughput:**
+   - Requests per second: Total system capacity
+   - Transactions per minute: Business operations completed
+   - Concurrent users: Simultaneous active sessions
+   - Queue depth: Backlog of pending work
+
+3. **Error Rates:**
+   - 4xx errors: Client errors (bad requests, not found, unauthorized)
+   - 5xx errors: Server errors (internal errors, timeouts, dependencies)
+   - Timeout rate: Requests exceeding time limit
+   - Retry rate: Operations requiring retries
+
+4. **Resource Utilization:**
+   - CPU usage: Percentage of CPU capacity used
+   - Memory usage: RAM consumption and growth rate
+   - Disk I/O: Read/write operations per second
+   - Network bandwidth: Data transfer rates
+
+**Performance Tracking Pattern:**
+```
+Performance measurement approach:
+1. Collection points:
+   - Application instrumentation: Response times, throughput
+   - Infrastructure monitoring: CPU, memory, disk, network
+   - Load balancer metrics: Request distribution
+   - Database metrics: Query performance, connection pool
+
+2. Aggregation windows:
+   - Real-time: Current values (1-5 minute window)
+   - Short-term: Recent trends (1 hour window)
+   - Medium-term: Daily patterns (24 hour window)
+   - Long-term: Historical trends (weeks/months)
+
+3. Baseline comparison:
+   - Establish baseline: Normal operating conditions
+   - Detect anomalies: Deviations from baseline
+   - Track regressions: Performance degradation over time
+   - Identify patterns: Daily/weekly usage cycles
+```
+
+**Performance Alert Pattern:**
+```
+Alert configuration:
+- Critical: P95 latency > 2x baseline OR error rate > 5%
+  Action: Immediate investigation, consider rollback
+
+- Warning: P95 latency > 1.5x baseline OR error rate > 2%
+  Action: Monitor closely, investigate if sustained
+
+- Info: Resource usage > 80% capacity
+  Action: Plan scaling or optimization
+
+Alert delivery:
+- Critical: Page on-call engineer
+- Warning: Notify team channel
+- Info: Log for review during business hours
+```
+
+---
+
+**Business Metrics Pattern:**
+
+Connect technical metrics to business outcomes:
+
+**Metric Categories:**
+
+1. **Feature Adoption:**
+   - Active users per feature: How many users using feature
+   - Usage frequency: How often feature is used
+   - Adoption rate: Percentage of eligible users using feature
+   - Time to adoption: How long after release users start using
+
+2. **User Satisfaction:**
+   - Net Promoter Score (NPS): Would users recommend system
+   - Customer Satisfaction (CSAT): User happiness with service
+   - User-reported issues: Bug reports, support tickets
+   - Feature requests: User demand for new capabilities
+
+3. **System Reliability:**
+   - Uptime percentage: System availability over time period
+   - SLA compliance: Meeting committed service levels
+   - Mean time between failures (MTBF): Reliability indicator
+   - Planned vs unplanned downtime: Maintenance overhead
+
+**Business Metric Tracking Pattern:**
+```
+Business metric collection:
+1. Usage analytics:
+   - Instrument feature usage: Track user interactions
+   - Session tracking: User journey through system
+   - Funnel analysis: Where users drop off
+   - Cohort analysis: User behavior over time
+
+2. Satisfaction measurement:
+   - Survey integration: In-app or email surveys
+   - Feedback collection: User comments and ratings
+   - Support ticket analysis: Issue categorization and trends
+   - Social monitoring: External sentiment tracking
+
+3. Reliability calculation:
+   - Uptime tracking: Monitor availability continuously
+   - Incident correlation: Link technical issues to business impact
+   - SLA reporting: Automated compliance calculation
+   - User impact: Users affected per incident
+```
+
+**Business Impact Pattern:**
+```
+Connect technical to business metrics:
+- Performance → User satisfaction: Slow response = lower CSAT
+- Error rate → Feature adoption: Frequent errors = less usage
+- Uptime → Revenue: Downtime = lost transactions
+- Deployment frequency → Feature adoption: Faster releases = more value
+
+Impact analysis:
+1. Measure correlation: Statistical relationship between metrics
+2. Identify drivers: Which technical metrics most affect business
+3. Prioritize work: Focus on high-impact improvements
+4. Communicate value: Show business ROI of technical work
+```
+
+---
+
+**Process Metrics Pattern:**
+
+Track team velocity and operational effectiveness:
+
+**Metric Categories:**
+
+1. **Deployment Frequency:**
+   - Deployments per day/week: Release velocity
+   - Time of day distribution: When deployments happen
+   - Deployment success rate: Percentage without rollback
+   - Deployment duration: Time from start to healthy
+
+2. **Lead Time:**
+   - Commit to production: Total time for change
+   - Code review time: Time from PR open to merge
+   - Build time: CI pipeline duration
+   - Deployment time: Release process duration
+
+3. **Mean Time to Recovery (MTTR):**
+   - Detection time: How long to notice issue
+   - Diagnosis time: How long to identify root cause
+   - Fix time: How long to implement solution
+   - Deployment time: How long to deploy fix
+
+4. **Change Failure Rate:**
+   - Failed deployments: Requiring rollback
+   - Hotfixes: Emergency fixes after deployment
+   - Incidents caused: Issues traced to recent changes
+   - Rollback frequency: How often rollbacks needed
+
+**Process Metric Collection Pattern:**
+```
+Automated tracking:
+1. CI/CD instrumentation:
+   - Pipeline start/end timestamps
+   - Stage durations
+   - Success/failure status
+   - Deployment frequency counter
+
+2. Issue tracking integration:
+   - Work item state transitions
+   - Cycle time calculation (start to done)
+   - Lead time calculation (created to deployed)
+   - Flow efficiency (active time / total time)
+
+3. Incident tracking:
+   - Incident start time (detection)
+   - Diagnosis completion time
+   - Fix deployment time
+   - Resolution confirmation time
+   - Calculate MTTR automatically
+```
+
+**DORA Metrics Pattern:**
+```
+Track DevOps Research & Assessment (DORA) four key metrics:
+
+1. Deployment Frequency:
+   Target: Multiple per day (elite), weekly (high), monthly (medium)
+   Measure: Count deployments per time period
+
+2. Lead Time for Changes:
+   Target: <1 hour (elite), <1 day (high), <1 week (medium)
+   Measure: Commit timestamp to production timestamp
+
+3. Mean Time to Recovery:
+   Target: <1 hour (elite), <1 day (high), <1 week (medium)
+   Measure: Incident start to resolution time
+
+4. Change Failure Rate:
+   Target: 0-15% (elite/high), 16-30% (medium)
+   Measure: Failed deployments / total deployments
+
+DORA classification:
+- Elite: All four metrics at elite level
+- High: Three or more at high level
+- Medium: One or more at medium level
+- Low: Below medium on any metric
+```
+
+---
+
+**Metric Dashboard Configuration Pattern:**
+
+Create unified view of all metrics:
+
+**Dashboard Structure:**
+
+1. **Executive Summary:**
+   - System health score: Single number (0-100)
+   - Key metric trends: Up/down arrows with percentages
+   - Active incidents: Current issues requiring attention
+   - SLA compliance: Traffic light (green/yellow/red)
+
+2. **Quality Section:**
+   - Test coverage: Current and trend
+   - Code complexity: Average and hotspots
+   - Technical debt: Total and breakdown by type
+   - Recent changes: Coverage delta, complexity changes
+
+3. **Performance Section:**
+   - Response time: P50/P95/P99 over time
+   - Throughput: Requests per second
+   - Error rate: 4xx and 5xx over time
+   - Resource usage: CPU, memory, disk graphs
+
+4. **Business Section:**
+   - Feature adoption: Top features by usage
+   - User satisfaction: NPS/CSAT trends
+   - System reliability: Uptime percentage
+   - Transaction volume: Business operations completed
+
+5. **Process Section:**
+   - Deployment frequency: Per day/week
+   - Lead time: Average and trend
+   - MTTR: Average and trend
+   - Change failure rate: Percentage and trend
+
+**Dashboard Implementation Pattern:**
+```
+Dashboard creation:
+1. Data sources:
+   - Connect to metric storage (time-series database)
+   - Aggregate from multiple systems
+   - Calculate derived metrics
+   - Cache for performance
+
+2. Visualization:
+   - Line graphs: Trends over time
+   - Bar charts: Comparisons across categories
+   - Gauges: Current value vs target
+   - Heat maps: Identify hotspots
+
+3. Interaction:
+   - Time range selection: Last hour, day, week, month
+   - Drill-down: Click for detailed view
+   - Filtering: By service, endpoint, user segment
+   - Alerting: Configure thresholds and notifications
+
+4. Access control:
+   - Public dashboards: High-level metrics
+   - Team dashboards: Detailed operational metrics
+   - Executive dashboards: Business-focused metrics
+   - On-call dashboards: Incident response metrics
+```
+
+---
+
+**Metric Analysis and Action Pattern:**
+
+Turn metrics into improvement actions:
+
+**Analysis Approach:**
+
+1. **Identify Trends:**
+   - Improving: Metrics moving toward targets
+   - Degrading: Metrics moving away from targets
+   - Stable: Metrics unchanging (good or bad)
+   - Cyclic: Metrics with regular patterns
+
+2. **Find Correlations:**
+   - Causation: One metric directly affects another
+   - Correlation: Metrics move together
+   - Leading indicators: Metrics that predict future issues
+   - Lagging indicators: Metrics that confirm past events
+
+3. **Prioritize Actions:**
+   - High impact, low effort: Quick wins
+   - High impact, high effort: Strategic investments
+   - Low impact, low effort: Nice to have
+   - Low impact, high effort: Avoid
+
+**Action Pattern:**
+```
+From metrics to action:
+1. Detect issue:
+   - Metric crosses threshold
+   - Trend in wrong direction
+   - Anomaly detected
+   - Comparison to baseline shows regression
+
+2. Investigate:
+   - Check correlated metrics
+   - Review recent changes
+   - Examine logs and traces
+   - Reproduce if possible
+
+3. Plan improvement:
+   - Define target state
+   - Identify solution approaches
+   - Estimate effort and impact
+   - Get team alignment
+
+4. Execute and measure:
+   - Implement improvement
+   - Deploy to production
+   - Monitor metric response
+   - Validate improvement achieved
+
+5. Document and share:
+   - Record what changed and why
+   - Share learnings with team
+   - Update runbooks
+   - Adjust targets if needed
+```
+
+</output-format>
+
+<instructions>
+CRITICAL: Quality metrics guide continuous improvement through measurement.
+
+NEVER track metrics by:
+- Collecting metrics without acting on them (measurement theater)
+- Using metrics to judge individuals (creates gaming)
+- Tracking too many metrics (analysis paralysis)
+- Setting unrealistic targets (demotivates team)
+- Ignoring business context (technical metrics isolated from value)
+- Measuring without baselines (no context for interpretation)
+
+DO NOT:
+- Track metrics that don't drive decisions
+- Measure activity instead of outcomes (lines of code written)
+- Use metrics to assign blame
+- Set targets without team input
+- Collect metrics without visualization
+- Ignore trends in favor of point-in-time values
+
+ALWAYS:
+- Connect metrics to improvement actions
+- Establish baselines before setting targets
+- Track trends over time, not just current values
+- Visualize metrics for easy interpretation
+- Set realistic, achievable targets with team
+- Link technical metrics to business outcomes
+- Review metrics regularly with team
+- Adjust targets as system evolves
+- Use metrics to celebrate improvements
+- Focus on small set of actionable metrics
+
+REPEAT: Metrics guide improvement. Track quality, performance, business, and process metrics. Establish baselines. Visualize trends. Take action based on data.
+</instructions>
+
+<examples>
+✅ GOOD Quality Metrics Dashboard (actionable, focused):
+
+**Pattern demonstrates:**
+- Small set of focused metrics
+- Clear baselines and targets
+- Trend visualization
+- Actionable insights
+
+**Dashboard view:**
+```
+Quality Metrics Dashboard - PaymentService
+
+Test Coverage:
+  Current: 87% ✓ (Target: 85%)
+  Trend: +3% last month ↗
+  Action: None - meeting target
+
+Code Complexity:
+  Average: 8.2 ✓ (Target: <10)
+  High complexity files: 3
+  Action: Refactor PaymentProcessor.process() (complexity: 23)
+
+Technical Debt:
+  Code smells: 12 ⚠️ (Target: <10)
+  Trend: +4 last month ↗
+  Top issue: Duplicate validation logic (5 occurrences)
+  Action: Extract shared validator
+
+Performance (P95 latency):
+  Current: 145ms ✓ (Target: <200ms)
+  Trend: Stable ➡
+  Action: None - within target
+
+Deployment Frequency:
+  Current: 8/week ✓ (Target: >5/week)
+  Trend: +2/week last month ↗
+  Action: None - good velocity
+
+Change Failure Rate:
+  Current: 8% ✓ (Target: <15%)
+  Trend: Stable ➡
+  Action: None - healthy rate
+```
+
+**Why this works:**
+- Focused on 6 key metrics (not 50)
+- Each metric has clear target
+- Trends show direction of change
+- Specific actions identified
+- Celebrates successes (✓)
+- Highlights issues (⚠️)
+
+---
+
+❌ BAD Metrics Anti-pattern (too many, no context, no action):
+
+**Anti-pattern characteristics:**
+- Tracking 40+ metrics
+- No baselines or targets
+- Raw numbers without context
+- No actionable insights
+
+**Bad dashboard:**
+```
+Metrics Report:
+
+Lines of code: 45,832
+Number of files: 234
+Average file size: 196 lines
+Number of functions: 1,247
+Average function size: 24 lines
+Number of classes: 89
+Number of tests: 456
+Test execution time: 2m 34s
+Number of dependencies: 67
+Number of TODO comments: 234
+Number of FIXME comments: 45
+Cyclomatic complexity sum: 2,341
+Number of code smells: 234
+Number of duplications: 56
+... (30 more metrics) ...
+
+(No targets, no trends, no actions)
+```
+
+**Why this fails:**
+- Too many metrics to process
+- No context (is 45,832 lines good or bad?)
+- No targets to compare against
+- No trends (improving or degrading?)
+- No actionable insights
+- Measures activity (lines of code) not outcomes
+
+---
+
+✅ GOOD DORA Metrics Tracking (clear, trend-based, comparative):
+
+**Pattern demonstrates:**
+- Four key metrics focused
+- Performance classification
+- Trend direction clear
+- Comparison to industry benchmarks
+
+**DORA Metrics Dashboard:**
+```
+DevOps Performance - Q1 2026
+
+1. Deployment Frequency: 12 per week
+   Classification: High (target: >7/week)
+   Trend: ↗ (+4/week from Q4 2025)
+   Benchmark: 75th percentile
+
+2. Lead Time for Changes: 4 hours
+   Classification: High (target: <1 day)
+   Trend: ↘ (-2 hours from Q4 2025)
+   Benchmark: 80th percentile
+
+3. Mean Time to Recovery: 45 minutes
+   Classification: Elite (target: <1 hour)
+   Trend: ↘ (-15 minutes from Q4 2025)
+   Benchmark: 90th percentile
+
+4. Change Failure Rate: 12%
+   Classification: Elite (target: <15%)
+   Trend: ↘ (-3% from Q4 2025)
+   Benchmark: 85th percentile
+
+Overall Performance: High
+- 1 Elite metric (MTTR)
+- 3 High metrics
+- All trends improving
+- Target: Elite (all four metrics elite)
+
+Actions for Q2:
+1. Improve deployment frequency to >14/week (elite threshold)
+2. Reduce lead time to <2 hours (elite threshold)
+3. Maintain MTTR and change failure rate
+
+Historical progression:
+Q3 2025: Medium
+Q4 2025: High
+Q1 2026: High (close to Elite)
+```
+
+**Why this works:**
+- Focused on four proven metrics
+- Clear performance classification
+- Shows improvement trends
+- Compares to industry benchmarks
+- Sets specific improvement goals
+- Shows historical progression
+
+---
+
+❌ BAD Process Metrics Anti-pattern (vanity metrics, no improvement):
+
+**Anti-pattern characteristics:**
+- Tracks vanity metrics
+- No trend analysis
+- Metrics never change targets
+- Used to judge individuals
+
+**Bad metrics report:**
+```
+Team Performance Report:
+
+Developer productivity:
+- Alice: 1,234 lines of code
+- Bob: 987 lines of code
+- Carol: 1,456 lines of code
+
+Code reviews:
+- Alice: 45 reviews
+- Bob: 32 reviews
+- Carol: 51 reviews
+
+Bug fixes:
+- Alice: 23 bugs
+- Bob: 34 bugs
+- Carol: 19 bugs
+
+(No team metrics, no trends, no improvement actions)
+```
+
+**Why this fails:**
+- Measures individual output (breeds competition)
+- Lines of code is vanity metric (quantity ≠ quality)
+- More bugs fixed could mean more bugs created
+- No team-level metrics
+- No improvement actions
+- No correlation to business value
+- Creates wrong incentives
+
+---
+
+✅ GOOD Metric-Driven Improvement (issue detected, action taken, improvement validated):
+
+**Pattern demonstrates:**
+- Metric detects issue
+- Root cause investigated
+- Action taken
+- Improvement validated
+
+**Improvement cycle:**
+```
+Week 1: Issue Detection
+Metric: P95 response time increased
+- Baseline: 120ms
+- Current: 280ms (+133%)
+- Alert triggered: >150ms threshold
+
+Week 1: Investigation
+Correlation analysis:
+- Database query time increased from 30ms to 180ms
+- New feature deployed 3 days ago
+- Feature added N+1 query pattern
+
+Root cause identified:
+- File: src/orders/repository.ts:145
+- Issue: Loop queries order items individually
+- Solution: Add eager loading for order items
+
+Week 2: Implementation
+Changes:
+- Modified query to use JOIN
+- Added database index on order_items.order_id
+- Deployed to staging: P95 dropped to 95ms
+
+Week 2: Validation
+Production deployment:
+- P95 response time: 95ms ✓ (21% improvement over baseline)
+- Database query time: 22ms ✓ (27% improvement)
+- No increase in error rate ✓
+
+Week 3: Documentation
+- Updated runbook with query pattern
+- Shared learning in team retrospective
+- Added lint rule to detect N+1 patterns
+- Adjusted target: P95 < 150ms → < 100ms (system improved)
+```
+
+**Why this works:**
+- Metric detected real issue
+- Investigation found root cause
+- Specific fix implemented
+- Improvement validated with metrics
+- Learning documented and shared
+- Team capability improved
+- Targets adjusted to reflect new capability
+</examples>

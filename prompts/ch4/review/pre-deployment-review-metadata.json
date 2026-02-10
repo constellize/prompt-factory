@@ -1,0 +1,20 @@
+{
+  "id": "pre-deployment-review",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Enforce pre-deployment quality gates to ensure production safety",
+  "useCase": "Before code reaches production, validate deployment safety (Gate 5: Review Process)",
+  "tags": [
+    "quality",
+    "review",
+    "pre-deployment",
+    "e2e-tests",
+    "infrastructure",
+    "rollback",
+    "monitoring",
+    "observability"
+  ],
+  "created": "2026-01-17"
+}

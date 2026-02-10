@@ -1,0 +1,22 @@
+{
+  "id": "revise-memory-bank",
+  "version": "v1",
+  "dateVersion": "20260121",
+  "chapter": "Chapter 5",
+  "category": "Documentation",
+  "purpose": "Revise memory bank documentation when circumstances change",
+  "useCase": "Maintain accurate knowledge as constraints, priorities, and understanding evolve",
+  "tags": [
+    "documentation",
+    "memory-bank",
+    "knowledge-evolution",
+    "revision-tracking",
+    "assumption-validation",
+    "decision-evolution",
+    "constraint-changes",
+    "learning-capture",
+    "historical-preservation",
+    "living-documentation"
+  ],
+  "created": "2026-01-21"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "assess-system-health-over-time",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 8",
+  "category": "System Health",
+  "purpose": "Track long-term system health trends enabling informed evolution decisions",
+  "useCase": "Periodically assess system health across multiple dimensions—architectural debt, documentation currency, complexity trends, maintenance burden, quality metrics—to understand whether system is improving or degrading and identify priorities for health improvements that enable confident system evolution",
+  "tags": [
+    "system-health",
+    "health-assessment",
+    "metrics-tracking",
+    "debt-management",
+    "trend-analysis",
+    "quality-assessment",
+    "long-term-health",
+    "informed-decisions"
+  ],
+  "created": "2026-02-01"
+}

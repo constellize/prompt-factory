@@ -1,0 +1,5 @@
+::: {.promptref title="Pre-Merge Review" url="{SITE_BASE}/prompts/v1/pre-merge-review"}
+**Pre-merge review** ensures code quality before joining the main branch. Integration tests verify that new code works correctly with existing system components, catching issues that unit tests miss. Performance tests detect significant regressions that could impact user experience or system capacity. Contract tests confirm that API boundaries remain stable and existing consumers won't break. Documentation must reflect any changes—if the code changed behavior, the docs should say so.
+
+"Enforce pre-merge quality gates for {{component_name}} in {{system_name}}. Run integration tests with real dependencies testing component interactions and database transactions. Execute performance tests measuring response time, throughput, and resource usage against baseline metrics. Validate API contracts using consumer-driven contract tests ensuring backward compatibility. Verify documentation completeness checking that code changes are reflected in docs..."
+:::

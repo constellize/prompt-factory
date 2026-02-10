@@ -1,0 +1,5 @@
+::: {.promptref title="Maintain Dependency Hygiene To Keep Codebase Secure And Maintainable" url="{SITE_BASE}/prompts/v1/maintain-dependency-hygiene"}
+**Maintain dependency hygiene** to keep your codebase secure and maintainable. Every dependency should be justified and documented—explain why it's needed and what alternatives were considered. Regularly scan for known security vulnerabilities in the dependency chain and address them promptly. Keep dependencies current with security patches without blindly upgrading everything. Minimize your dependency footprint by avoiding unnecessary libraries that add weight without clear value.
+
+"Maintain dependency hygiene for {{component_name}} in {{system_name}}. Audit and justify dependencies documenting purpose and alternatives for each. Scan for security vulnerabilities using npm audit before deployment prioritizing critical and high severity. Keep dependencies current applying security patches promptly while testing before major upgrades. Minimize footprint preferring standard library and removing unused dependencies..."
+:::

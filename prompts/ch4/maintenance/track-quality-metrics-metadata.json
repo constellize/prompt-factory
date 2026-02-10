@@ -1,0 +1,21 @@
+{
+  "id": "track-quality-metrics",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Track quality metrics to measure system health and guide continuous improvement",
+  "useCase": "Continuously measure and monitor quality across multiple dimensions (Gate 6: Continuous Improvement)",
+  "tags": [
+    "quality",
+    "maintenance",
+    "metrics",
+    "monitoring",
+    "performance",
+    "business-metrics",
+    "process-metrics",
+    "dora",
+    "continuous-improvement"
+  ],
+  "created": "2026-01-17"
+}

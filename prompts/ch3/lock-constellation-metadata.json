@@ -1,0 +1,17 @@
+{
+  "id": "lock-constellation",
+  "version": "v1",
+  "dateVersion": "20260114",
+  "chapter": "Chapter 3",
+  "category": "Architecture",
+  "purpose": "Lock constellation scope and prevent feature creep",
+  "useCase": "After gap analysis, before implementation to maintain discipline",
+  "tags": [
+    "architecture",
+    "scope",
+    "discipline",
+    "requirements",
+    "governance"
+  ],
+  "created": "2026-01-14"
+}

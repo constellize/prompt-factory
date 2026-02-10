@@ -1,0 +1,18 @@
+{
+  "id": "extract-decisions-from-meetings",
+  "version": "v1",
+  "dateVersion": "20260204",
+  "chapter": "Chapter 6",
+  "category": "Knowledge Management",
+  "purpose": "Extract actionable decisions from meeting notes into memory bank entries",
+  "useCase": "After meetings to capture decisions, constraints, and action items that would otherwise be lost",
+  "tags": [
+    "meetings",
+    "decisions",
+    "memory-bank",
+    "knowledge-extraction",
+    "documentation",
+    "team-coordination"
+  ],
+  "created": "2026-02-04"
+}

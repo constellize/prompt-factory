@@ -1,0 +1,20 @@
+{
+  "id": "document-personal-learning-journey",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 8",
+  "category": "Personal Practice",
+  "purpose": "Capture individual learning journey building expertise and personal growth",
+  "useCase": "Document how individual engineer grew through specific challenge—investigation process, skills developed, lessons learned, knowledge gained—building personal expertise while creating knowledge that can be shared with team to accelerate collective capability",
+  "tags": [
+    "personal-learning",
+    "learning-journey",
+    "skill-development",
+    "problem-solving",
+    "expertise-building",
+    "reflection",
+    "growth-documentation",
+    "knowledge-contribution"
+  ],
+  "created": "2026-02-01"
+}

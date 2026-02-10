@@ -1,0 +1,5 @@
+::: {.promptref title="Track Quality Metrics" url="{SITE_BASE}/prompts/v1/track-quality-metrics"}
+**Track quality metrics** to measure system health and guide continuous improvement. Quality metrics like test coverage, code complexity, and technical debt show whether the codebase remains maintainable. Performance metrics including response times, throughput, and error rates indicate whether the system meets user expectations. Business metrics such as feature adoption, user satisfaction, and system reliability connect technical work to business outcomes. Process metrics like deployment frequency, lead time, and mean time to recovery reveal team velocity and operational excellence.
+
+"Track quality metrics for {{component_name}} in {{system_name}}. Define quality metrics tracking test coverage, code complexity, and technical debt. Track performance metrics measuring response times, throughput, and error rates. Measure business metrics capturing feature adoption, user satisfaction, and system reliability. Monitor process metrics including deployment frequency, lead time, and mean time to recovery..."
+:::

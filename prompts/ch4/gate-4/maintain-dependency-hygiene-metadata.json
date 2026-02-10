@@ -1,0 +1,11 @@
+{
+  "id": "maintain-dependency-hygiene",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Maintain dependency hygiene to keep codebase secure and maintainable",
+  "useCase": "Managing dependencies with justification and security scanning (Gate 4: Maintainability in Context)",
+  "tags": ["quality", "dependencies", "security", "npm", "hygiene", "gate-4"],
+  "created": "2026-01-17"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "validate-ai-changes",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Validate AI-generated changes to ensure correctness, alignment, and safety",
+  "useCase": "Rigorously validate AI code changes before integration (Best Practices)",
+  "tags": [
+    "quality",
+    "ai-validation",
+    "code-review",
+    "memory-bank",
+    "integration-testing",
+    "context-verification",
+    "architectural-alignment",
+    "best-practices",
+    "safety",
+    "correctness"
+  ],
+  "created": "2026-01-17"
+}

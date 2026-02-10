@@ -1,0 +1,5 @@
+::: {.promptref title="Design Actionable Health Reporting With Status Indicators, Errors, Thresholds, And Dependency Mapping" url="{SITE_BASE}/prompts/v1/implement-actionable-health-reporting"}
+**Design actionable health reporting** that enables operators to respond effectively. Status indicators should be clear and meaningful: UP, DOWN, or DEGRADED, not just HTTP status codes. Error messages must include specific troubleshooting hints that guide operators toward resolution. Performance metrics should include acceptable thresholds so operators know when values are concerning. Dependencies should be mapped individually with their own status, using dependency chaining to show cascading health—when a database is down because disk is full, report both failures so operators can trace problems to their root cause.
+
+"Design actionable health reporting for {{component_name}} in {{system_name}} that enables operators to respond effectively. Health reports MUST be actionable—operators need to understand WHAT failed, WHY it matters, and HOW to fix it. Use dependency chaining to paint a complete picture during incidents..."
+:::

@@ -1,0 +1,5 @@
+::: {.promptref title="Externalize Configuration To Eliminate Environment-Specific Values From Code" url="{SITE_BASE}/prompts/v1/externalize-configuration"}
+**Externalize configuration** to eliminate environment-specific values from code. Hardcoded values like database URLs or API keys prevent portability across environments. All configurations should load from external sources—environment variables, configuration servers, or mounted volumes. Provide sensible defaults for non-critical configurations to reduce required setup. Validate configuration at startup with clear error messages that tell operators exactly what's missing or invalid.
+
+"Externalize configuration for {{component_name}} in {{system_name}}. Follow this process: Identify all configuration including hardcoded values and environment-specific settings. Externalize critical configuration loading from environment variables. Provide sensible defaults for non-critical settings. Validate at startup checking required variables exist and format is correct..."
+:::

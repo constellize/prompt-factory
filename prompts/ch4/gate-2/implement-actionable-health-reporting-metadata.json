@@ -1,0 +1,17 @@
+{
+  "id": "implement-actionable-health-reporting",
+  "version": "v1",
+  "dateVersion": "20260114",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Design actionable health reporting with status indicators, errors, thresholds, and dependency mapping",
+  "useCase": "After health checks implemented, create actionable reporting (Gate 2: Health Check Completeness)",
+  "tags": [
+    "quality",
+    "health-checks",
+    "reporting",
+    "observability",
+    "gate-2"
+  ],
+  "created": "2026-01-14"
+}

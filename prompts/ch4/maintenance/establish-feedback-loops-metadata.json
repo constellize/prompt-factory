@@ -1,0 +1,22 @@
+{
+  "id": "establish-feedback-loops",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Establish feedback loops to surface issues quickly and guide improvement",
+  "useCase": "Build automated, team, user, and system feedback mechanisms (Gate 6: Continuous Improvement)",
+  "tags": [
+    "quality",
+    "maintenance",
+    "feedback-loops",
+    "automation",
+    "code-review",
+    "retrospectives",
+    "user-feedback",
+    "monitoring",
+    "observability",
+    "continuous-improvement"
+  ],
+  "created": "2026-01-17"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "business-problem",
+  "chapter": "Chapter 1",
+  "category": "Analysis",
+  "purpose": "Generate business problem statement using SPIIBV template",
+  "useCase": "When documenting business problems and opportunities",
+  "tags": [
+    "requirements",
+    "business-problem",
+    "SPIIBV"
+  ],
+  "created": "2026-01-13",
+  "version": "v1",
+  "dateVersion": "20260113"
+}

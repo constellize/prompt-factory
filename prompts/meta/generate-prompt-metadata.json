@@ -1,0 +1,17 @@
+{
+  "id": "generate-prompt",
+  "chapter": "Meta",
+  "category": "Prompt Engineering",
+  "purpose": "Generate high-quality prompts for the Prompt Factory system",
+  "useCase": "When creating new prompts that follow factory guidelines and best practices",
+  "tags": [
+    "meta",
+    "prompt-engineering",
+    "prompt-generation",
+    "factory",
+    "guidelines"
+  ],
+  "created": "2026-02-03",
+  "version": "v1",
+  "dateVersion": "20260203"
+}

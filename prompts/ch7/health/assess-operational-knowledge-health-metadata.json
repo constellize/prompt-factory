@@ -1,0 +1,24 @@
+{
+  "id": "assess-operational-knowledge-health",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 7",
+  "category": "Operations",
+  "purpose": "Assess operational memory bank health through systematic evaluation",
+  "useCase": "Evaluate runbook currency, check cross-reference integrity, identify knowledge gaps, assess incident response effectiveness, measure time-to-resolution trends, recommend knowledge updates based on recent incidents",
+  "tags": [
+    "operations",
+    "operational-knowledge",
+    "knowledge-health",
+    "assessment",
+    "runbook-currency",
+    "cross-reference-integrity",
+    "knowledge-gaps",
+    "incident-effectiveness",
+    "resolution-time-trends",
+    "maintenance",
+    "knowledge-decay",
+    "continuous-improvement"
+  ],
+  "created": "2026-02-01"
+}

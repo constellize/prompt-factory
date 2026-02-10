@@ -1,0 +1,11 @@
+{
+  "id": "achieve-environment-independence",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Achieve environment independence so deployment processes work identically across dev, staging, and production",
+  "useCase": "Making deployments work the same way in all environments (Gate 3: Deployment Readiness)",
+  "tags": ["quality", "deployment", "environment-independence", "migrations", "gate-3"],
+  "created": "2026-01-17"
+}

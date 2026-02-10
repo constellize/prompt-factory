@@ -1,0 +1,22 @@
+{
+  "id": "design-proactive-operational-architecture",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 7",
+  "category": "Operations",
+  "purpose": "Design proactive operational architecture during development",
+  "useCase": "Build resilience into system design by planning health checks, failure modes, observability, degradation patterns, and deployment procedures before first production deployment",
+  "tags": [
+    "operations",
+    "proactive-design",
+    "health-checks",
+    "failure-modes",
+    "observability",
+    "graceful-degradation",
+    "capacity-planning",
+    "deployment-procedures",
+    "resilience",
+    "sre"
+  ],
+  "created": "2026-02-01"
+}

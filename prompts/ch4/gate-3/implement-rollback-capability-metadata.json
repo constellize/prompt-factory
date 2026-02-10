@@ -1,0 +1,11 @@
+{
+  "id": "implement-rollback-capability",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Build rollback capability to recover quickly when deployments fail",
+  "useCase": "Creating rollback procedures for fast recovery (Gate 3: Deployment Readiness)",
+  "tags": ["quality", "rollback", "deployment", "recovery", "gate-3"],
+  "created": "2026-01-17"
+}

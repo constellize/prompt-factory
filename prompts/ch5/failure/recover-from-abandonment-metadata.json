@@ -1,0 +1,22 @@
+{
+  "id": "recover-from-abandonment",
+  "version": "v1",
+  "dateVersion": "20260121",
+  "chapter": "Chapter 5",
+  "category": "Documentation",
+  "purpose": "Recover memory bank from abandonment where updates completely stopped",
+  "useCase": "Restart documentation practice after extended period without updates following deadline pressure",
+  "tags": [
+    "documentation",
+    "memory-bank",
+    "failure-recovery",
+    "abandonment-recovery",
+    "restart-patterns",
+    "sustainable-maintenance",
+    "team-accountability",
+    "cultural-change",
+    "documentation-rhythm",
+    "prevention"
+  ],
+  "created": "2026-01-21"
+}

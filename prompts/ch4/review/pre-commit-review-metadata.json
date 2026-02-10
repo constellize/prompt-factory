@@ -1,0 +1,19 @@
+{
+  "id": "pre-commit-review",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Enforce pre-commit quality gates to prevent issues from entering repository",
+  "useCase": "Before code enters shared repository, run automated checks (Gate 5: Review Process)",
+  "tags": [
+    "quality",
+    "review",
+    "pre-commit",
+    "static-analysis",
+    "unit-tests",
+    "security",
+    "dependencies"
+  ],
+  "created": "2026-01-17"
+}

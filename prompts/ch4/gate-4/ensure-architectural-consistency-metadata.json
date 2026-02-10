@@ -1,0 +1,11 @@
+{
+  "id": "ensure-architectural-consistency",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Ensure architectural consistency by following established patterns from memory bank",
+  "useCase": "Validating that code follows constellation patterns (Gate 4: Maintainability in Context)",
+  "tags": ["quality", "architecture", "consistency", "patterns", "gate-4"],
+  "created": "2026-01-17"
+}

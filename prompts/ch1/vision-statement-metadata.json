@@ -1,0 +1,14 @@
+{
+  "id": "vision-statement",
+  "chapter": "Chapter 1",
+  "category": "Analysis",
+  "purpose": "Generate vision statement using For/Who/The/Is/That/Unlike template",
+  "useCase": "When creating product vision statements",
+  "tags": [
+    "requirements",
+    "vision"
+  ],
+  "created": "2026-01-13",
+  "version": "v1",
+  "dateVersion": "20260113"
+}

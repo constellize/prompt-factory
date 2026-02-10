@@ -1,0 +1,22 @@
+{
+  "id": "establish-operational-memory-bank",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 7",
+  "category": "Operations",
+  "purpose": "Establish operational memory bank structure for production systems",
+  "useCase": "Choose between separate, integrated, or hybrid operational knowledge structure based on team dynamics, access requirements, and operational coupling",
+  "tags": [
+    "operations",
+    "memory-bank",
+    "operational-knowledge",
+    "structure-decision",
+    "runbooks",
+    "incident-response",
+    "cross-references",
+    "team-organization",
+    "access-control",
+    "sre"
+  ],
+  "created": "2026-02-01"
+}

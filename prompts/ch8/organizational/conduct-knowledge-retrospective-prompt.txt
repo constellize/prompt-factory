@@ -1,0 +1,378 @@
+---
+template_variables:
+  - name: sprint_id
+    description: Sprint identifier or number
+    example: "Sprint 24" or "2026-Q1-Sprint-4"
+  - name: team_name
+    description: Team or squad name
+    example: "PaymentAPI Team" or "Platform Squad"
+  - name: sprint_duration
+    description: Sprint timeframe
+    example: "Feb 1-15, 2026"
+  - name: memory_bank_location
+    description: Where to document knowledge retrospective
+    example: "memory-bank/organizational/" or "team-memory-bank/retrospectives/"
+---
+
+<task>
+Conduct knowledge-focused retrospective for {{team_name}} Sprint {{sprint_id}} by systematically evaluating how well team captured learnings, identified knowledge gaps, shared knowledge across the team, and maintained memory bank documentation—generating action items to improve organizational learning practices.
+</task>
+
+<context>
+Sprint: {{sprint_id}}
+Team: {{team_name}}
+Duration: {{sprint_duration}}
+Documentation: {{memory_bank_location}}
+
+Knowledge retrospectives complement traditional retrospectives:
+- Traditional retrospective: Team dynamics, process effectiveness, collaboration
+- Knowledge retrospective: Learning capture, documentation quality, knowledge transfer
+
+Knowledge retrospectives surface:
+1. How well did we capture learnings from this sprint?
+2. What knowledge gaps became apparent during implementation?
+3. How effectively did we share knowledge across the team?
+4. Which memory bank documents need updates?
+5. What could we improve about working with knowledge?
+
+Connects to Chapter 8 theme of compound learning.
+</context>
+
+<thinking>
+Before conducting knowledge retrospective:
+1. What knowledge did we generate this sprint?
+2. How well did we capture and document it?
+3. What gaps became apparent?
+4. How effectively did team members share knowledge?
+5. Did our memory bank help or hinder progress?
+6. What practices should we continue, adjust, or abandon?
+</thinking>
+
+<output-format>
+
+## Knowledge Retrospective Structure
+
+```
+# Knowledge Retrospective: {{team_name}} Sprint {{sprint_id}}
+
+Sprint: {{sprint_id}} | Team: {{team_name}} | Duration: {{sprint_duration}}
+Date: [YYYY-MM-DD] | Facilitator: [Name] | Participants: [Names]
+
+---
+
+## Part 1: Knowledge Capture Assessment
+
+### Knowledge Generated This Sprint
+
+1. [Knowledge item]: [Category: Technical/Organizational/Process]
+   - How discovered: [Debugging, code review, incident, etc.]
+   - Significance: [Why this matters]
+   - Capture status: [Well captured / Partially / Not captured]
+
+2. [Knowledge item]: [Category]
+   - [Same structure]
+
+### Capture Quality Assessment
+
+For key knowledge items, assess:
+- Specificity: [1-5] Was it specific enough to reuse?
+- Completeness: [1-5] Did we capture rationale, not just what changed?
+- Accessibility: [1-5] Can team easily find this knowledge?
+- Actionability: [1-5] Can someone apply this in future work?
+
+If poorly captured: What would have helped? Should we go back and capture it now?
+
+---
+
+## Part 2: Knowledge Gaps
+
+### Gaps Discovered
+
+1. [Gap description]
+   - Where revealed: [Which task]
+   - Impact: [How lack of knowledge affected work]
+   - Severity: [HIGH / MEDIUM / LOW]
+   - Root cause: [New tech, forgotten pattern, undocumented decision, etc.]
+
+### Gap Analysis (HIGH/MEDIUM severity)
+
+Gap: [Title]
+- What we needed: [Specific knowledge]
+- What we did instead: [Workaround and cost]
+- How to fill: [Research needed, owner, timeline, success criteria]
+- Priority: [Urgent / High / Medium / Low]
+
+---
+
+## Part 3: Knowledge Transfer Assessment
+
+### Transfer Events
+
+1. [Knowledge transferred]
+   - From: [Name] → To: [Names]
+   - Method: [Pair programming, code review, documentation, presentation]
+   - Effectiveness: [1-5] Did recipients demonstrate understanding?
+   - Impact: [Distributed knowledge prevents single points of failure]
+
+### Knowledge Distribution
+
+Distributed across team: [Knowledge that spread successfully, how, verification]
+Stuck with individuals: [Knowledge that remained siloed, why, risk, transfer plan]
+
+---
+
+## Part 4: Memory Bank Effectiveness
+
+### Documents That Helped
+
+1. [memory-bank/path]
+   - How helped: [Specific way it accelerated work]
+   - Quality: [Accurate, up-to-date, clear?]
+   - Impact: [Time saved, risk reduced]
+
+### Documents That Needed Updates
+
+1. [memory-bank/path]
+   - Issue: [What was wrong or missing]
+   - Impact: [What happened]
+   - Update needed: [What to add/change]
+   - Priority: [HIGH / MEDIUM / LOW]
+
+### Documents That Should Have Existed
+
+1. [What we needed]
+   - What we looked for: [Search or doc name]
+   - What we did instead: [Workaround]
+   - Should we create: [Yes/No, owner, timeline]
+
+---
+
+## Part 5: Organizational Learning Health
+
+### Learning Velocity Trend
+
+Compare to previous sprints:
+- New patterns discovered: [This sprint vs previous]
+- Documents created/updated: [This sprint vs previous]
+- Knowledge transfer events: [This sprint vs previous]
+- Trend: [Accelerating / Stable / Declining]
+
+### Compound Learning Evidence
+
+[Pattern across sprints]
+- Sprint N-2: [Earlier learning]
+- Sprint N-1: [Related learning]
+- This sprint: [Current learning building on previous]
+- Acceleration: [How earlier learnings helped]
+
+---
+
+## Part 6: Action Items
+
+### Immediate Actions (Before Next Sprint)
+
+1. [Action]
+   - Category: [Capture / Transfer / Documentation / Gap filling]
+   - Rationale: [Why important]
+   - Owner: [Name]
+   - Success criteria: [How we'll know it's done]
+
+### Process Changes (Next Sprint Trial)
+
+1. [Change]
+   - Current practice: [How we do it now]
+   - New practice: [What to try]
+   - Trial period: [Duration]
+   - Success metrics: [How to evaluate]
+
+### Documentation Priorities
+
+1. [Document - Priority HIGH/MEDIUM]
+   - What: [Content needed]
+   - Why: [Importance]
+   - Owner: [Name]
+   - Timeline: [When complete]
+```
+
+---
+
+## Meeting Facilitation Guide (60-90 minutes)
+
+**Part 1 (20 min): Knowledge Capture**
+- "What significant knowledge did we generate?"
+- For each: Was it captured? How well? Where?
+
+**Part 2 (15 min): Knowledge Gaps**
+- "What did we wish we had known?"
+- Assess severity, discuss how to fill
+
+**Part 3 (15 min): Knowledge Transfer**
+- "How well did we share knowledge?"
+- Identify stuck knowledge and transfer plans
+
+**Part 4 (10 min): Memory Bank**
+- "Did our docs help or hinder?"
+- What needs updates?
+
+**Part 5 (15-20 min): Action Items**
+- Generate improvements with owners and timelines
+
+</output-format>
+
+<instructions>
+CRITICAL: Knowledge retrospective is not a complaint session. Focus on systematizing learning practices and improving organizational learning health.
+
+DO NOT:
+- Make it about blame ("You should have documented that")
+- Treat knowledge capture as optional
+- Skip knowledge transfer discussion (silent killer of organizational learning)
+- Create action items without owners and deadlines
+
+ALWAYS:
+- Celebrate successful knowledge practices and transfers
+- Connect findings to memory bank improvements
+- Distinguish one-time issues from systemic patterns
+- Assign owners to action items
+- Identify compound learning effects
+- Assess memory bank effectiveness honestly
+
+REMEMBER: Knowledge retrospectives build organizational learning capability. Each sprint's practices get better when systematically evaluated and improved.
+</instructions>
+
+<examples>
+
+## Example: Sprint 23 Knowledge Retrospective
+
+```
+# Knowledge Retrospective: PaymentAPI Team Sprint 23
+
+Sprint: Sprint 23 | Team: PaymentAPI Team | Duration: Jan 15-29, 2026
+Date: 2026-01-29 | Facilitator: Morgan Lee | Participants: Alex, Jordan, Morgan, Casey
+
+---
+
+## Part 1: Knowledge Capture Assessment
+
+### Knowledge Generated
+
+1. Circuit breaker dual-threshold pattern: Technical
+   - Discovered: Load testing during implementation
+   - Significance: Critical for implementing resilience patterns
+   - Status: Well captured (learning doc, systemPatterns.md, load testing guide)
+
+2. Database migrations need N-1 compatibility: Technical + Process
+   - Discovered: Challenge when migration broke dev environments
+   - Significance: Prevents recurring broken dev environments
+   - Status: Partially captured (fix made, pattern could be better documented)
+
+3. Cross-team dependency changes need communication plan: Organizational
+   - Discovered: Stripe V3 migration coordination with Checkout team
+   - Significance: Prevents late surprises for dependent teams
+   - Status: Partially captured (discussed, not systematized)
+
+### Capture Quality: Circuit Breaker Pattern
+
+- Specificity: 5/5 (specific thresholds with rationale)
+- Completeness: 4/5 (has rationale, could use more failure examples)
+- Accessibility: 4/5 (multiple docs, could have central link)
+- Actionability: 5/5 (someone can follow documented approach)
+
+---
+
+## Part 2: Knowledge Gaps
+
+### Gaps Discovered
+
+1. Automated N-1 compatibility detection for migrations
+   - Where revealed: Challenge 1 (migration broke dev environments)
+   - Impact: Manual code review insufficient, engineers lost ~4 hours
+   - Severity: HIGH (recurring risk)
+   - Root cause: Tool gap—no automated checks
+
+### Gap Analysis: Automated N-1 Detection
+
+- What needed: Tool to detect migration compatibility issues
+- What we did: Added checklist item (manual, can be forgotten)
+- How to fill: Research tools, build CI check (Owner: Platform lead, Sprint 24)
+- Priority: Urgent (ongoing risk)
+
+---
+
+## Part 3: Knowledge Transfer
+
+### Transfer Events
+
+1. Circuit breaker pattern
+   - From: Alex → To: Jordan, Morgan, Casey
+   - Method: Pair programming + code review + load testing + docs
+   - Effectiveness: 5/5 (all demonstrated understanding in planning)
+   - Impact: Future implementations won't require Alex
+
+2. Stripe V3 migration approach
+   - From: Jordan → To: Casey, Alex
+   - Method: Code review + ADR
+   - Effectiveness: 3/5 (can maintain, but deep reasoning stayed with Jordan)
+   - Impact: Maintenance distributed, architecture expertise centralized
+
+### Stuck Knowledge
+
+Stripe V3 migration design decisions: With Jordan
+- Why stuck: Owned entire migration, others participated but not in design
+- Risk: Team can't explain migration reasoning if Jordan unavailable
+- Plan: Architecture review session Sprint 24 for Jordan to present approach
+
+---
+
+## Part 4: Memory Bank Effectiveness
+
+### Documents That Helped
+
+1. systemPatterns.md#resilience
+   - How: Foundation for circuit breaker implementation
+   - Quality: Accurate, comprehensive
+   - Impact: Saved ~4 hours research
+
+### Documents That Needed Updates
+
+1. systemPatterns.md#database-migrations
+   - Issue: Didn't include N-1 compatibility requirement
+   - Impact: Missing pattern didn't help during Challenge 1
+   - Update: Add N-1 requirement with examples
+   - Priority: HIGH
+
+---
+
+## Part 5: Compound Learning
+
+Database Performance Mastery:
+- Sprint 21: 2 days to fix slow query (reactive)
+- Sprint 22: 4 hours to fix (applied Sprint 21 approach, 75% faster)
+- Sprint 23: 0 issues (prevented via code review + automated tests)
+- Acceleration: Moved from reactive to proactive prevention
+
+---
+
+## Part 6: Action Items
+
+### Immediate
+
+1. Distribute Stripe V3 expertise
+   - Category: Transfer
+   - Owner: Jordan
+   - Success: Team can explain migration approach after architecture session
+
+2. Create automated N-1 compatibility detection
+   - Category: Gap filling
+   - Owner: Platform lead
+   - Success: CI check catches compatibility issues
+
+### Process Changes
+
+1. Add knowledge retrospective after sprint retrospective
+   - Current: Learning captured separately
+   - New: 30-45 min dedicated session
+   - Trial: 2 sprints
+   - Success: Better awareness of knowledge generated
+```
+
+</examples>

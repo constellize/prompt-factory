@@ -1,0 +1,947 @@
+---
+template_variables:
+  - name: project_name
+    description: The specific project to triage memory bank for
+    example: "E-commerce Platform"
+  - name: staleness_period
+    description: How long since last comprehensive update
+    example: "2 months since last thorough review"
+---
+
+<task>
+Triage salvageable knowledge in memory bank for {{project_name}} to determine what remains accurate, what needs minor updates, and what must be archived.
+
+Identify accurate entries that still reflect current reality by comparing documentation against actual codebase, validating architectural descriptions match implementation, and confirming patterns documented are patterns used. Mark entries needing minor updates where core information is correct but details have drifted, file paths changed, or examples need refreshing. Archive completely obsolete entries where documented approaches are no longer in use, technologies have been replaced, or features have been removed. Assess salvageability systematically by reviewing each memory bank file, categorizing every entry by accuracy level, estimating update effort required, and prioritizing triage work.
+
+Treat triage as honest assessment rather than wishful thinking, acknowledging gaps between documentation and reality while identifying what can be saved with reasonable effort. This approach prevents wasted time updating truly obsolete entries while preserving valuable knowledge that needs only minor correction.
+
+Follow this process:
+
+1. **Assess overall staleness:**
+   - Review last update date for each file
+   - Identify major changes since last update
+   - Estimate drift severity
+   - Determine triage scope
+   - Set realistic recovery timeline
+
+2. **Categorize every entry:**
+   - Still accurate: Mark reviewed, keep as-is
+   - Minor updates needed: Flag specific changes required
+   - Major rewrite needed: Mark for rebuild
+   - Completely obsolete: Archive with explanation
+   - Uncertain: Validate before categorizing
+
+3. **Estimate recovery effort:**
+   - Count entries by category
+   - Assess time per entry type
+   - Calculate total recovery work
+   - Prioritize by value and effort
+   - Create phased recovery plan
+
+4. **Mark and preserve:**
+   - Add review dates to accurate entries
+   - Flag update needs clearly
+   - Create archive for obsolete entries
+   - Document uncertainty for unclear cases
+   - Maintain all content during triage
+</task>
+
+<context>
+Project to triage memory bank:
+{{project_name}}
+
+Staleness period:
+{{staleness_period}}
+
+**Standard Construction Folder Structure:**
+This prompt reviews:
+- `memory-bank/projectbrief.md` (foundation accuracy)
+- `memory-bank/systemPatterns.md` (architecture currency)
+- `memory-bank/techContext.md` (tool and convention accuracy)
+- `memory-bank/productContext.md` (user need relevance)
+- `memory-bank/activeContext.md` (current state accuracy)
+- `memory-bank/progress.md` (completion tracking accuracy)
+
+This prompt creates:
+- Triage assessment report
+- Categorized entry inventory
+- Recovery effort estimate
+- Phased recovery plan
+</context>
+
+<thinking>
+Before triaging memory bank, analyze:
+1. How stale is the memory bank overall?
+2. Which files are most critical to accuracy?
+3. What major changes happened during staleness period?
+4. How much effort is realistic for recovery?
+5. Which entries provide most value if updated?
+6. What can we afford to archive vs must preserve?
+</thinking>
+
+<output-format>
+Create triage assessment following these patterns:
+
+**Overall Staleness Assessment Pattern:**
+
+Establish baseline understanding:
+
+**Staleness Review:**
+```
+Timeline:
+- Last comprehensive update: [Date]
+- Staleness duration: [Weeks/months]
+- Major changes during period: [Count and summary]
+- Team changes: [People joined/left]
+- Technology changes: [Tools added/removed]
+
+Current State:
+- Lines of code changed: [Estimate]
+- Features shipped: [Count]
+- Architecture changes: [Major/Minor/None]
+- Pattern evolution: [Significant/Moderate/Minimal]
+
+Drift Severity:
+□ Minimal (< 1 month, small changes)
+  Impact: Minor touch-ups needed
+  Effort: 2-4 hours
+
+□ Moderate (1-3 months, moderate changes)
+  Impact: Some sections need rewriting
+  Effort: 1-2 days
+
+□ Significant (3-6 months, major changes)
+  Impact: Large portions need rebuilding
+  Effort: 3-5 days
+
+□ Severe (> 6 months, extensive changes)
+  Impact: Consider full recovery approach
+  Effort: 1-2 weeks
+
+Current Assessment: [Selected severity]
+```
+
+**Priority Files:**
+```
+Rank by importance to accuracy:
+
+Critical (must be accurate for team to function):
+1. [File]: [Why critical]
+2. [File]: [Why critical]
+
+Important (valuable if accurate, but not blocking):
+3. [File]: [Why important]
+4. [File]: [Why important]
+
+Nice to have (helpful but lower priority):
+5. [File]: [Why nice to have]
+
+Focus triage on critical files first.
+```
+
+---
+
+**Entry Categorization Pattern:**
+
+Systematic assessment of every entry:
+
+**Accuracy Categories:**
+```
+Category 1: ACCURATE (Keep as-is)
+- Still reflects current reality
+- File references valid
+- Patterns match actual use
+- Examples work
+Action: Mark with "Reviewed [date]", no changes needed
+
+Category 2: MINOR UPDATES (Small fixes)
+- Core information correct
+- Details drifted (file paths, versions, examples)
+- Quick fixes (< 15 min per entry)
+- Structure still valid
+Action: Flag specific changes needed, schedule fix
+
+Category 3: MAJOR UPDATES (Rewrite needed)
+- Core information outdated
+- Significant changes required
+- Substantial effort (> 30 min per entry)
+- May need validation with team
+Action: Mark for rebuild, add to recovery plan
+
+Category 4: OBSOLETE (Archive)
+- No longer applicable
+- Technology removed
+- Feature deleted
+- Approach abandoned
+Action: Move to archived/ with explanation
+
+Category 5: UNCERTAIN (Validate first)
+- Can't determine accuracy from documentation alone
+- Need code review or team input
+- Ambiguous whether current or obsolete
+Action: Flag for validation, categorize after clarification
+```
+
+**Entry Assessment Template:**
+```
+Entry: [Section name]
+File: [Which memory bank file]
+Topic: [What it's about]
+
+Assessment:
+□ Accurate - Reviewed [date], no changes needed
+□ Minor updates - [Specific changes required]
+□ Major updates - [Why rewrite needed]
+□ Obsolete - [Why no longer relevant]
+□ Uncertain - [What needs validation]
+
+Evidence:
+- [Why you categorized this way]
+
+Effort estimate (if update needed): [Minutes/hours]
+Priority: [High/Medium/Low]
+```
+
+---
+
+**File-by-File Triage Pattern:**
+
+Systematic review process:
+
+**Triage Workflow:**
+```
+For each memory bank file:
+
+1. Read completely (15-30 min per file)
+2. For each section/entry:
+   - Compare to current codebase
+   - Check file references
+   - Validate patterns against actual code
+   - Assess examples for accuracy
+   - Categorize (accurate/minor/major/obsolete/uncertain)
+3. Create triage report for file
+4. Estimate recovery effort
+5. Move to next file
+
+Order of triage:
+1. projectbrief.md (foundation)
+2. systemPatterns.md (architecture)
+3. activeContext.md (current state)
+4. techContext.md (tools and conventions)
+5. productContext.md (user needs)
+6. progress.md (history)
+```
+
+**File Triage Template:**
+```
+File: [memory-bank/filename.md]
+Reviewed: [Date]
+Reviewer: [Name]
+
+Entries by Category:
+
+ACCURATE (keep as-is):
+- [Section 1]: Reviewed, current
+- [Section 2]: Reviewed, current
+Total: [count] entries
+
+MINOR UPDATES needed:
+- [Section 3]: Update file path from X to Y
+- [Section 4]: Refresh example with current code
+Total: [count] entries, estimated [hours] to fix
+
+MAJOR UPDATES needed:
+- [Section 5]: Architecture changed, needs rewrite
+- [Section 6]: Pattern evolved, needs new examples
+Total: [count] entries, estimated [hours] to rebuild
+
+OBSOLETE (archive):
+- [Section 7]: Technology removed (date)
+- [Section 8]: Feature deleted (date)
+Total: [count] entries to archive
+
+UNCERTAIN (validate):
+- [Section 9]: Can't verify without team input
+- [Section 10]: Ambiguous whether current
+Total: [count] entries needing validation
+
+Overall File Status:
+- Salvageable: [%]
+- Needs work: [%]
+- Obsolete: [%]
+- Recovery effort: [hours]
+- Priority: [High/Medium/Low]
+```
+
+---
+
+**Effort Estimation Pattern:**
+
+Calculate realistic recovery time:
+
+**Recovery Effort Calculator:**
+```
+Accurate entries (no work):
+Count: [X] entries
+Effort: 0 hours (just mark reviewed)
+
+Minor update entries:
+Count: [Y] entries
+Effort per entry: 10 minutes average
+Total: [Y × 10/60] hours
+
+Major update entries:
+Count: [Z] entries
+Effort per entry: 1 hour average
+Total: [Z × 1] hours
+
+Obsolete entries (archive):
+Count: [A] entries
+Effort per entry: 15 minutes (create retirement notice)
+Total: [A × 15/60] hours
+
+Uncertain entries (validate):
+Count: [B] entries
+Effort per entry: 30 minutes (validate + categorize + fix)
+Total: [B × 30/60] hours
+
+Subtotal: [Sum] hours
+
+Add overhead:
+- Validation with team: 2 hours
+- Review and approval: 1 hour
+- Documentation of triage: 1 hour
+
+Total Recovery Effort: [Sum + overhead] hours
+
+Realistic timeline:
+- 2 hours/day: [Total/2] days
+- 4 hours/day: [Total/4] days
+- 1 full day: [Total/8] days
+```
+
+**Effort vs Value Matrix:**
+```
+Plot each file:
+
+High Value, Low Effort (Do First):
+- [File]: [Why high value] - [X hours]
+
+High Value, High Effort (Schedule):
+- [File]: [Why high value] - [X hours]
+
+Low Value, Low Effort (Do If Time):
+- [File]: [Why low value] - [X hours]
+
+Low Value, High Effort (Consider Archiving):
+- [File]: [Why low value] - [X hours]
+
+Prioritize: High value first, low effort first within value tier
+```
+
+---
+
+**Marking Pattern:**
+
+Clear notation for each category:
+
+**Accurate Entry Marking:**
+```
+Add to top of section:
+
+> **Reviewed:** [Date] - Confirmed accurate
+> **Reviewer:** [Name]
+> **Next review:** [Date + 3 months]
+
+Keep content unchanged.
+Adds confidence to readers.
+Tracks currency.
+```
+
+**Minor Update Flagging:**
+```
+Add to section:
+
+> **UPDATE NEEDED** (flagged [date])
+> - [ ] Update file path: src/old/ → src/new/
+> - [ ] Refresh example with current code
+> - [ ] Update version number: v1.2 → v1.5
+> **Estimated effort:** 10 minutes
+> **Priority:** Medium
+
+Content remains, flags what needs fixing.
+Clear actionable items.
+Effort estimated for planning.
+```
+
+**Major Update Marking:**
+```
+Add to section:
+
+> **MAJOR UPDATE NEEDED** (flagged [date])
+> **Issue:** Architecture changed from monolith to microservices
+> **Scope:** Complete rewrite required
+> **Estimated effort:** 2 hours
+> **Priority:** High
+> **Owner:** [Assign to team member]
+> **Target completion:** [Date]
+
+Original content preserved until rewrite.
+Scope clarified.
+Ownership assigned.
+```
+
+**Obsolete Entry Handling:**
+```
+Replace section with:
+
+> **OBSOLETE** (marked [date])
+> **Reason:** [Technology removed / Feature deleted / Approach abandoned]
+> **Removed:** [When the change happened]
+> **Replacement:** [See new approach in X] OR [No replacement needed]
+> **Original content archived:** memory-bank/archived/[year]/[topic]/
+> **Retirement notice:** [Link to archived RETIRED.md]
+
+Original content moved to archive.
+Context preserved for history.
+Readers not misled by obsolete info.
+```
+
+**Uncertain Entry Flagging:**
+```
+Add to section:
+
+> **VALIDATION NEEDED** (flagged [date])
+> **Uncertainty:** Can't determine if this is current or obsolete
+> **Validation:** [Specific question to answer]
+> **Ask:** [Team member name]
+> **Priority:** [High/Medium/Low]
+
+Content remains with uncertainty noted.
+Clear what needs validation.
+Assigned for follow-up.
+```
+
+---
+
+**Phased Recovery Plan Pattern:**
+
+Break work into manageable phases:
+
+**Recovery Plan Template:**
+```
+Memory Bank Recovery Plan
+Project: {{project_name}}
+Triage completed: [Date]
+Total effort: [X hours]
+
+Phase 1: Quick Wins (Target: Week 1)
+Duration: [Y hours]
+Focus: High value, low effort items
+
+Tasks:
+- Mark [X] accurate entries as reviewed (1 hour)
+- Fix [Y] minor updates (2 hours)
+- Archive [Z] obsolete entries (1 hour)
+
+Outcome: [%] of memory bank accurate
+
+Phase 2: Critical Rebuilds (Target: Week 2)
+Duration: [Y hours]
+Focus: High value, high effort items
+
+Tasks:
+- Rebuild [File 1] major sections (4 hours)
+- Rebuild [File 2] major sections (3 hours)
+- Validate [X] uncertain entries (2 hours)
+
+Outcome: Critical files accurate
+
+Phase 3: Remaining Updates (Target: Week 3-4)
+Duration: [Y hours]
+Focus: Lower priority items
+
+Tasks:
+- Update [remaining sections] (6 hours)
+- Enhance examples (2 hours)
+- Cross-reference validation (1 hour)
+
+Outcome: Complete memory bank accuracy restored
+
+Phase 4: Prevention (Ongoing)
+- Establish stewardship practices
+- Implement update triggers
+- Monitor currency
+
+Success Metrics:
+- [%] entries accurate
+- [%] files reviewed
+- [X] obsolete entries archived
+- Team confidence: Target 8/10
+```
+
+---
+
+**Validation Pattern:**
+
+Resolve uncertain entries:
+
+**Uncertainty Resolution Process:**
+```
+For each uncertain entry:
+
+1. Identify validation method:
+   □ Check current code
+   □ Review recent commits
+   □ Ask team member
+   □ Test implementation
+   □ Check production behavior
+
+2. Ask specific question:
+   "Is [this approach] still current?"
+   "Does [this file] still exist at [path]?"
+   "Do we still use [this pattern]?"
+
+3. Get definitive answer:
+   - Yes, current → Mark accurate
+   - Yes, but... → Flag minor updates
+   - No, changed to... → Flag major updates or mark obsolete
+   - No, removed → Mark obsolete
+
+4. Recategorize based on answer:
+   Move from uncertain to appropriate category
+
+5. Document validation:
+   "Validated [date] with [person/method]: [finding]"
+
+Target: Zero uncertain entries after validation phase
+```
+
+---
+
+**Preservation Pattern:**
+
+Maintain content during triage:
+
+**Triage Preservation Principles:**
+```
+CRITICAL: During triage, DO NOT delete or rewrite content.
+
+Triage is assessment, not repair.
+
+DO during triage:
+✓ Mark entries with review dates
+✓ Flag updates needed
+✓ Note obsolete status
+✓ Estimate effort
+✓ Preserve all original content
+
+DON'T during triage:
+✗ Rewrite sections
+✗ Delete obsolete entries
+✗ Update file paths
+✗ Fix examples
+✗ Consolidate duplicates
+
+Separation of concerns:
+- Triage = Assessment
+- Recovery = Repair
+
+Assess completely before repairing anything.
+Prevents premature decisions.
+Enables informed prioritization.
+```
+
+---
+
+**Triage Report Pattern:**
+
+Document assessment results:
+
+**Triage Report Template:**
+```
+Memory Bank Triage Report
+Project: {{project_name}}
+Triage date: [Date]
+Triaged by: [Name]
+Staleness period: [Duration]
+
+Executive Summary:
+- Overall assessment: [Minimal/Moderate/Significant/Severe drift]
+- Salvageable: [%]
+- Recovery effort: [X hours over Y weeks]
+- Recommendation: [Proceed with recovery / Consider fresh start]
+
+Detailed Findings:
+
+By File:
+| File | Accurate | Minor | Major | Obsolete | Uncertain | Effort |
+|------|----------|-------|-------|----------|-----------|--------|
+| projectbrief.md | X | Y | Z | A | B | N hrs |
+| systemPatterns.md | X | Y | Z | A | B | N hrs |
+| techContext.md | X | Y | Z | A | B | N hrs |
+| productContext.md | X | Y | Z | A | B | N hrs |
+| activeContext.md | X | Y | Z | A | B | N hrs |
+| progress.md | X | Y | Z | A | B | N hrs |
+| Total | X | Y | Z | A | B | N hrs |
+
+By Category:
+- Accurate: [X] entries ([%])
+- Minor updates: [Y] entries ([%]) - [N hours]
+- Major updates: [Z] entries ([%]) - [N hours]
+- Obsolete: [A] entries ([%]) - [N hours]
+- Uncertain: [B] entries ([%]) - [N hours]
+
+Priority Items:
+1. [Critical update needed]
+2. [Critical update needed]
+3. [Important validation needed]
+
+Recovery Plan:
+- Phase 1: [Scope] - [Duration]
+- Phase 2: [Scope] - [Duration]
+- Phase 3: [Scope] - [Duration]
+
+Success Criteria:
+- [%] accuracy target
+- [Date] completion target
+- [Score] team confidence target
+
+Recommendation:
+[Proceed / Modify approach / Consider alternatives]
+```
+
+</output-format>
+
+<instructions>
+CRITICAL: Triage is honest assessment, not wishful thinking.
+
+NEVER triage by:
+- Marking everything as "minor updates" (avoiding hard truths)
+- Deleting content during assessment (premature action)
+- Skipping effort estimation (unrealistic planning)
+- Guessing accuracy without validation (false confidence)
+- Ignoring obsolete entries (pollution persists)
+
+DO NOT:
+- Rewrite anything during triage
+- Delete obsolete entries yet
+- Fix minor issues during assessment
+- Rush through validation
+- Underestimate recovery effort
+- Skip documenting uncertainty
+
+ALWAYS:
+- Compare documentation to actual codebase
+- Categorize every entry honestly
+- Estimate effort realistically
+- Mark clearly and preserve content
+- Validate uncertain entries
+- Create detailed triage report
+- Plan phased recovery
+
+REPEAT: Triage is assessment before repair. Mark everything, delete nothing, estimate realistically, plan recovery.
+</instructions>
+
+<examples>
+✅ GOOD Triage (honest, systematic, actionable):
+
+**Pattern demonstrates:**
+- Honest assessment of staleness
+- Systematic categorization
+- Realistic effort estimates
+- Clear marking and preservation
+- Actionable recovery plan
+
+**Example triage:**
+```
+Memory Bank Triage: Payment Service
+Triage date: 2026-01-21
+Triaged by: Alice
+Staleness: 2 months since last update
+
+---
+
+OVERALL ASSESSMENT:
+
+Timeline:
+- Last update: November 15, 2025
+- Staleness: 10 weeks
+- Major changes:
+  - Stripe integration (Dec 2025)
+  - Refund flow redesign (Jan 2026)
+  - PCI compliance updates (Jan 2026)
+
+Drift Severity: MODERATE
+- Some sections need rewriting
+- Most patterns still valid
+- File organization unchanged
+- Recovery effort: 1-2 days
+
+---
+
+FILE-BY-FILE TRIAGE:
+
+=== systemPatterns.md ===
+Reviewed: 2026-01-21 by Alice
+
+ACCURATE (4 sections):
+✓ "Error Handling Pattern" - Reviewed, still current
+✓ "API Design Principles" - Reviewed, still current
+✓ "Database Transactions" - Reviewed, still current
+✓ "Logging Standards" - Reviewed, still current
+
+MINOR UPDATES (3 sections):
+- "Payment Flow": Update Stripe API version (v3 → v5)
+  Effort: 10 minutes
+- "Configuration Management": Add new env vars for PCI
+  Effort: 15 minutes
+- "Testing Approach": Include Stripe fixtures example
+  Effort: 20 minutes
+
+MAJOR UPDATES (2 sections):
+- "Payment Architecture": Complete rewrite for Stripe integration
+  Reason: Migrated from PayPal to Stripe
+  Effort: 2 hours
+  Priority: HIGH
+
+- "Refund Processing": Significant updates for new flow
+  Reason: Refund flow redesigned for compliance
+  Effort: 1 hour
+  Priority: HIGH
+
+OBSOLETE (1 section):
+- "PayPal Integration": Technology removed December 2025
+  Action: Archive with retirement notice
+  Effort: 15 minutes
+
+UNCERTAIN (1 section):
+- "Subscription Billing": Can't verify if pattern still current
+  Validation: Ask Bob (subscription owner)
+  Effort: 30 minutes (validate + categorize)
+
+File Summary:
+- 11 total sections
+- 36% accurate
+- 27% minor updates (45 min)
+- 18% major updates (3 hours)
+- 9% obsolete (15 min)
+- 9% uncertain (30 min)
+- Total effort: 4.5 hours
+
+---
+
+=== techContext.md ===
+Reviewed: 2026-01-21 by Alice
+
+ACCURATE (6 sections):
+✓ "Development Environment" - Current
+✓ "Git Workflow" - Current
+✓ "CI/CD Pipeline" - Current
+✓ "Monitoring Setup" - Current
+✓ "Database Configuration" - Current
+✓ "Error Tracking" - Current
+
+MINOR UPDATES (4 sections):
+- "Stripe SDK": Update version (12.0 → 14.2)
+  Effort: 5 minutes
+- "Environment Variables": Add 3 new PCI vars
+  Effort: 10 minutes
+- "Testing Tools": Add Stripe fixtures location
+  Effort: 10 minutes
+- "Dependencies": Update package versions
+  Effort: 15 minutes
+
+MAJOR UPDATES (0 sections):
+None
+
+OBSOLETE (2 sections):
+- "PayPal SDK Setup": Removed December 2025
+  Effort: 10 minutes
+- "PayPal Webhook Configuration": Removed December 2025
+  Effort: 10 minutes
+
+UNCERTAIN (0 sections):
+None
+
+File Summary:
+- 12 total sections
+- 50% accurate
+- 33% minor updates (40 min)
+- 0% major updates
+- 17% obsolete (20 min)
+- Total effort: 1 hour
+
+---
+
+=== activeContext.md ===
+Reviewed: 2026-01-21 by Alice
+
+ACCURATE (2 sections):
+✓ "Team Structure" - Current
+✓ "Communication Channels" - Current
+
+MINOR UPDATES (1 section):
+- "Current Sprint Goals": Update to current sprint
+  Effort: 10 minutes
+
+MAJOR UPDATES (0 sections):
+None (active context should be fresh anyway)
+
+OBSOLETE (3 sections):
+- "Stripe Migration Status": Completed December 2025
+  Effort: 5 minutes
+- "Old Known Issues": All resolved
+  Effort: 5 minutes
+- "November Sprint Retrospective": Historical
+  Effort: 5 minutes
+
+UNCERTAIN (0 sections):
+None
+
+File Summary:
+- 6 total sections
+- 33% accurate
+- 17% minor updates (10 min)
+- 0% major updates
+- 50% obsolete (15 min)
+- Total effort: 25 minutes
+
+---
+
+OVERALL SUMMARY:
+
+Total Entries: 29
+- Accurate: 12 (41%)
+- Minor updates: 8 (28%) - 1.5 hours
+- Major updates: 2 (7%) - 3 hours
+- Obsolete: 6 (21%) - 1 hour
+- Uncertain: 1 (3%) - 30 minutes
+
+Total Recovery Effort: 6 hours
+
+Breakdown:
+- Mark accurate: 15 minutes
+- Minor fixes: 1.5 hours
+- Major rewrites: 3 hours
+- Archive obsolete: 1 hour
+- Validate uncertain: 30 minutes
+- Overhead (validation, approval): 1 hour
+
+Recovery Timeline:
+- Phase 1 (Week 1): Quick wins - 2 hours
+  - Mark 12 accurate entries
+  - Fix 8 minor updates
+  - Archive 6 obsolete entries
+  Result: 69% accurate
+
+- Phase 2 (Week 2): Major rebuilds - 4 hours
+  - Rewrite "Payment Architecture"
+  - Rewrite "Refund Processing"
+  - Validate subscription billing
+  Result: 100% accurate
+
+Total: 2 weeks, 6 hours invested
+
+---
+
+RECOMMENDATIONS:
+
+Proceed with Recovery: YES
+Rationale:
+- 41% already accurate (good foundation)
+- 28% need minor fixes (easy wins)
+- Only 7% need major rewrites (manageable)
+- 6 hour investment reasonable
+- High salvage rate (93% with minor effort)
+
+Priority Actions:
+1. Rewrite "Payment Architecture" (HIGH - critical, 2 hrs)
+2. Rewrite "Refund Processing" (HIGH - compliance, 1 hr)
+3. Validate subscription billing (MEDIUM - 30 min)
+4. Fix all minor updates (MEDIUM - 1.5 hrs)
+5. Archive obsolete entries (LOW - 1 hr)
+
+Success Criteria:
+- 100% accuracy within 2 weeks
+- Team confidence >8/10
+- All PCI-related docs current
+- Active context reflects current sprint
+
+Risk: LOW
+- Small recovery effort
+- No major surprises found
+- Team available for validation
+- Clear path to accuracy
+```
+
+**Why this works:**
+- Honest assessment of each entry
+- Realistic effort estimates
+- Clear categorization
+- Content preserved during triage
+- Actionable recovery plan
+- Prioritized by value and effort
+- Team confidence this is achievable
+
+---
+
+❌ BAD Triage (superficial, overly optimistic):
+
+**Anti-pattern characteristics:**
+- Quick scan without deep review
+- Overly optimistic categorization
+- No effort estimates
+- Vague recommendations
+
+**Bad triage:**
+```
+Looked through memory bank. Seems mostly fine.
+
+A few things need updating but nothing major.
+
+Should be quick to fix.
+
+(No specific categorization)
+(No effort estimates)
+(No validation of accuracy)
+(No detailed plan)
+```
+
+**Why this fails:**
+```
+What happened:
+
+Week 1: Started "fixing a few things"
+- Realized payment architecture completely wrong
+- Found 6 obsolete sections not noticed
+- Discovered 12 file paths broken
+- "Quick fix" became multi-day effort
+
+Week 2: Still finding problems
+- More obsolete content discovered
+- Major rewrites needed
+- Didn't estimate effort properly
+- Team frustrated with scope creep
+
+Result:
+- "Quick fix" took 2 weeks
+- Team lost confidence
+- Still not sure if complete
+- Wished for proper triage first
+
+Impact: 2 weeks wasted on unplanned work
+Could have been prevented: 2 hour triage upfront
+```
+
+**Lesson:**
+```
+Proper triage upfront saves massive time later.
+
+2 hours of honest assessment prevents 2 weeks
+of scope creep and frustration.
+
+Be pessimistic in triage, realistic in recovery.
+Under-promise, over-deliver.
+```
+</examples>

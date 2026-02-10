@@ -1,0 +1,15 @@
+{
+  "id": "ecosystem-map",
+  "chapter": "Chapter 1",
+  "category": "Analysis",
+  "purpose": "Generate linear ecosystem map",
+  "useCase": "When mapping stakeholders and actors",
+  "tags": [
+    "requirements",
+    "stakeholders",
+    "ecosystem"
+  ],
+  "created": "2026-01-13",
+  "version": "v1",
+  "dateVersion": "20260113"
+}

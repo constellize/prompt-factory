@@ -1,0 +1,20 @@
+{
+  "id": "capture-sprint-learnings",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 8",
+  "category": "Organizational Learning",
+  "purpose": "Document sprint learnings for compound organizational knowledge",
+  "useCase": "Transform individual sprint experiences into permanent organizational knowledge by capturing achievements, challenges, technical insights, organizational insights, and cross-sprint learning patterns that accelerate future development",
+  "tags": [
+    "sprint-learning",
+    "organizational-learning",
+    "compound-learning",
+    "knowledge-capture",
+    "technical-insights",
+    "process-improvement",
+    "cross-sprint-patterns",
+    "memory-bank-updates"
+  ],
+  "created": "2026-02-01"
+}

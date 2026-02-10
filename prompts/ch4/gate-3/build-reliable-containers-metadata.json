@@ -1,0 +1,11 @@
+{
+  "id": "build-reliable-containers",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Build container reliability with clean builds, predictable starts, and graceful shutdowns",
+  "useCase": "Creating Docker containers that deploy reliably (Gate 3: Deployment Readiness)",
+  "tags": ["quality", "containers", "docker", "deployment", "gate-3"],
+  "created": "2026-01-17"
+}

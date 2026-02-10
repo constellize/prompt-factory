@@ -1,0 +1,22 @@
+{
+  "id": "retire-memory-bank",
+  "version": "v1",
+  "dateVersion": "20260121",
+  "chapter": "Chapter 5",
+  "category": "Documentation",
+  "purpose": "Retire outdated memory bank documentation gracefully with preservation",
+  "useCase": "Archive obsolete knowledge while preserving lessons and maintaining complete system evolution history",
+  "tags": [
+    "documentation",
+    "memory-bank",
+    "knowledge-retirement",
+    "archival",
+    "lesson-extraction",
+    "historical-preservation",
+    "institutional-memory",
+    "evolution-tracking",
+    "graceful-deprecation",
+    "learning-preservation"
+  ],
+  "created": "2026-01-21"
+}

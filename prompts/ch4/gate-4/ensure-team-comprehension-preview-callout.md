@@ -1,0 +1,5 @@
+::: {.promptref title="Ensure Team Comprehension So Any Member Can Work Effectively" url="{SITE_BASE}/prompts/v1/ensure-team-comprehension"}
+**Ensure team comprehension** so any team member can work effectively in the codebase. Code structure should be self-evident, with clear organization that makes finding things intuitive. Complex business logic needs thorough explanation since it embeds domain knowledge that may not be obvious. Setup and development workflows must be documented so new team members can contribute quickly. Testing approaches should be clear and repeatable, not tribal knowledge that only seniors understand.
+
+"Ensure team comprehension for {{component_name}} in {{system_name}}. Organize code structure clearly using standard project layout with feature folders and descriptive naming. Explain complex business logic documenting domain concepts, business rules, and edge cases. Document development workflows providing step-by-step setup, build commands, and troubleshooting guides. Make testing approaches clear explaining philosophy, mocking strategies, and providing examples..."
+:::

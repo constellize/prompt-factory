@@ -1,0 +1,22 @@
+{
+  "id": "triage-salvageable-knowledge",
+  "version": "v1",
+  "dateVersion": "20260121",
+  "chapter": "Chapter 5",
+  "category": "Documentation",
+  "purpose": "Triage moderately stale memory bank to assess salvageability",
+  "useCase": "Honest assessment of what can be saved vs needs work for memory banks stale 1-3 months",
+  "tags": [
+    "documentation",
+    "memory-bank",
+    "stewardship",
+    "triage",
+    "assessment",
+    "salvageability",
+    "effort-estimation",
+    "recovery-planning",
+    "honest-assessment",
+    "categorization"
+  ],
+  "created": "2026-01-21"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ensure-team-comprehension",
+  "version": "v1",
+  "dateVersion": "20260117",
+  "chapter": "Chapter 4",
+  "category": "Quality",
+  "purpose": "Ensure team comprehension so any team member can work effectively in the codebase",
+  "useCase": "Making codebase understandable for all team members (Gate 4: Maintainability in Context)",
+  "tags": ["quality", "documentation", "team", "comprehension", "maintainability", "gate-4"],
+  "created": "2026-01-17"
+}

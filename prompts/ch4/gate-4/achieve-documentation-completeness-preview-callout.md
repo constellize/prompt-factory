@@ -1,0 +1,5 @@
+::: {.promptref title="Achieve Documentation Completeness To Help Team Members Understand And Contribute" url="{SITE_BASE}/prompts/v1/achieve-documentation-completeness"}
+**Achieve documentation completeness** that helps any team member understand and contribute to the codebase. README files should explain purpose, setup, and usage clearly without assuming prior knowledge. Code comments must explain why decisions were made, not just what the code does—the code itself shows what. API documentation needs to stay current as interfaces evolve. Decision rationale belongs in memory bank entries so future maintainers understand the context behind choices.
+
+"Achieve documentation completeness for {{component_name}} in {{system_name}}. Create comprehensive README with setup, troubleshooting, and development workflow. Write explanatory code comments that document WHY decisions were made not WHAT code does. Maintain current API documentation using OpenAPI with request/response schemas and examples. Capture decision rationale in memory bank documenting alternatives considered and trade-offs..."
+:::

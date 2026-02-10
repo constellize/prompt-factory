@@ -1,0 +1,24 @@
+{
+  "id": "document-incident-investigation",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 7",
+  "category": "Operations",
+  "purpose": "Document incident investigation in real-time to capture systematic debugging paths",
+  "useCase": "Capture hypotheses → tests → results pattern during incidents, record dead ends and reasoning, preserve commands and outputs, extract reusable debugging patterns for future incidents",
+  "tags": [
+    "operations",
+    "incident-response",
+    "incident-investigation",
+    "debugging",
+    "troubleshooting",
+    "operational-knowledge",
+    "postmortem",
+    "root-cause-analysis",
+    "investigation-documentation",
+    "debugging-patterns",
+    "knowledge-capture",
+    "incident-timeline"
+  ],
+  "created": "2026-02-01"
+}

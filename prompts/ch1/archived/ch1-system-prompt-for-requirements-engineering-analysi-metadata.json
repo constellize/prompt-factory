@@ -1,0 +1,13 @@
+{
+  "id": "ch1-system-prompt-for-requirements-engineering-analysi",
+  "chapter": "Chapter 1",
+  "category": "Analysis",
+  "purpose": "System prompt for requirements engineering analysis",
+  "useCase": "Use as system prompt when generating requirements documents for a product",
+  "tags": [
+    "requirements",
+    "system-prompt",
+    "template"
+  ],
+  "created": "2026-01-13"
+}

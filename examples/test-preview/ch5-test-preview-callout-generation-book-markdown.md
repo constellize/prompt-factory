@@ -1,0 +1,44 @@
+<!-- PROMPT START -->
+> **Prompt: Test Preview Callout Generation**
+>
+> **Purpose:** Test preview callout generation
+>
+> **Use when:** Testing the new preview callout feature
+>
+> **Category:** Architecture
+
+```
+<task>
+Test preview callout generation
+</task>
+
+<output-format>
+Provide your design proposal in this structure:
+
+1. **Design Approach**
+   - Core architectural decisions
+   - Key components or services
+   - Rationale for choices
+
+2. **Trade-offs**
+   - Benefits of this approach
+   - Limitations or costs
+   - Alternative approaches considered
+
+3. **Implementation Guidance**
+   - Recommended first steps
+   - Critical dependencies
+   - Success criteria
+</output-format>
+
+<thinking>
+Before responding:
+1. Analyze the current situation
+2. Consider constraints and trade-offs
+3. Identify potential approaches
+4. Evaluate pros and cons
+</thinking>
+```
+
+<!-- PROMPT END -->
+<!-- METADATA: {"id":"ch5-test-preview-callout-generation","chapter":"Chapter 5","category":"Architecture","tags":[]} -->

@@ -1,0 +1,19 @@
+{
+  "id": "grow-memory-bank-organically",
+  "version": "v1",
+  "dateVersion": "20260201",
+  "chapter": "Chapter 9",
+  "category": "Adoption",
+  "purpose": "Enable organic memory bank growth based on actual team needs",
+  "useCase": "Assess coverage gaps and pain points, identify what to add based on real usage patterns, expand existing docs when needed, prune obsolete content—allowing memory bank to evolve naturally with team rather than becoming bloated theoretical structure",
+  "tags": [
+    "organic-growth",
+    "need-driven",
+    "memory-bank-evolution",
+    "pain-point-assessment",
+    "documentation-curation",
+    "minimal-viable",
+    "sustainable-growth"
+  ],
+  "created": "2026-02-01"
+}
