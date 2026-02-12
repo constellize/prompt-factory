@@ -1,0 +1,439 @@
+---
+# === Identity ===
+id: create-memory-bank-training-exercise
+name: Design hands-on training exercises for memory bank learning
+version: v1
+
+# === Classification ===
+chapter: 9
+category: adoption
+subcategory: adoption
+tags:
+  - training
+  - hands-on-learning
+  - exercises
+  - skill-building
+  - real-context-learning
+  - practice
+  - facilitated-learning
+  - self-paced
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Design hands-on training exercises for memory bank learning.
+    Create practical, real-context exercises that teach memory bank skills through doing—using real projects, including plan-prompt-proceed practice, building success experiences, enabling self-paced or facilitated learning.
+  argument-hint: "[exercise_context] [learning_objectives] [exercise_duration]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: exercise_context
+    description: Real project context for exercise
+    example: "Current payment system redesign"
+    maps-to: "$0"
+  - name: learning_objectives
+    description: What participants should learn
+    example: "Using memory bank for planning"
+    maps-to: "$1"
+  - name: exercise_duration
+    description: How long exercise should take
+    example: "2 hours"
+    maps-to: "$2"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/create-memory-bank-training-exercise
+  marketplace:
+    plugin: constellize-adoption
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Design hands-on training exercise for learning memory banks using {{exercise_context}} with {{exercise_duration}} duration by using real project context (not toy examples), structuring with clear learning objectives, including plan-prompt-proceed pattern practice, providing reflection prompts for learners, creating success criteria and checkpoints—enabling self-paced or facilitated learning that transforms memory bank concepts into real capability.
+</task>
+
+<context>
+Exercise Context: {{exercise_context}}
+Learning Objectives: {{learning_objectives}}
+Duration: {{exercise_duration}}
+
+Hands-on exercises drive learning better than lectures or documentation. By practicing with real project context, learners:
+1. See immediate value (not abstract)
+2. Build confidence through success
+3. Develop practical skills, not theory
+4. Create artifacts they'll reference later
+
+Connects to Chapter 9 adoption pattern: Learn by doing, in context, with guidance.
+</context>
+
+<output-format>
+
+## Training Exercise Design Pattern
+
+```
+# Memory Bank Training Exercise: {{exercise_context}}
+
+Context: {{exercise_context}}
+Learning Objectives: {{learning_objectives}}
+Duration: {{exercise_duration}}
+Format: [Self-paced / Facilitated / Pair / Group]
+
+## Learning Objectives
+
+By end of exercise, participants will:
+- [Objective 1]: [Specific, measurable outcome]
+- [Objective 2]: [Specific, measurable outcome]
+- [Objective 3]: [Specific, measurable outcome]
+
+## Exercise Setup (10 minutes)
+
+### Context
+
+Real scenario:
+- [Describe actual project context]
+- [Why this matters]
+- [What participants will accomplish]
+
+### Success Criteria
+
+Participants will succeed when:
+- [Criterion 1]: [Observable success indicator]
+- [Criterion 2]: [Observable success indicator]
+- [Criterion 3]: [Observable success indicator]
+
+### Resources Provided
+
+- [Resource 1]: [What you'll have access to]
+- [Resource 2]: [What you'll have access to]
+- [Support]: [Who to ask for help]
+
+## Phase 1: Planning With Memory Bank (30 minutes)
+
+### Activity: Create Project Plan
+
+Task: Using memory bank, create detailed plan for [real project task]
+
+Steps:
+1. Read memory bank sections:
+   - systemPatterns.md: [Sections relevant to task]
+   - techContext.md: [Sections relevant to task]
+   - [Other relevant sections]
+
+2. Answer planning questions:
+   - Question 1: [What design pattern applies?]
+   - Question 2: [What technical decisions do we need to make?]
+   - Question 3: [What constraints should we consider?]
+
+3. Create implementation plan:
+   - [High-level approach]
+   - [Key decisions]
+   - [Risks/assumptions]
+
+### Reflection Prompts
+
+- What information from memory bank was most helpful?
+- What information did you wish was in memory bank?
+- How did memory bank inform your planning?
+
+## Phase 2: Prompting With Memory Bank Context (30 minutes)
+
+### Activity: Create AI Prompt Using Plan
+
+Task: Using your plan from Phase 1, create detailed prompt for AI assistance
+
+Steps:
+1. Gather context from memory bank:
+   - [Architectural patterns relevant to task]
+   - [Technical decisions that apply]
+   - [Previous solutions to similar problems]
+
+2. Create prompt including:
+   - [Clear problem statement]
+   - [Context from memory bank]
+   - [Specific requirements]
+   - [Constraints and considerations]
+
+3. Review prompt:
+   - Does prompt include all relevant memory bank context?
+   - Would AI assistant understand the problem clearly?
+   - Are success criteria explicit?
+
+### Reflection Prompts
+
+- How did including memory bank context improve your prompt?
+- What would be different without memory bank?
+- How clear is your prompt for AI assistance?
+
+## Phase 3: Proceeding With Implementation (60-90 minutes)
+
+### Activity: Implement With AI Assistance
+
+Task: Use prompt from Phase 2 to implement with AI assistance
+
+Steps:
+1. Share prompt with AI (or facilitator acts as AI)
+2. Review AI response:
+   - Does it follow architectural patterns?
+   - Does it match technical context?
+   - Are there gaps in understanding?
+3. Refine and implement
+4. Compare to memory bank patterns:
+   - Does implementation match documented patterns?
+   - Are there improvements to document?
+
+### Checkpoint
+
+At halfway point:
+- [ ] Implementation in progress
+- [ ] AI has provided useful guidance
+- [ ] Team understands problem context
+
+### Reflection Prompts
+
+- How did memory bank context improve implementation quality?
+- What would be different without memory bank?
+- What should be added to memory bank based on this implementation?
+
+## Phase 4: Reflecting and Contributing (20 minutes)
+
+### Activity: Reflection and Knowledge Contribution
+
+Task: Reflect on learning and contribute to team memory bank
+
+Steps:
+1. Individual reflection:
+   - What did I learn about [topic]?
+   - What memory bank information was most valuable?
+   - What's missing from memory bank?
+
+2. Team share:
+   - One key learning per person
+   - One suggestion for memory bank improvement
+
+3. Create contribution:
+   - What should we add to memory bank based on this exercise?
+   - Who will update it?
+
+### Final Reflection Prompts
+
+- What's the value of memory banks for planning and implementation?
+- How would you use memory banks in future work?
+- What would help memory banks be more useful?
+
+## Success Indicators
+
+Participants demonstrate learning when:
+- [Indicator 1]: [Observable evidence]
+- [Indicator 2]: [Observable evidence]
+- [Indicator 3]: [Observable evidence]
+
+Example indicators:
+- Effectively reference multiple memory bank sections in planning
+- Create detailed prompt including relevant memory bank context
+- Implementation follows documented patterns
+- Suggest improvements to memory bank based on exercise
+
+## Facilitation Guide
+
+If facilitator is guiding exercise:
+
+Phase 1 (30 min):
+- Ask: "What patterns apply to this task?" (guide to memory bank)
+- Watch: Are they finding relevant sections?
+- Suggest: If stuck, point to specific memory bank section
+
+Phase 2 (30 min):
+- Ask: "What context should AI know?" (guide to complete prompt)
+- Watch: Is prompt including relevant memory bank info?
+- Suggest: "Remember the memory bank says X, include that in prompt"
+
+Phase 3 (60-90 min):
+- Observe: Is team following documented patterns?
+- Ask: "Does this match the pattern in memory bank?"
+- Support: Help when stuck, but let team solve problems
+
+Phase 4 (20 min):
+- Ask: "What did you learn? What should we document?"
+- Encourage: Create memory bank issue/PR for improvements
+- Celebrate: Acknowledge learning and contributions
+
+```
+
+---
+
+## Example: Payment Feature Training Exercise
+
+```markdown
+# Training Exercise: Implementing Payment Retry Logic
+
+Context: Team learning to use memory bank while implementing payment retry feature
+Learning Objectives:
+- Use memory bank to research architectural patterns
+- Create detailed implementation plan using pattern guidance
+- Write prompt that includes relevant memory bank context
+- Implement feature with pattern consistency
+- Contribute learnings back to memory bank
+
+Duration: 3 hours (one afternoon)
+Format: Facilitated group exercise (4 engineers + 1 facilitator)
+
+---
+
+## Phase 1: Planning (30 minutes)
+
+Team reads memory bank sections:
+- systemPatterns.md#resilience: Circuit breaker pattern with thresholds
+- systemPatterns.md#error-handling: Retry logic approaches
+- techContext.md#resilience4j: Library we use for resilience
+- operations/performance/load-testing.md: Validation approach
+
+Planning questions answered:
+1. What pattern should we use? (Circuit breaker with exponential backoff)
+2. What thresholds match our system? (50% error rate over 10 requests)
+3. How should we validate? (Load test with failure injection)
+
+Plan created:
+- Use Resilience4j for circuit breaker implementation
+- Configure with memory bank-documented thresholds
+- Validate with load testing approach from memory bank
+
+Team reflection:
+- "Memory bank gave us thresholds, saved research time"
+- "Found previous load testing approach we can reuse"
+- "Feel confident about thresholds because they're documented and validated"
+
+---
+
+## Phase 2: Prompting (30 minutes)
+
+Prompt created including:
+- Clear problem: Implement payment retry with circuit breaker
+- Context from memory bank:
+  - Resilience4j library configuration
+  - Documented thresholds
+  - Circuit breaker lifecycle
+  - Error handling pattern
+- Requirements:
+  - 3 retry attempts with exponential backoff
+  - Circuit breaker opens at 50% error rate over 10 requests
+  - Half-open timeout 30 seconds
+- Success criteria:
+  - Follows Resilience4j patterns
+  - Thresholds match documentation
+  - Includes all error handling
+
+Team reflection:
+- "This prompt is way better than I would have written without memory bank"
+- "AI will understand our system constraints because of context"
+- "Expectations are clear because we documented thresholds"
+
+---
+
+## Phase 3: Implementation (60-90 minutes)
+
+AI (or facilitator playing AI) responds with implementation outline.
+
+Team reviews:
+- Does it follow circuit breaker pattern from memory bank?
+- Are thresholds used correctly?
+- Is error handling complete?
+
+Team implements:
+- Adjusts AI response where needed
+- Compares to documented patterns
+- Validates logic matches memory bank documentation
+
+Checkpoint (45 min in): Everyone has working circuit breaker implementation
+
+Team reflection:
+- "Implementation matches pattern documentation"
+- "Memory bank saved us from inventing our own error handling"
+- "All team members implemented similarly because we followed documented pattern"
+
+---
+
+## Phase 4: Reflection and Contribution (20 minutes)
+
+Individual reflection:
+- What I learned: Circuit breaker pattern, thresholds are empirical not theoretical
+- Memory bank value: Pattern documentation saved time, created consistency
+- Missing from memory bank: Common implementation mistakes and how to avoid
+
+Team contributions:
+- Alex: "Add section on verifying circuit breaker behavior in tests"
+- Jordan: "Document common pitfalls we encountered"
+- Morgan: "Create runbook for monitoring circuit breaker state"
+
+Contributions scheduled:
+- Alex will add test verification section (this sprint)
+- Jordan will document pitfalls (next sprint)
+- Morgan will create monitoring runbook (next sprint)
+
+Final reflection:
+- Memory bank value demonstrated: Faster planning, better implementation quality, consistent patterns
+- How we'd use going forward: Check memory bank for patterns before starting
+- Improvements: Keep memory bank updated as we learn more
+
+---
+
+## Success Criteria Met
+
+✓ Effectively referenced multiple memory bank sections (Phase 1)
+✓ Created detailed prompt including context (Phase 2)
+✓ Implementation followed documented patterns (Phase 3)
+✓ Suggested improvements to memory bank (Phase 4)
+✓ Team understands value of memory bank for this workflow
+
+Next step: Make this part of regular onboarding for new features
+```
+
+```
+
+</output-format>
+
+<instructions>
+CRITICAL: Training exercises teach through doing, not explaining.
+
+DO NOT:
+- Use toy examples (use real project context)
+- Lecture about memory banks (practice with them)
+- Make exercise too easy (some productive struggle helps learning)
+- Skip reflection (learning amplified through reflection)
+- Expect adoption after one exercise (practice builds habit)
+
+ALWAYS:
+- Use real project context that matters to participants
+- Structure for success (checkpoints, guidance, support)
+- Include reflection prompts (amplifies learning)
+- Celebrate improvements to memory bank (closes loop)
+- Make value explicit (show ROI)
+- Provide clear success criteria
+- Enable self-paced and facilitated versions
+
+REMEMBER: Best training exercises create "aha!" moments where learners experience real value and think "I want to do this again."
+</instructions>
+
+<examples>
+
+[See template example above showing payment retry feature training exercise - demonstrates real context, hands-on phases, reflection, and value demonstration]
+
+</examples>

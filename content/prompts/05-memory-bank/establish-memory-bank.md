@@ -1,0 +1,1109 @@
+---
+# === Identity ===
+id: establish-memory-bank
+name: Establish memory bank documentation system for living project knowledge
+version: v1
+
+# === Classification ===
+chapter: 5
+category: memory-bank
+subcategory: foundation
+tags:
+  - documentation
+  - memory-bank
+  - project-context
+  - knowledge-management
+  - stewardship
+  - self-reflection
+  - living-documentation
+  - context-reset
+  - team-transitions
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Establish memory bank documentation system for living project knowledge.
+    Maintain project context across context resets and team transitions.
+  argument-hint: "[project_name] [system_name]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: project_name
+    description: The specific project to establish memory bank for
+    example: "E-commerce Platform"
+    maps-to: "$0"
+  - name: system_name
+    description: The name of your system
+    example: "Payment Processing System"
+    maps-to: "$1"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/establish-memory-bank
+  marketplace:
+    plugin: constellize-memory-bank
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Establish memory bank documentation system for {{project_name}} to maintain living project knowledge across context resets and team transitions.
+
+Create a memory bank system as your single source of truth that survives context resets and team changes. The memory bank consists of six core documentation files that together provide complete project understanding. The project brief establishes the foundation with core objectives, requirements, and scope boundaries that rarely change. Product context explains the why with user needs, problem statements, and success metrics that connect technical work to business value. System patterns document the implementation guide with architecture, design patterns, and technical decisions that serve as your build plan. Technical context captures tool details with technologies, setup procedures, and code conventions that enable consistent development. Active context maintains current focus with immediate next steps, recent decisions, and key learnings that change frequently as work progresses. Progress tracking records historical evolution with completed work, known issues, and timeline milestones that show how the project has developed over time.
+
+Follow this process:
+
+1. **Create core documentation structure:**
+   - Project brief: Foundation document with objectives, requirements, and scope
+   - Product context: User needs, problem statement, and success metrics
+   - System patterns: Architecture, design patterns, and implementation phases
+   - Technical context: Technologies, setup, conventions, and common issues
+   - Active context: Current focus, recent decisions, and immediate next steps
+   - Progress tracking: Completed work, remaining tasks, known issues
+
+2. **Establish reading order and dependencies:**
+   - Define first-read sequence for context reset recovery
+   - Document file dependencies and cross-references
+   - Create self-check questions before starting work
+   - Specify when to read each file during active development
+   - Establish update triggers for each document
+
+3. **Implement stewardship mindset:**
+   - Continuous self-assessment after each milestone
+   - Reflection questions before ending work sessions
+   - Documentation of decisions and rationale immediately
+   - Regular validation that documentation remains current
+   - Commitment to maintaining accuracy across sessions
+
+4. **Define writing and maintenance guidelines:**
+   - Specific and actionable writing style
+   - Hierarchical organization with consistent structure
+   - No duplication rule with canonical information locations
+   - Evolution strategy as understanding deepens
+   - Self-reflection prompts for documentation completeness
+</task>
+
+<context>
+Project to establish memory bank:
+{{project_name}}
+
+**Standard Construction Folder Structure:**
+This prompt creates:
+- `memory-bank/` folder at project root
+- `memory-bank/projectbrief.md` (foundation)
+- `memory-bank/productContext.md` (the why)
+- `memory-bank/systemPatterns.md` (implementation guide)
+- `memory-bank/techContext.md` (technical details)
+- `memory-bank/activeContext.md` (current focus)
+- `memory-bank/progress.md` (status tracking)
+</context>
+
+<thinking>
+Before establishing memory bank, analyze:
+1. What knowledge must survive context resets and team transitions?
+2. What information changes frequently vs remains stable?
+3. What questions will someone need answered to continue work?
+4. What decisions need rationale documented?
+5. How will documentation stay current and avoid staleness?
+</thinking>
+
+<output-format>
+Create memory bank documentation system following these patterns:
+
+**Memory Bank Structure Pattern:**
+
+Six core files with distinct purposes:
+
+**File Organization:**
+
+1. **projectbrief.md - Foundation (Stable)**
+   - Core objectives and requirements
+   - Success criteria and testing checklist
+   - Project constraints and boundaries
+   - Scope definition (in-scope vs out-of-scope)
+   - Rarely changes after initial definition
+
+2. **productContext.md - The Why (Evolves Slowly)**
+   - Problem statement and solution approach
+   - User experience goals and workflows
+   - Key user stories with acceptance criteria
+   - Success metrics and measurement approach
+   - Business context and value proposition
+
+3. **systemPatterns.md - Implementation Guide (Living Technical Truth)**
+   - System architecture and component relationships
+   - Implementation phases with detailed tasks
+   - Design patterns and technical decisions
+   - Critical code paths and workflows
+   - Pattern library for consistent implementation
+
+4. **techContext.md - Technical Details (Reference)**
+   - Technologies, frameworks, and dependencies
+   - Development environment setup procedures
+   - Code patterns and conventions
+   - Common issues and debugging guidance
+   - Tool-specific configuration and usage
+
+5. **activeContext.md - Current Focus (Changes Frequently)**
+   - Current work phase and immediate next steps
+   - Recent decisions with rationale
+   - Key patterns and preferences discovered
+   - Important learnings from recent work
+   - Blockers and open questions
+
+6. **progress.md - Status Tracking (Historical Record)**
+   - Completed work with timestamps
+   - Remaining tasks and priorities
+   - Known issues and anticipated challenges
+   - Testing strategy and validation results
+   - Timeline tracking and milestone achievement
+
+**Purpose Distinction Pattern:**
+```
+Information Flow:
+
+Stable → Evolving → Dynamic
+
+projectbrief.md (Changes: Rarely)
+  ↓ defines requirements for
+productContext.md (Changes: Occasionally)
+  ↓ informs architecture of
+systemPatterns.md (Changes: As understanding deepens)
+  ↓ implemented using
+techContext.md (Changes: When tools change)
+  ↓ guides current work in
+activeContext.md (Changes: Daily/Hourly)
+  ↓ tracked by
+progress.md (Changes: Continuously)
+```
+
+---
+
+**Reading Order Pattern:**
+
+Different sequences for different scenarios:
+
+**Context Reset Recovery (First Read):**
+```
+Sequence for complete understanding:
+
+1. projectbrief.md (10 min)
+   → Understand: Mission and scope
+   → Answer: What are we building and why?
+
+2. productContext.md (15 min)
+   → Understand: User needs and business value
+   → Answer: Who uses this and what problems does it solve?
+
+3. systemPatterns.md (20 min)
+   → Understand: Technical architecture
+   → Answer: How is this built and organized?
+
+4. techContext.md (10 min)
+   → Understand: Tools and conventions
+   → Answer: What technologies and how are they used?
+
+5. activeContext.md (5 min)
+   → Understand: Current state and focus
+   → Answer: What's happening right now?
+
+6. progress.md (10 min)
+   → Understand: History and status
+   → Answer: What's done and what remains?
+
+Total time: ~70 minutes for complete context recovery
+```
+
+**Daily Work Session (Active Development):**
+```
+Minimal reading for continuation:
+
+1. activeContext.md (2 min)
+   → Check: Current focus and recent decisions
+
+2. progress.md (2 min)
+   → Check: Latest completed work and blockers
+
+3. Reference files as needed:
+   - systemPatterns.md for architecture questions
+   - techContext.md for tool questions
+   - productContext.md for user need questions
+   - projectbrief.md for scope questions
+
+Total time: ~5 minutes to resume work
+```
+
+**Self-Check Questions Pattern:**
+```
+Before starting any work:
+
+□ Have I read ALL 6 core files? (if context reset)
+□ Do I understand CURRENT state from activeContext.md?
+□ Do I know WHAT'S DONE from progress.md?
+□ Do I understand the WHY from productContext.md?
+□ Can I explain technical APPROACH from systemPatterns.md?
+□ Do I know WHERE to find information I need?
+
+If "No" to any: Read the relevant file before proceeding
+```
+
+---
+
+**Update Triggers Pattern:**
+
+When to update each file:
+
+**Automatic Update Triggers:**
+```
+activeContext.md - UPDATE when:
+- Making any technical decision
+- Discovering important pattern
+- Completing work session
+- Encountering blocker
+- Learning something significant
+
+progress.md - UPDATE when:
+- Completing any task or milestone
+- Discovering new issue or risk
+- Changing timeline or priorities
+- Reaching project milestone
+- Test results available
+
+systemPatterns.md - UPDATE when:
+- Adding new architecture component
+- Establishing new design pattern
+- Making architectural decision
+- Discovering critical code path
+- Refactoring significant structure
+
+techContext.md - UPDATE when:
+- Adding new dependency or tool
+- Changing development setup
+- Discovering debugging technique
+- Establishing new code convention
+- Tool configuration changes
+
+productContext.md - UPDATE when:
+- User needs evolve or clarify
+- Success metrics change
+- New user stories added
+- Business context shifts
+- UX goals adjust
+
+projectbrief.md - UPDATE when:
+- Core requirements change (rare)
+- Scope boundaries shift
+- Constraints are added/removed
+- Success criteria change
+- Rarely updated after initial definition
+```
+
+**User-Triggered Update:**
+```
+When user says "update memory bank":
+
+1. Scan ALL 6 files for staleness
+2. Update activeContext.md with current state
+3. Update progress.md with recent completions
+4. Add any new decisions to appropriate files
+5. Document any new patterns discovered
+6. Ensure cross-references are current
+7. Validate no contradictions exist
+
+Process time: 10-15 minutes
+Frequency: End of significant work or user request
+```
+
+---
+
+**Stewardship Mindset Pattern:**
+
+Treat memory bank as living knowledge:
+
+**Continuous Self-Assessment:**
+```
+After every significant milestone, ask:
+
+1. "What did I just LEARN that should be documented?"
+   → Add to activeContext.md or systemPatterns.md
+
+2. "Are my DECISIONS captured in activeContext.md?"
+   → Document decision and rationale
+
+3. "Is progress.md CURRENT with what I've completed?"
+   → Mark tasks done, update status
+
+4. "Have I updated PATTERNS I discovered in systemPatterns.md?"
+   → Add new patterns or update existing ones
+
+5. "Is activeContext.md ACCURATE for next session?"
+   → Review and update immediate next steps
+```
+
+**Context Reset Readiness Test:**
+```
+Stewardship validation:
+
+Ask yourself: "If I reset RIGHT NOW, would the Memory Bank
+let me continue effectively?"
+
+Test by answering:
+- Can I understand the current state? (activeContext.md)
+- Do I know what's completed? (progress.md)
+- Can I understand why decisions were made? (activeContext.md)
+- Do I have technical guidance? (systemPatterns.md)
+- Can I set up the environment? (techContext.md)
+
+If "No" to any: Update the relevant file NOW
+```
+
+**Pre-Session Ending Checklist:**
+```
+Before ending ANY work session:
+
+□ Updated activeContext.md with current state
+□ Marked completed tasks in progress.md
+□ Documented any new decisions with rationale
+□ Captured any new patterns discovered
+□ Updated blockers or open questions
+□ Verified next steps are clear
+□ Cross-references are correct
+
+Time investment: 5-10 minutes
+Benefit: Save hours on next session startup
+```
+
+---
+
+**Writing Guidelines Pattern:**
+
+Make documentation useful:
+
+**Specific and Actionable:**
+```
+❌ Vague: "The system handles payments"
+✅ Specific: "PaymentService processes credit card payments
+             through Stripe API, retries failed transactions
+             3 times with exponential backoff"
+
+❌ Vague: "Error handling is important"
+✅ Actionable: "All service methods must catch errors,
+                log with context, and return custom error
+                types (PaymentError, ValidationError, etc.)"
+```
+
+**Document Decisions with Rationale:**
+```
+Decision template:
+
+Decision: [What was decided]
+Rationale: [Why this choice]
+Alternatives: [What else was considered]
+Trade-offs: [What we gain/lose]
+Date: [When decided]
+Reference: [Related documentation]
+
+Example:
+Decision: Use PostgreSQL for primary database
+Rationale: Need ACID transactions for payment processing,
+          team has PostgreSQL expertise
+Alternatives: MongoDB (no transactions), MySQL (less features)
+Trade-offs: More complex setup but better data integrity
+Date: 2026-01-15
+Reference: systemPatterns.md "Data Layer Architecture"
+```
+
+**Keep Current:**
+```
+Staleness prevention:
+
+1. Date-stamp significant updates:
+   "Last updated: 2026-01-17 - Added authentication flow"
+
+2. Mark deprecated information:
+   "~~OLD: Used REST API~~
+   NEW: Using GraphQL API as of 2026-01-10"
+
+3. Remove outdated sections entirely:
+   Not: "This might change in the future"
+   Do: Delete when actually changes
+
+4. Regular review cycle:
+   - activeContext.md: Daily updates
+   - progress.md: Daily updates
+   - systemPatterns.md: Weekly review
+   - techContext.md: When tools change
+   - productContext.md: Monthly review
+   - projectbrief.md: Quarterly review
+```
+
+**Use Examples:**
+```
+Abstract concept → Concrete example
+
+❌ Abstract:
+"Components communicate through well-defined interfaces"
+
+✅ Concrete:
+"Components communicate through well-defined interfaces.
+Example:
+- OrderService calls PaymentService.processPayment(orderId, amount)
+- PaymentService returns PaymentResult { status, transactionId }
+- No direct database access across service boundaries"
+```
+
+**Write for Context Reset:**
+```
+Assumption: You'll forget everything
+
+Ask: "If I had zero context, what would I need to know?"
+
+Include:
+- Why things exist: "Rate limiting prevents abuse"
+- How things work: "Rate limiter allows 100 req/min per user"
+- Where things are: "Rate limiter in api/middleware/rateLimiter.js"
+- What to watch out for: "Rate limit window is UTC-based"
+- How to test: "Test with curl: curl -H 'X-User-ID: test' ..."
+```
+
+---
+
+**Structure Guidelines Pattern:**
+
+Organize for scannability:
+
+**Hierarchical Organization:**
+```
+Consistent header levels:
+
+# File Title (H1) - One per file
+## Major Sections (H2) - Main topics
+### Subsections (H3) - Detailed topics
+#### Details (H4) - Specific items
+
+Example structure:
+# systemPatterns.md
+
+## Architecture Overview
+### Component Relationships
+#### API Layer
+#### Service Layer
+#### Data Layer
+
+## Implementation Phases
+### Phase 1: Foundation
+### Phase 2: Core Features
+### Phase 3: Integration
+```
+
+**Scannable Format:**
+```
+Use visual hierarchy:
+
+✓ Lists for related items:
+  - Item 1
+  - Item 2
+  - Item 3
+
+✓ Bold for key terms:
+  The **PaymentService** processes transactions
+
+✓ Code blocks for examples:
+  ```
+  processPayment(orderId, amount)
+  ```
+
+✓ Callout boxes:
+  > **Important:** Always validate amount > 0
+
+✓ Tables for comparisons:
+  | Option | Pros | Cons |
+  |--------|------|------|
+  | A      | Fast | Complex |
+  | B      | Simple | Slow |
+```
+
+**Cross-Reference Pattern:**
+```
+Link between files:
+
+"For authentication flow, see systemPatterns.md
+ 'Authentication Architecture' section"
+
+"Setup instructions in techContext.md
+ 'Development Environment Setup'"
+
+"User story details in productContext.md
+ 'Key User Stories'"
+
+Benefits:
+- Avoid duplication
+- Single source of truth
+- Easy navigation
+- Clear dependencies
+```
+
+**No Duplication Rule:**
+```
+Information location:
+
+WHY it exists → productContext.md
+WHAT we're building → projectbrief.md
+HOW it's built → systemPatterns.md
+WHICH tools → techContext.md
+WHERE we are → activeContext.md
+WHEN things happened → progress.md
+
+Each piece of information lives in ONE place
+Other files REFERENCE, don't REPEAT
+```
+
+**Evolution Strategy:**
+```
+As understanding deepens:
+
+Phase 1: Initial (rough, incomplete)
+- Capture basic understanding
+- Mark uncertainty: "TBD: Authentication approach"
+- Note questions: "Q: Should we cache user data?"
+
+Phase 2: Refinement (clearer, more complete)
+- Fill in TBDs as decisions made
+- Answer questions as learned
+- Add examples and details
+
+Phase 3: Mature (precise, comprehensive)
+- Remove uncertainty markers
+- Add rationale for decisions
+- Include lessons learned
+- Reference real code
+
+Memory bank evolves with project understanding
+```
+
+---
+
+**Self-Reflection Prompts Pattern:**
+
+Guide continuous improvement:
+
+**After Completing Work:**
+```
+Reflection questions:
+
+1. "Did I UPDATE activeContext.md with my current state?"
+   Check: Are immediate next steps documented?
+
+2. "Did I mark COMPLETED tasks in progress.md?"
+   Check: Is status current and accurate?
+
+3. "Did I DOCUMENT any new decisions or patterns?"
+   Check: Are rationales captured?
+
+4. "Will NEXT session have enough context to continue?"
+   Check: Can someone else pick this up?
+
+5. "What would I want to KNOW if I reset right now?"
+   Check: Is critical information documented?
+
+If "No" to any: Update relevant file before ending session
+```
+
+**Weekly Review:**
+```
+Deeper reflection (30 minutes):
+
+1. Scan all 6 files for accuracy
+2. Remove outdated information
+3. Update evolving understandings
+4. Add missing cross-references
+5. Verify no contradictions
+6. Check that new patterns documented
+7. Ensure terminology consistent
+
+Benefits:
+- Prevents documentation drift
+- Catches staleness early
+- Maintains trust in memory bank
+```
+
+**Commitment Check:**
+```
+Stewardship commitment validation:
+
+"Am I maintaining this Memory Bank with PRECISION and CLARITY?"
+
+Self-assessment:
+□ I update after every significant milestone
+□ I document decisions immediately, not later
+□ I reflect on what future me needs
+□ I treat this as critical project infrastructure
+□ I invest time now to save time later
+
+If checked: Good steward
+If unchecked: Documentation debt accumulating
+```
+
+---
+
+**Memory Bank Lifecycle Pattern:**
+
+From creation to maturity:
+
+**Phase 1: Establishment (Day 1)**
+```
+Create initial structure:
+
+1. Create memory-bank/ folder
+2. Create 6 core files with templates
+3. Fill projectbrief.md with initial requirements
+4. Document initial understanding in other files
+5. Establish update habits from day one
+
+Time investment: 2-3 hours
+Benefit: Foundation for entire project
+```
+
+**Phase 2: Active Growth (Weeks 1-4)**
+```
+Rapid evolution:
+
+- Daily updates to activeContext.md and progress.md
+- Frequent updates to systemPatterns.md as architecture emerges
+- Occasional updates to techContext.md as tools added
+- Rare updates to productContext.md and projectbrief.md
+
+Documentation grows rapidly as understanding deepens
+```
+
+**Phase 3: Maturity (Month 2+)**
+```
+Stable with targeted updates:
+
+- activeContext.md still changes frequently
+- progress.md tracks ongoing work
+- systemPatterns.md mostly stable, refined occasionally
+- techContext.md stable unless tool changes
+- productContext.md and projectbrief.md rarely change
+
+Documentation is comprehensive and mostly maintenance
+```
+
+**Phase 4: Maintenance (Ongoing)**
+```
+Keep current without drift:
+
+- Weekly reviews for accuracy
+- Immediate updates for decisions
+- Remove outdated information
+- Refine language as understanding improves
+- Maintain cross-references
+- Ensure terminology consistency
+
+Mature memory bank is project asset
+```
+
+</output-format>
+
+<instructions>
+CRITICAL: Memory bank is your lifeline across context resets and team transitions.
+
+NEVER establish memory bank by:
+- Creating documentation and never updating it (stale, useless)
+- Duplicating information across files (inconsistency, confusion)
+- Writing vague, abstract documentation (not actionable)
+- Forgetting to document decisions and rationale (context lost)
+- Treating documentation as optional (project knowledge lost)
+- Updating randomly without structure (chaotic, unreliable)
+
+DO NOT:
+- Create memory bank files and forget to use them
+- Update files inconsistently or sporadically
+- Write documentation for today without thinking of context resets
+- Skip self-reflection prompts before ending sessions
+- Ignore staleness warnings in documentation
+- Duplicate information instead of cross-referencing
+
+ALWAYS:
+- Create all 6 core files with distinct purposes
+- Update activeContext.md and progress.md after each session
+- Document decisions with rationale immediately
+- Use self-reflection prompts before ending work
+- Cross-reference instead of duplicating
+- Write assuming complete context loss
+- Maintain stewardship mindset
+- Treat memory bank as single source of truth
+- Review weekly for accuracy and currency
+- Test: "Could someone continue my work from these docs?"
+
+REPEAT: Memory bank is your single source of truth. Six core files with distinct purposes. Update after every significant work. Document decisions with rationale. Write for context reset recovery. Stewardship mindset essential.
+</instructions>
+
+<examples>
+✅ GOOD Memory Bank Establishment (comprehensive, maintained):
+
+**Pattern demonstrates:**
+- All 6 files created with clear purposes
+- Regular updates after work
+- Decisions documented with rationale
+- Self-reflection practiced
+- Context reset ready
+
+**Example usage:**
+```
+Day 1: Project start
+Developer creates memory-bank/ with 6 core files
+Spends 2 hours documenting initial understanding
+
+projectbrief.md:
+# E-commerce Platform
+
+## Core Objectives
+- Enable online product sales
+- Process payments securely
+- Manage inventory
+- Handle orders end-to-end
+
+## Success Criteria
+- Users can browse and purchase products
+- Payments process in <3 seconds
+- Inventory updates in real-time
+- Order fulfillment workflow complete
+
+## Scope
+In scope:
+- Product catalog
+- Shopping cart
+- Payment processing
+- Order management
+
+Out of scope:
+- Content management system
+- Marketing automation
+- Analytics dashboard
+
+activeContext.md (Day 1 end):
+# Current Focus
+
+## Immediate Next Steps
+1. Set up development environment
+2. Create basic project structure
+3. Implement database schema
+4. Build API skeleton
+
+## Recent Decisions
+- **Decision:** Use PostgreSQL for database
+  **Rationale:** ACID transactions needed for payments
+  **Date:** 2026-01-17
+
+## Current Phase
+Phase 1: Foundation (Days 1-5)
+
+progress.md:
+# Progress Tracking
+
+## Completed
+- [x] Created memory bank structure (2026-01-17)
+- [x] Defined project scope and requirements (2026-01-17)
+- [x] Selected technology stack (2026-01-17)
+
+## In Progress
+- [ ] Development environment setup
+- [ ] Database schema design
+
+## Remaining
+- [ ] API implementation
+- [ ] Frontend development
+- [ ] Payment integration
+- [ ] Testing and deployment
+
+Day 3: After implementing authentication
+Developer updates multiple files:
+
+activeContext.md:
+## Recent Decisions
+- **Decision:** Use JWT for authentication
+  **Rationale:** Stateless auth, scalable, standard
+  **Alternatives:** Sessions (server state required)
+  **Trade-offs:** Must handle token refresh
+  **Date:** 2026-01-19
+
+systemPatterns.md:
+## Authentication Flow
+1. User submits credentials to /auth/login
+2. Server validates credentials against database
+3. Server generates JWT with user ID and roles
+4. Client stores JWT in localStorage
+5. Client includes JWT in Authorization header
+6. Server validates JWT on protected endpoints
+
+Code location: src/auth/authService.js
+
+progress.md:
+## Completed
+- [x] Authentication system implemented (2026-01-19)
+  - JWT generation and validation
+  - Login endpoint
+  - Protected route middleware
+  - User role checking
+
+Week 2: Context Reset
+New developer joins or original developer continues after break
+
+Reads all 6 files (70 minutes):
+✓ Understands project goals from projectbrief.md
+✓ Understands user needs from productContext.md
+✓ Understands architecture from systemPatterns.md
+✓ Can set up environment from techContext.md
+✓ Knows current state from activeContext.md
+✓ Knows what's done from progress.md
+
+Result: Can continue work effectively with full context
+```
+
+**Why this works:**
+- All 6 files created and maintained
+- Updated after significant work
+- Decisions documented with rationale
+- Clear separation of concerns
+- Context reset recovery possible
+- New team members can onboard
+- Work can continue effectively
+
+---
+
+❌ BAD Memory Bank (created but not maintained):
+
+**Anti-pattern characteristics:**
+- Files created once, never updated
+- Vague, abstract documentation
+- No decision rationale
+- Stale information
+- Context reset fails
+
+**Bad example:**
+```
+Day 1: Project start
+Developer creates memory-bank/ folder
+Writes minimal content:
+
+projectbrief.md:
+# E-commerce Platform
+Build an online store
+
+(No details, no scope, no success criteria)
+
+activeContext.md:
+# Current Focus
+Working on stuff
+
+(No specifics, no decisions, no next steps)
+
+Week 2: No updates despite significant work
+- Authentication implemented (not documented)
+- Database schema created (not documented)
+- API endpoints built (not documented)
+- Decisions made (not documented)
+
+Week 4: Context reset (new developer or after break)
+Reads memory bank files:
+❌ Can't understand current state
+❌ Can't find architectural decisions
+❌ Can't determine what's completed
+❌ Can't find setup instructions
+❌ Can't identify next steps
+
+Result: Must ask many questions or rediscover everything
+
+Time wasted:
+- 4 hours asking questions
+- 8 hours rediscovering decisions
+- 2 hours recreating setup docs
+Total: 14 hours lost due to poor documentation
+
+Opportunity cost:
+- Original documentation: 3 hours total
+- Time saved: 14 hours
+- ROI: 467% return on documentation investment
+```
+
+**Why this fails:**
+- Created but never maintained
+- Vague, unusable content
+- No decision documentation
+- Stale after first week
+- Context reset impossible
+- New team members blocked
+- Time wasted rediscovering
+- Documentation became liability, not asset
+
+---
+
+✅ GOOD Active Context Maintenance (updated continuously):
+
+**Pattern demonstrates:**
+- Updated after each session
+- Decisions documented immediately
+- Next steps always clear
+- Reflection practiced
+- Ready for context reset
+
+**Example activeContext.md evolution:**
+```
+Monday Morning:
+# Active Context
+
+## Current Focus
+Implementing payment processing integration
+
+## Immediate Next Steps
+1. Read Stripe API documentation
+2. Create PaymentService class
+3. Implement processPayment() method
+4. Add error handling for declined cards
+5. Write integration tests
+
+## Recent Decisions
+(none yet this week)
+
+## Open Questions
+- Should we store payment tokens in database?
+- What retry strategy for failed payments?
+
+Monday Evening (after work):
+# Active Context
+
+## Current Focus
+Implemented basic payment processing, ready for error handling
+
+## Immediate Next Steps
+1. ✅ Read Stripe API documentation
+2. ✅ Create PaymentService class
+3. ✅ Implement processPayment() method
+4. Add comprehensive error handling (NEXT)
+5. Write integration tests
+6. Handle webhook notifications
+
+## Recent Decisions
+- **Decision:** Store encrypted payment tokens in database
+  **Rationale:** Needed for refunds and recurring payments
+  **Security:** Use AES-256 encryption, keys in env variables
+  **Date:** 2026-01-20
+  **Reference:** systemPatterns.md "Data Security"
+
+- **Decision:** Retry failed payments 3 times with exponential backoff
+  **Rationale:** Stripe recommends 3 retries for transient errors
+  **Pattern:** 1s, 2s, 4s delays
+  **Date:** 2026-01-20
+
+## Key Learnings
+- Stripe test mode uses different API keys (test_sk_...)
+- Webhook signature verification is required for security
+- Payment intents provide better UX than charges API
+
+## Open Questions
+- ~~Should we store payment tokens in database?~~ ANSWERED: Yes, encrypted
+- ~~What retry strategy for failed payments?~~ ANSWERED: 3 retries, exponential
+- NEW: How to handle partial refunds?
+
+## Blockers
+None currently
+
+Tuesday Morning (starting work):
+Reads activeContext.md (2 minutes):
+✓ Knows to work on error handling next
+✓ Understands recent decisions and rationale
+✓ Has reference to related documentation
+✓ Knows open questions and blockers
+
+Can immediately continue with full context
+```
+
+**Why this works:**
+- Updated at end of each session (5 min investment)
+- Decisions documented immediately with rationale
+- Next steps always clear and actionable
+- Completed work checked off
+- Open questions tracked and answered
+- Blockers documented
+- Key learnings captured
+- Reference links provided
+- Context reset ready at any moment
+
+---
+
+❌ BAD Active Context (never updated):
+
+**Anti-pattern characteristics:**
+- Created initially, never touched again
+- No decisions documented
+- No progress tracking
+- Stale next steps
+- Context reset fails
+
+**Bad example:**
+```
+Week 1 (created):
+# Active Context
+
+## Current Focus
+Working on the project
+
+## Next Steps
+- Implement features
+- Write tests
+
+(Never updated again)
+
+Week 4 (trying to use):
+Developer reads activeContext.md:
+❌ "Working on the project" - not specific
+❌ "Implement features" - which features?
+❌ No recent decisions documented
+❌ Don't know what's completed
+❌ Don't know current blockers
+❌ Can't resume work effectively
+
+Must:
+- Ask team what's current focus
+- Review git commits to see what's done
+- Rediscover why decisions were made
+- Waste time getting context
+
+Time wasted: 2-4 hours per context reset
+Frequency: Every few days
+Monthly cost: 20-40 hours wasted
+Annual cost: 240-480 hours wasted
+
+Simple fix: Spend 5 minutes updating after each session
+Annual savings: 230-470 hours
+```
+
+**Why this fails:**
+- Never maintained after creation
+- No decision documentation
+- No progress tracking
+- Completely stale
+- Useless for context recovery
+- Team wastes time repeatedly
+- Opportunity cost is massive
+- Simple habit would prevent all issues
+</examples>

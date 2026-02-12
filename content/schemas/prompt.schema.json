@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://constellize.com/schemas/prompt.schema.json",
+  "title": "Constellize Prompt",
+  "description": "Schema for Constellize prompts - source of truth for book, website, and Claude Code marketplace",
+  "type": "object",
+  "required": ["id", "name", "chapter", "category"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier (kebab-case)",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable display name"
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version",
+      "default": "1.0.0"
+    },
+    "chapter": {
+      "type": "integer",
+      "description": "Book chapter number (1-9)",
+      "minimum": 1,
+      "maximum": 9
+    },
+    "category": {
+      "type": "string",
+      "description": "Prompt category within chapter",
+      "enum": [
+        "planning",
+        "architecture",
+        "quality",
+        "deployment",
+        "excellence",
+        "ai-workflow",
+        "memory-bank",
+        "operations",
+        "organization",
+        "learning",
+        "evolution",
+        "adoption",
+        "meta"
+      ]
+    },
+    "subcategory": {
+      "type": "string",
+      "description": "Optional subcategory (e.g., gate-1, foundation, incident)"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Search/filter tags"
+    },
+    "skill": {
+      "type": "object",
+      "description": "Claude Code skill configuration",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "When Claude should invoke this skill (shown to Claude)"
+        },
+        "argument-hint": {
+          "type": "string",
+          "description": "Hint for arguments, e.g., '[project-name]'"
+        },
+        "allowed-tools": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tools Claude can use: Read, Write, Glob, Grep, Bash, etc."
+        },
+        "model": {
+          "type": "string",
+          "enum": ["haiku", "sonnet", "opus", "inherit"],
+          "description": "Recommended model for this skill"
+        },
+        "context": {
+          "type": "string",
+          "enum": ["inline", "fork"],
+          "description": "Whether to run inline or in isolated subagent"
+        },
+        "user-invocable": {
+          "type": "boolean",
+          "default": true
+        },
+        "disable-model-invocation": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "variables": {
+      "type": "array",
+      "description": "Template variables that map to $ARGUMENTS",
+      "items": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Variable name (used as {{name}} in prompt)"
+          },
+          "description": {
+            "type": "string"
+          },
+          "example": {
+            "type": "string"
+          },
+          "maps-to": {
+            "type": "string",
+            "description": "Maps to $ARGUMENTS position, e.g., '$0', '$1'"
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "description": "Output target configuration",
+      "properties": {
+        "book": {
+          "type": "object",
+          "properties": {
+            "include": { "type": "boolean", "default": true },
+            "format": {
+              "type": "string",
+              "enum": ["callout", "section", "appendix"],
+              "default": "callout"
+            }
+          }
+        },
+        "website": {
+          "type": "object",
+          "properties": {
+            "include": { "type": "boolean", "default": true },
+            "path": { "type": "string" }
+          }
+        },
+        "marketplace": {
+          "type": "object",
+          "properties": {
+            "plugin": {
+              "type": "string",
+              "description": "Target plugin name, e.g., 'constellize-memory-bank'"
+            }
+          }
+        }
+      }
+    },
+    "related": {
+      "type": "object",
+      "properties": {
+        "personas": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Recommended personas/agents to use with this prompt"
+        },
+        "skills": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Related skills"
+        }
+      }
+    }
+  }
+}

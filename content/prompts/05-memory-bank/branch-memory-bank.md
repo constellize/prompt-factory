@@ -1,0 +1,1339 @@
+---
+# === Identity ===
+id: branch-memory-bank
+name: Branch memory bank to explore alternative approaches safely
+version: v1
+
+# === Classification ===
+chapter: 5
+category: memory-bank
+subcategory: evolution
+tags:
+  - documentation
+  - memory-bank
+  - knowledge-branching
+  - exploration
+  - hypothesis-testing
+  - alternative-evaluation
+  - construction-zone
+  - parallel-knowledge
+  - evidence-based-decisions
+  - innovation
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Branch memory bank to explore alternative approaches safely.
+    Investigate alternatives while preserving production knowledge and enabling evidence-based decisions.
+  argument-hint: "[project_name] [exploration_topic]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: project_name
+    description: The specific project to branch memory bank for
+    example: "E-commerce Platform"
+    maps-to: "$0"
+  - name: exploration_topic
+    description: What alternative approach is being explored
+    example: "GraphQL as alternative to REST API"
+    maps-to: "$1"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/branch-memory-bank
+  marketplace:
+    plugin: constellize-memory-bank
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Branch memory bank documentation for {{project_name}} to explore alternative approaches while preserving current production knowledge.
+
+Create construction zone entries for alternative approaches, allowing safe exploration without disrupting proven patterns. Preserve original reasoning while exploring new directions, maintaining the rationale for current decisions alongside investigation of potentially superior alternatives. Document why new approaches might be better than current ones, capturing the hypothesis and evidence needed to validate the exploration. Link experimental knowledge to production knowledge being challenged, creating clear connections that help evaluate trade-offs between current and proposed approaches.
+
+Treat branching as parallel knowledge development rather than replacement, enabling teams to investigate alternatives without losing hard-won understanding of current solutions. This approach supports innovation while maintaining stability, allowing evidence-based evaluation of whether exploration should graduate to production or be archived as investigated-and-rejected.
+
+Follow this process:
+
+1. **Identify exploration opportunity:**
+   - Recognize limitations of current approach
+   - Note potential alternatives worth investigating
+   - Define hypothesis for why alternative might be better
+   - Establish success criteria for exploration
+   - Determine scope of investigation
+
+2. **Create branch documentation:**
+   - Document current production approach clearly
+   - Create construction zone entry for exploration
+   - State hypothesis and expected benefits
+   - Outline investigation plan with validation steps
+   - Link to production knowledge being challenged
+
+3. **Explore alternative systematically:**
+   - Document experiments and findings
+   - Compare alternative to current approach
+   - Capture evidence supporting or refuting hypothesis
+   - Note unexpected discoveries
+   - Track costs and benefits observed
+
+4. **Resolve branch intentionally:**
+   - Graduate to production (replace current approach)
+   - Archive as investigated (preserve learning, keep current approach)
+   - Merge insights (adopt parts, keep current base)
+   - Document decision rationale clearly
+</task>
+
+<context>
+Project to branch memory bank:
+{{project_name}}
+
+Exploration topic:
+{{exploration_topic}}
+
+**Standard Construction Folder Structure:**
+This prompt creates:
+- `construction/explorations/[topic]/hypothesis.md` (what we're testing)
+- `construction/explorations/[topic]/investigation.md` (findings)
+- `construction/explorations/[topic]/comparison.md` (vs current approach)
+
+This prompt links to:
+- `memory-bank/systemPatterns.md` (current production patterns)
+- `memory-bank/techContext.md` (current technical context)
+- `memory-bank/activeContext.md` (note exploration in progress)
+</context>
+
+<thinking>
+Before branching memory bank, analyze:
+1. What current approach might be improved?
+2. What alternative is worth investigating?
+3. What would make the alternative superior?
+4. How will we validate the hypothesis?
+5. What's the scope (full replacement vs targeted improvement)?
+6. How do we preserve learning regardless of outcome?
+</thinking>
+
+<output-format>
+Create memory bank branch following these patterns:
+
+**Exploration Identification Pattern:**
+
+Recognize when to branch knowledge:
+
+**Branch Triggers:**
+```
+Consider branching when:
+
+1. Current approach has known limitations:
+   - Performance bottlenecks identified
+   - Scalability concerns emerging
+   - Maintenance burden increasing
+   - Developer experience poor
+   - User feedback indicates issues
+
+2. New alternative emerges:
+   - New technology addresses current pain points
+   - Industry best practices evolve
+   - Team gains expertise in different approach
+   - Competitor demonstrates superior solution
+   - Open source project solves similar problem
+
+3. Hypothesis forms:
+   - "If we used X instead of Y, we could achieve Z"
+   - Evidence suggests alternative might be better
+   - Trade-offs might be worth exploring
+   - Risk is manageable with investigation
+
+4. Uncertainty exists:
+   - Not sure if alternative is truly better
+   - Need evidence to make informed decision
+   - Current approach might still be best
+   - Trade-offs need careful evaluation
+
+5. Exploration is feasible:
+   - Can investigate without disrupting production
+   - Resources available for exploration
+   - Timeline permits investigation
+   - Rollback possible if exploration fails
+```
+
+**When NOT to branch:**
+```
+Don't branch for:
+- Minor optimizations (just improve current approach)
+- Unproven technologies (too risky)
+- Personal preferences without evidence (not justified)
+- Following hype (need substantial benefit)
+- Already decided (don't relitigate settled decisions)
+```
+
+---
+
+**Branch Creation Pattern:**
+
+Document exploration clearly:
+
+**Hypothesis Document Template:**
+```
+# Exploration: [Topic]
+
+## Current Production Approach
+
+**What we do now:**
+[Clear description of current approach]
+
+**Why we chose it:**
+- [Original rationale 1]
+- [Original rationale 2]
+
+**Known limitations:**
+- [Limitation 1]: [Impact]
+- [Limitation 2]: [Impact]
+
+**Location:** [Where current approach lives]
+**Decision:** [Link to original decision documentation]
+
+---
+
+## Proposed Alternative
+
+**What we'd explore:**
+[Clear description of alternative approach]
+
+**Why it might be better:**
+- [Expected benefit 1]
+- [Expected benefit 2]
+- [Expected benefit 3]
+
+**Hypothesis:**
+"By adopting [alternative], we will achieve [benefit] because [reasoning],
+which will address [current limitation]."
+
+---
+
+## Success Criteria
+
+**Must prove:**
+1. [Criterion 1]: [Measurement method]
+2. [Criterion 2]: [Measurement method]
+
+**Must not worsen:**
+1. [Existing strength 1]: [How we'll verify]
+2. [Existing strength 2]: [How we'll verify]
+
+**Acceptable trade-offs:**
+- [What we're willing to sacrifice]
+- [What we're not willing to sacrifice]
+
+---
+
+## Investigation Plan
+
+**Phase 1: Research ([duration])**
+- [Research task 1]
+- [Research task 2]
+
+**Phase 2: Prototype ([duration])**
+- [Build task 1]
+- [Build task 2]
+
+**Phase 3: Evaluate ([duration])**
+- [Evaluation task 1]
+- [Evaluation task 2]
+
+**Phase 4: Decide ([duration])**
+- [Decision task 1]
+- [Decision task 2]
+
+**Total investment:** [Time/resources]
+**Decision date:** [When we'll decide]
+
+---
+
+## Links
+
+**Production knowledge:**
+- systemPatterns.md: [Relevant section]
+- techContext.md: [Relevant section]
+
+**Related decisions:**
+- [Decision 1 that might be affected]
+- [Decision 2 that might be affected]
+
+**Started:** [Date]
+**Status:** [Active / Completed / Archived]
+```
+
+**Example Hypothesis Document:**
+```
+# Exploration: GraphQL as Alternative to REST API
+
+## Current Production Approach
+
+**What we do now:**
+RESTful API with multiple endpoints for different resources.
+Frontend makes multiple requests to assemble views.
+
+**Why we chose it:**
+- Industry standard, well understood
+- Simple to implement and debug
+- HTTP caching works out of box
+- Team expertise with REST
+- Tooling mature
+
+**Known limitations:**
+- Over-fetching: Clients get more data than needed
+  Impact: Wasted bandwidth, slower mobile performance
+
+- Under-fetching: Often need multiple requests for one view
+  Impact: Increased latency (3-5 requests common), worse UX
+
+- API versioning: Breaking changes require v2 endpoints
+  Impact: Maintenance burden, client migration complexity
+
+- Documentation drift: Swagger often out of sync with reality
+  Impact: Developer frustration, integration errors
+
+**Location:** src/api/routes/*, src/api/controllers/*
+**Decision:** systemPatterns.md "API Design Decision" (2026-01-15)
+
+---
+
+## Proposed Alternative
+
+**What we'd explore:**
+GraphQL API allowing clients to specify exactly what data they need
+in a single request with strongly typed schema.
+
+**Why it might be better:**
+- Eliminates over-fetching (clients request only needed fields)
+- Eliminates under-fetching (one request gets related data)
+- Self-documenting (schema is source of truth)
+- No API versioning (schema evolution with deprecation)
+- Better mobile performance (less data, fewer requests)
+- Improved developer experience (introspection, tooling)
+
+**Hypothesis:**
+"By adopting GraphQL, we will reduce mobile API latency by 50% and
+improve developer velocity by 30% because clients will make single
+optimized requests instead of multiple REST calls, which will address
+our mobile performance and developer experience issues."
+
+---
+
+## Success Criteria
+
+**Must prove:**
+1. Latency reduction: 50%+ improvement in mobile view load time
+   Measurement: Compare REST vs GraphQL for 5 critical views
+
+2. Developer velocity: 30%+ faster feature development
+   Measurement: Track time for next 3 features vs historical average
+
+3. Bandwidth reduction: 40%+ less data transferred
+   Measurement: Compare payload sizes for critical views
+
+**Must not worsen:**
+1. API security: Same or better authorization model
+   Verify: Security audit of GraphQL implementation
+
+2. Server performance: Handle same request load
+   Verify: Load testing at production scale
+
+3. Error handling: Clear errors for debugging
+   Verify: Error scenarios produce actionable messages
+
+**Acceptable trade-offs:**
+- Willing to sacrifice: HTTP caching (GraphQL caching different)
+- Willing to sacrifice: REST simplicity (GraphQL more complex)
+- Not willing to sacrifice: Security (must be equivalent or better)
+- Not willing to sacrifice: Performance (must be same or better)
+
+---
+
+## Investigation Plan
+
+**Phase 1: Research (1 week)**
+- Study GraphQL best practices and patterns
+- Review GraphQL security considerations
+- Evaluate GraphQL server libraries (Apollo, Yoga, etc)
+- Interview teams using GraphQL in production
+
+**Phase 2: Prototype (2 weeks)**
+- Implement GraphQL server for 2 resources (Product, User)
+- Build example queries for 3 critical views
+- Implement authorization and error handling
+- Create monitoring and logging
+
+**Phase 3: Evaluate (2 weeks)**
+- Performance testing: Compare latency, throughput, bandwidth
+- Developer experience: Have 2 developers build features with each
+- Security review: Audit query complexity, authorization
+- Operational review: Monitoring, debugging, troubleshooting
+
+**Phase 4: Decide (1 week)**
+- Analyze all evidence against success criteria
+- Team discussion of findings
+- Document decision rationale
+- Plan migration if adopting, or archive if not
+
+**Total investment:** 6 weeks (1 developer)
+**Decision date:** 2026-03-15
+
+---
+
+## Links
+
+**Production knowledge:**
+- systemPatterns.md: "API Design Decision"
+- techContext.md: "REST API Setup"
+- productContext.md: "Mobile Performance Goals"
+
+**Related decisions:**
+- API authentication strategy (might need changes)
+- Client-side data fetching (will change significantly)
+- API rate limiting (different approach needed)
+- Monitoring strategy (new metrics for GraphQL)
+
+**Started:** 2026-02-01
+**Status:** Active - Phase 2 (Prototype)
+```
+
+---
+
+**Investigation Documentation Pattern:**
+
+Track exploration findings:
+
+**Investigation Log Template:**
+```
+# Investigation Log: [Topic]
+
+## Experiments Conducted
+
+### Experiment 1: [Name]
+**Date:** [Date]
+**Goal:** [What we're testing]
+**Method:** [How we tested]
+**Results:** [What we found]
+**Evidence:** [Data, screenshots, metrics]
+**Conclusion:** [What this means]
+
+### Experiment 2: [Name]
+...
+
+---
+
+## Findings
+
+### Performance
+**Hypothesis:** [What we expected]
+**Reality:** [What we observed]
+**Evidence:** [Measurements]
+**Analysis:** [Why results occurred]
+
+### Developer Experience
+**Hypothesis:** [What we expected]
+**Reality:** [What we observed]
+**Evidence:** [Developer feedback, time measurements]
+**Analysis:** [Why results occurred]
+
+### Operational Complexity
+**Hypothesis:** [What we expected]
+**Reality:** [What we observed]
+**Evidence:** [Examples, incidents]
+**Analysis:** [Why results occurred]
+
+---
+
+## Unexpected Discoveries
+
+**Discovery 1:**
+- What: [What we found that we didn't expect]
+- Impact: [How this affects evaluation]
+- Evidence: [Proof]
+
+**Discovery 2:**
+...
+
+---
+
+## Risks Identified
+
+**Risk 1:** [Risk description]
+- Likelihood: [High/Medium/Low]
+- Impact: [High/Medium/Low]
+- Mitigation: [How to address]
+
+**Risk 2:**
+...
+
+---
+
+## Open Questions
+
+1. [Question that needs answering]
+   - Investigation: [How to answer]
+   - Importance: [Why it matters]
+
+2. [Question that needs answering]
+   ...
+```
+
+**Example Investigation Log:**
+```
+# Investigation Log: GraphQL Alternative
+
+## Experiments Conducted
+
+### Experiment 1: Product Listing Performance
+**Date:** 2026-02-10
+**Goal:** Compare REST vs GraphQL for product list view
+**Method:** Load test both APIs with 1000 concurrent users requesting
+          product list with images, prices, availability
+
+**Results:**
+REST API:
+- 5 requests per page load (products, images, prices, inventory, categories)
+- Average: 850ms total time
+- 95th percentile: 1200ms
+- Data transferred: 245KB
+
+GraphQL API:
+- 1 request per page load (all data in one query)
+- Average: 380ms total time
+- 95th percentile: 520ms
+- Data transferred: 95KB
+
+**Evidence:**
+- Load testing results: /construction/explorations/graphql/load-test-results.json
+- Network traces: /construction/explorations/graphql/network-traces/
+- Metrics dashboard: [link]
+
+**Conclusion:**
+GraphQL reduced latency by 55% and bandwidth by 61% for product list view.
+Hypothesis confirmed for this use case.
+
+### Experiment 2: Complex Nested Data (Order Details)
+**Date:** 2026-02-14
+**Goal:** Test deeply nested queries (order → line items → products → reviews)
+
+**Results:**
+REST API:
+- Waterfall of 4 requests (order, then items, then products, then reviews)
+- Average: 1450ms total time (sequential requests)
+- 95th percentile: 2100ms
+- Data transferred: 180KB
+
+GraphQL API:
+- 1 query with nested structure
+- Average: 420ms total time
+- 95th percentile: 580ms
+- Data transferred: 85KB
+
+**Evidence:**
+- Response time comparison: 72% improvement
+- Eliminated request waterfall (4 → 1 requests)
+- Developer built query in 15 minutes vs 45 minutes for REST version
+
+**Conclusion:**
+GraphQL especially powerful for nested data. Massive latency improvement
+by eliminating request waterfalls.
+
+### Experiment 3: Simple Single-Resource Fetch
+**Date:** 2026-02-16
+**Goal:** Test if GraphQL adds overhead for simple cases
+
+**Results:**
+REST API:
+- GET /users/123
+- Average: 45ms
+- 95th percentile: 65ms
+- Data transferred: 2KB
+
+GraphQL API:
+- query { user(id: 123) { ... } }
+- Average: 52ms
+- 95th percentile: 72ms
+- Data transferred: 2KB
+
+**Evidence:**
+- GraphQL slightly slower (7ms, ~15% overhead)
+- Likely due to query parsing and validation
+- Still well within acceptable performance
+
+**Conclusion:**
+GraphQL has small overhead for simple cases but still performant.
+Trade-off acceptable given benefits for complex cases.
+
+---
+
+## Findings
+
+### Performance
+**Hypothesis:** 50% latency reduction for mobile views
+**Reality:** 55-72% reduction depending on view complexity
+**Evidence:**
+- Product list: 55% improvement (850ms → 380ms)
+- Order details: 72% improvement (1450ms → 420ms)
+- User profile: 48% improvement (single resource, less dramatic)
+- Average across 5 critical views: 58% improvement
+
+**Analysis:**
+Improvement exceeds hypothesis. Benefit greatest for complex views
+with nested data (most mobile views). Simple single-resource fetches
+show smaller improvement but still positive.
+
+### Developer Experience
+**Hypothesis:** 30% faster feature development
+**Reality:** 45% faster for features involving API changes
+
+**Evidence:**
+Tracked 3 feature builds (each built by 2 devs, one REST one GraphQL):
+
+Feature 1 (Product recommendations):
+- REST: 6 hours (new endpoint, client integration, testing)
+- GraphQL: 3 hours (extend schema, client query, testing)
+- Improvement: 50%
+
+Feature 2 (Order filtering):
+- REST: 4 hours (modify endpoint, update docs, client work)
+- GraphQL: 2.5 hours (add filter args, client query update)
+- Improvement: 37%
+
+Feature 3 (User preferences):
+- REST: 5 hours (new endpoint, versioning concerns, client)
+- GraphQL: 2.5 hours (extend user type, client query)
+- Improvement: 50%
+
+Average improvement: 45%
+
+**Analysis:**
+Developer velocity improvement exceeds hypothesis. Key factors:
+- No new endpoints (just schema extensions)
+- Self-documenting (introspection)
+- Strong typing catches errors early
+- Frontend developers prefer GraphQL DX
+
+### Operational Complexity
+**Hypothesis:** Similar operational complexity to REST
+**Reality:** More complex in some areas, simpler in others
+
+**More complex:**
+- Query complexity management (need depth/cost limits)
+- Caching strategy (can't use HTTP caching)
+- Monitoring (need query-specific metrics)
+- Rate limiting (query-based, not endpoint-based)
+
+**Simpler:**
+- No API versioning (schema evolution)
+- Single endpoint (simpler routing)
+- Error handling (structured errors)
+- Documentation (schema is source of truth)
+
+**Analysis:**
+Complexity shifts rather than increases. GraphQL complexity is
+upfront (depth limits, query costs) but REST complexity is ongoing
+(versioning, documentation drift).
+
+---
+
+## Unexpected Discoveries
+
+**Discovery 1: Query Complexity Attacks**
+- What: Malicious queries can request deeply nested data causing DoS
+- Impact: Security concern that must be addressed
+- Evidence: Unlimited depth query caused 10-second response time
+- Mitigation: Implemented query depth limit (5 levels) and cost analysis
+
+**Discovery 2: N+1 Query Problem**
+- What: Naive GraphQL resolvers caused database query explosion
+- Impact: Performance worse than REST without dataloader
+- Evidence: Single GraphQL query triggered 50 database queries
+- Mitigation: Implemented DataLoader for batching and caching
+
+**Discovery 3: Frontend Team Enthusiasm**
+- What: Frontend developers strongly prefer GraphQL
+- Impact: Morale and velocity boost beyond measured metrics
+- Evidence: Unsolicited positive feedback, voluntary overtime on prototype
+- Analysis: Better DX leads to happier developers, valuable intangible
+
+**Discovery 4: Third-Party Integration Challenge**
+- What: Many third-party services only provide REST APIs
+- Impact: Need GraphQL → REST wrapper for integrations
+- Evidence: Stripe, SendGrid, AWS services all REST-based
+- Mitigation: Wrapping layer adds some complexity
+
+---
+
+## Risks Identified
+
+**Risk 1: Query Complexity DoS**
+- Likelihood: High (public API, motivated attackers)
+- Impact: High (service degradation or outage)
+- Mitigation: Query depth limits, cost analysis, rate limiting by complexity
+
+**Risk 2: N+1 Query Performance**
+- Likelihood: Medium (easy to introduce accidentally)
+- Impact: High (severe performance degradation)
+- Mitigation: DataLoader patterns, resolver testing, performance monitoring
+
+**Risk 3: Learning Curve**
+- Likelihood: Low (team is technical)
+- Impact: Medium (temporary velocity decrease)
+- Mitigation: Training, documentation, gradual rollout
+
+**Risk 4: Ecosystem Maturity**
+- Likelihood: Low (GraphQL is proven)
+- Impact: Medium (tooling gaps possible)
+- Mitigation: Choose mature libraries (Apollo), active community
+
+---
+
+## Open Questions
+
+1. How to migrate existing clients gradually?
+   - Investigation: Design dual REST/GraphQL support strategy
+   - Importance: Critical for production rollout
+
+2. What's the monitoring story for GraphQL?
+   - Investigation: Evaluate Apollo Studio, Datadog GraphQL support
+   - Importance: High (need operational visibility)
+
+3. How to handle file uploads?
+   - Investigation: Research GraphQL file upload approaches
+   - Importance: Medium (needed for 2 features)
+
+4. What's caching strategy without HTTP caching?
+   - Investigation: Evaluate Apollo Client cache, CDN options
+   - Importance: High (performance optimization)
+```
+
+---
+
+**Comparison Documentation Pattern:**
+
+Systematic alternative evaluation:
+
+**Comparison Template:**
+```
+# Comparison: [Current] vs [Alternative]
+
+## Side-by-Side Comparison
+
+| Dimension | Current ([name]) | Alternative ([name]) | Winner |
+|-----------|------------------|----------------------|--------|
+| [Criterion 1] | [Score/description] | [Score/description] | [Which and why] |
+| [Criterion 2] | [Score/description] | [Score/description] | [Which and why] |
+
+## Detailed Analysis
+
+### [Dimension 1]
+
+**Current approach:**
+[Description, metrics, evidence]
+
+**Alternative approach:**
+[Description, metrics, evidence]
+
+**Comparison:**
+[Which is better and why, with evidence]
+
+**Trade-offs:**
+[What you gain, what you lose]
+
+### [Dimension 2]
+...
+
+---
+
+## Summary
+
+**Current strengths to preserve:**
+- [Strength 1]
+- [Strength 2]
+
+**Current weaknesses to address:**
+- [Weakness 1]
+- [Weakness 2]
+
+**Alternative advantages:**
+- [Advantage 1]
+- [Advantage 2]
+
+**Alternative disadvantages:**
+- [Disadvantage 1]
+- [Disadvantage 2]
+
+**Overall assessment:**
+[Balanced evaluation with recommendation]
+```
+
+**Example Comparison:**
+```
+# Comparison: REST API vs GraphQL API
+
+## Side-by-Side Comparison
+
+| Dimension | REST API | GraphQL API | Winner |
+|-----------|----------|-------------|--------|
+| Mobile latency | 850ms avg (product list) | 380ms avg | GraphQL (55% faster) |
+| Bandwidth | 245KB (product list) | 95KB | GraphQL (61% less) |
+| Developer velocity | 5hrs avg per feature | 2.75hrs avg | GraphQL (45% faster) |
+| Learning curve | Known by all | New to team | REST (lower barrier) |
+| Operational complexity | Well understood | Requires new patterns | REST (simpler ops) |
+| API versioning | Required for breaking changes | Schema evolution | GraphQL (no versions) |
+| Caching | HTTP caching works | Requires custom strategy | REST (simpler caching) |
+| Security | Well known patterns | New attack vectors (query complexity) | REST (fewer concerns) |
+| Tooling maturity | Mature ecosystem | Growing ecosystem | REST (more tools) |
+| Documentation | Often outdated (Swagger) | Self-documenting (schema) | GraphQL (always current) |
+
+## Detailed Analysis
+
+### Performance
+
+**REST API:**
+- Multiple endpoints for related data
+- 3-5 requests typical for single view
+- Sequential requests create waterfalls
+- Over-fetching common (get full objects)
+- Product list: 850ms, 245KB
+
+**GraphQL API:**
+- Single query for related data
+- 1 request per view regardless of complexity
+- Parallel data fetching server-side
+- Exact data requested (no over-fetching)
+- Product list: 380ms, 95KB
+
+**Comparison:**
+GraphQL significantly faster (55% avg) and more bandwidth-efficient (60% avg).
+Benefit strongest for complex, nested data. Simple single-resource fetches
+show smaller improvement (~15% overhead).
+
+**Trade-offs:**
+- Gain: Faster mobile experience, less bandwidth
+- Lose: HTTP caching simplicity
+
+**Verdict:** GraphQL wins for performance
+
+### Developer Experience
+
+**REST API:**
+- New feature → new endpoint or version
+- API versioning creates maintenance burden
+- Documentation often out of sync
+- Frontend must know endpoint structure
+- Average feature: 5 hours
+
+**GraphQL API:**
+- New feature → extend schema
+- No versioning (deprecation markers)
+- Schema is always current (introspection)
+- Frontend can explore schema interactively
+- Average feature: 2.75 hours
+
+**Comparison:**
+GraphQL development 45% faster. Developers strongly prefer GraphQL
+DX (unsolicited positive feedback). Self-documenting nature major
+win. No versioning eliminates migration burden.
+
+**Trade-offs:**
+- Gain: Faster development, better DX, no versioning
+- Lose: Need to learn GraphQL patterns
+
+**Verdict:** GraphQL wins for developer experience
+
+### Operational Complexity
+
+**REST API:**
+- Well understood (team has 3 years experience)
+- HTTP caching works automatically
+- Simple rate limiting (per endpoint)
+- Monitoring straightforward (endpoint-based)
+- Known security patterns
+
+**GraphQL API:**
+- New to team (learning required)
+- Custom caching strategy needed
+- Rate limiting by query complexity
+- Need query-specific monitoring
+- New attack vectors (query complexity DoS)
+
+**Comparison:**
+REST simpler operationally due to familiarity and HTTP primitives.
+GraphQL requires new patterns: query complexity limits, DataLoader
+for N+1 prevention, custom caching, complexity-based rate limiting.
+
+However, GraphQL eliminates ongoing complexity: no API versioning,
+no documentation drift, single endpoint.
+
+**Trade-offs:**
+- Lose: HTTP caching, familiar patterns
+- Gain: No versioning, no documentation drift
+
+**Verdict:** REST simpler initially, GraphQL simpler long-term
+
+### Migration Risk
+
+**REST API:**
+- No migration (continue as-is)
+- Risk: None
+- Effort: None
+
+**GraphQL API:**
+- Requires migration or dual support
+- Risk: Breaking existing clients
+- Effort: Dual support or gradual migration
+
+**Comparison:**
+REST has zero migration risk (status quo). GraphQL requires careful
+migration strategy. Can run dual REST/GraphQL during transition.
+
+**Trade-offs:**
+- Risk: Migration complexity, potential client breakage
+- Gain: Long-term benefits worth migration cost
+
+**Verdict:** REST wins for zero migration risk
+
+---
+
+## Summary
+
+**REST strengths to preserve:**
+- HTTP caching simplicity
+- Team expertise and comfort
+- Well-understood operational patterns
+- Mature tooling ecosystem
+
+**REST weaknesses to address:**
+- Multiple requests for related data (latency)
+- Over-fetching (bandwidth waste)
+- API versioning burden (maintenance)
+- Documentation drift (developer frustration)
+
+**GraphQL advantages:**
+- 55% faster mobile latency (major user benefit)
+- 61% less bandwidth (better mobile experience)
+- 45% faster development (velocity boost)
+- Self-documenting (always accurate)
+- No versioning (eliminates maintenance burden)
+- Strong typing (catch errors early)
+
+**GraphQL disadvantages:**
+- Learning curve (mitigated by training)
+- Custom caching needed (solvable with Apollo Client)
+- New security concerns (addressed with query limits)
+- Migration required (manageable with dual support)
+
+**Overall assessment:**
+
+GraphQL advantages significantly outweigh disadvantages. Performance
+improvements (55% latency, 61% bandwidth) directly address top user
+complaint. Developer velocity boost (45%) is substantial and sustainable.
+Elimination of API versioning removes ongoing maintenance burden.
+
+Disadvantages are manageable: Learning curve is temporary, caching
+solutions exist, security concerns have known mitigations, migration
+can be gradual.
+
+**Recommendation:** Adopt GraphQL with gradual migration plan.
+
+**Migration Strategy:**
+1. Run dual REST/GraphQL during transition (3 months)
+2. New features use GraphQL only
+3. Migrate critical mobile views to GraphQL (biggest wins)
+4. Gradually migrate remaining clients
+5. Deprecate REST after all clients migrated (6-12 months)
+
+**Risk Mitigation:**
+- Training program for all engineers (2 weeks)
+- Implement query complexity limits before public API
+- Use DataLoader pattern for all resolvers
+- Monitoring dashboard for GraphQL-specific metrics
+- Dual support eliminates migration risk
+```
+
+---
+
+**Branch Resolution Pattern:**
+
+Decide what to do with exploration:
+
+**Resolution Template:**
+```
+# Resolution: [Topic]
+
+**Date:** [Date]
+**Decision:** [Graduate / Archive / Merge]
+
+## Evidence Summary
+
+**Success Criteria Met:**
+- [Criterion 1]: [Result]
+- [Criterion 2]: [Result]
+
+**Hypothesis:** [Original hypothesis]
+**Outcome:** [Confirmed / Rejected / Partially confirmed]
+
+## Decision Rationale
+
+**Why [decision]:**
+- [Reason 1 with evidence]
+- [Reason 2 with evidence]
+- [Reason 3 with evidence]
+
+**Trade-offs accepted:**
+- [Trade-off 1]
+- [Trade-off 2]
+
+**Alternatives considered:**
+- [Alternative 1]: [Why not chosen]
+- [Alternative 2]: [Why not chosen]
+
+---
+
+## Next Actions
+
+**If Graduate to Production:**
+1. [Migration step 1]
+2. [Migration step 2]
+...
+
+**If Archive:**
+- Reason: [Why not pursuing]
+- Learning preserved: [What we learned]
+- Future reconsideration: [Under what conditions]
+
+**If Merge:**
+- Adopt: [Which parts]
+- Keep: [Which parts of current]
+- Integration: [How to combine]
+
+---
+
+## Documentation Updates
+
+**Production knowledge to update:**
+- systemPatterns.md: [Changes needed]
+- techContext.md: [Changes needed]
+- activeContext.md: [Changes needed]
+
+**Construction knowledge to archive:**
+- Move exploration to /construction/archived/[topic]
+- Add resolution summary
+- Link from archived to production
+
+**Knowledge preserved:**
+[Summary of what was learned regardless of outcome]
+```
+
+</output-format>
+
+<instructions>
+CRITICAL: Branching enables exploration without disrupting production knowledge.
+
+NEVER branch by:
+- Overwriting production knowledge (history lost)
+- Exploring without hypothesis (no direction)
+- Forgetting to link to production (disconnected)
+- Abandoning exploration without documenting (learning lost)
+- Deciding without evidence (not validated)
+- Merging exploration without decision rationale (unclear)
+
+DO NOT:
+- Replace production patterns before validation
+- Explore indefinitely without resolution
+- Ignore lessons from failed explorations
+- Archive without preserving learning
+- Skip comparison to current approach
+- Graduate without meeting success criteria
+
+ALWAYS:
+- Create separate construction zone for exploration
+- State hypothesis and success criteria upfront
+- Preserve production knowledge throughout exploration
+- Link exploration to production knowledge being challenged
+- Document findings systematically
+- Compare alternative to current with evidence
+- Resolve intentionally (graduate, archive, or merge)
+- Preserve learning regardless of outcome
+
+REPEAT: Branching is parallel knowledge development. Preserve production while exploring alternatives. Resolve with evidence-based decision.
+</instructions>
+
+<examples>
+✅ GOOD Branch (clear hypothesis, systematic exploration):
+
+**Pattern demonstrates:**
+- Clear hypothesis with success criteria
+- Systematic investigation
+- Evidence-based comparison
+- Intentional resolution
+- Learning preserved
+
+**Example branch:**
+```
+Created: /construction/explorations/graphql/
+
+hypothesis.md (shown earlier - complete)
+investigation.md (shown earlier - complete)
+comparison.md (shown earlier - complete)
+
+resolution.md:
+
+# Resolution: GraphQL Alternative
+
+**Date:** 2026-03-15
+**Decision:** Graduate to Production (with gradual migration)
+
+## Evidence Summary
+
+**Success Criteria Met:**
+✓ Latency reduction: 58% average (target: 50%)
+✓ Developer velocity: 45% improvement (target: 30%)
+✓ Bandwidth reduction: 60% average (target: 40%)
+✓ Security: Equivalent with query complexity limits
+✓ Server performance: Handles production load + 50% headroom
+
+**Hypothesis:** "By adopting GraphQL, we will reduce mobile API latency
+by 50% and improve developer velocity by 30% because clients will make
+single optimized requests instead of multiple REST calls."
+
+**Outcome:** Hypothesis confirmed and exceeded
+
+## Decision Rationale
+
+**Why Graduate to Production:**
+
+1. Performance improvements exceed targets (58% vs 50% target)
+   - User impact: Dramatically better mobile experience
+   - Business impact: Higher conversion (speed affects sales)
+   - Evidence: Load testing across 5 critical views
+
+2. Developer velocity boost substantial (45% vs 30% target)
+   - Team impact: Features ship faster
+   - Quality impact: Less complexity, fewer bugs
+   - Evidence: Tracked 3 feature builds, developer feedback
+
+3. Long-term benefits outweigh migration cost
+   - Eliminates API versioning burden (major maintenance win)
+   - Self-documenting reduces support burden
+   - Better DX improves team morale
+
+4. Risks are manageable with mitigations identified
+   - Query complexity: Limits implemented and tested
+   - N+1 queries: DataLoader patterns validated
+   - Migration: Dual support strategy de-risks
+
+**Trade-offs accepted:**
+- Accepting: Learning curve (temporary, training mitigates)
+- Accepting: Custom caching (solutions exist, Apollo Client)
+- Accepting: New operational patterns (team can learn)
+- Accepting: Migration effort (6 weeks, worth long-term gain)
+
+**Alternatives considered:**
+- Keep REST: Doesn't address performance issues, rejected
+- Optimize REST: Would only get 20% improvement, insufficient
+- Hybrid (GraphQL for mobile only): Maintenance burden of two APIs, rejected
+
+---
+
+## Next Actions
+
+**Migration Plan (6 months):**
+
+Phase 1: Foundation (Weeks 1-2)
+1. Deploy GraphQL server alongside REST
+2. Implement query complexity limits
+3. Set up GraphQL monitoring dashboard
+4. Train engineering team (2-day workshop)
+
+Phase 2: Critical Views (Weeks 3-8)
+1. Migrate 5 critical mobile views to GraphQL
+2. Monitor performance and errors closely
+3. Gather user feedback and metrics
+4. Iterate on schema based on learnings
+
+Phase 3: New Development (Weeks 9-12)
+1. All new features use GraphQL
+2. REST enters maintenance mode (bug fixes only)
+3. Document migration patterns for team
+4. Build out schema for remaining features
+
+Phase 4: Gradual Migration (Weeks 13-24)
+1. Migrate remaining clients to GraphQL
+2. Deprecate REST endpoints as clients migrate
+3. Monitor usage of REST endpoints
+4. Communication plan for external API users
+
+Phase 5: REST Sunset (Week 25-26)
+1. Final REST → GraphQL migrations
+2. Remove REST code
+3. Simplify to single API paradigm
+4. Celebrate and retrospective
+
+**Risk Mitigation:**
+- Dual support eliminates breaking changes
+- Can rollback to REST if critical issues
+- External API users get 6-month deprecation notice
+- Monitoring alerts on GraphQL errors
+
+---
+
+## Documentation Updates
+
+**Production knowledge to update:**
+
+systemPatterns.md:
+- Add "GraphQL API Architecture" section
+- Mark "REST API Design" as deprecated (date: 2026-03-15)
+- Link to migration guide
+
+techContext.md:
+- Add GraphQL server setup
+- Add Apollo Client configuration
+- Add query complexity limit configuration
+- Mark REST setup as deprecated
+
+activeContext.md:
+- Current focus: GraphQL migration Phase 1
+- Next steps: Deploy GraphQL server, team training
+- Remove "investigate GraphQL" (now decided)
+
+progress.md:
+- Mark "API exploration" completed
+- Add "GraphQL migration" with 6-month timeline
+
+productContext.md:
+- Update performance targets (achieved with GraphQL)
+
+**Construction knowledge to archive:**
+
+Move to: /construction/archived/graphql-exploration/
+Files preserved:
+- hypothesis.md (what we tested)
+- investigation.md (what we found)
+- comparison.md (how we evaluated)
+- resolution.md (why we decided)
+
+Added: README.md summarizing exploration for future reference
+
+**Knowledge preserved:**
+
+This exploration taught us:
+
+1. Performance validation methodology
+   - Load testing approach reusable for future explorations
+   - Comparison framework applicable to other decisions
+
+2. Query complexity is real security concern
+   - GraphQL needs depth/cost limits
+   - Attack patterns documented for future
+
+3. Developer experience matters for velocity
+   - Measured 45% improvement
+   - Team morale improved measurably
+   - DX is legitimate decision criterion
+
+4. Migration strategies
+   - Dual support de-risks transitions
+   - Gradual migration better than big bang
+   - External users need long notice periods
+
+5. Evidence-based decision making works
+   - Hypothesis → validate → decide
+   - Objective criteria prevent bike-shedding
+   - Data beats opinions
+
+Preserved in: /construction/archived/graphql-exploration/LESSONS.md
+
+---
+
+Result: Exploration graduated to production with clear plan and
+preserved learning. Future engineers can understand complete journey
+from hypothesis to decision.
+```
+
+**Why this works:**
+- Hypothesis stated clearly upfront
+- Systematic investigation with evidence
+- Objective comparison with current approach
+- Success criteria met with data
+- Decision rationale is evidence-based
+- Migration plan is concrete
+- Learning preserved regardless
+- Future engineers see complete exploration
+
+---
+
+❌ BAD Branch (no hypothesis, abandoned without learning):
+
+**Anti-pattern characteristics:**
+- No clear hypothesis
+- Exploration without direction
+- Abandoned without documentation
+- Learning lost
+- Disconnected from production
+
+**Bad branch:**
+```
+Started trying GraphQL, seemed cool.
+
+Built a prototype, kind of worked.
+
+Then stopped working on it.
+
+No documentation of findings.
+No comparison to REST.
+No decision documentation.
+No learning captured.
+
+Just abandoned in /construction/graphql-thing/
+
+Production docs unchanged.
+No reference to exploration.
+```
+
+**Why this fails:**
+- No hypothesis (what were we testing?)
+- No success criteria (how to evaluate?)
+- No findings documentation (what did we learn?)
+- No decision rationale (why abandoned?)
+- Learning completely lost
+- Future might repeat same exploration
+- Time wasted with nothing to show
+
+**Impact:**
+```
+6 months later, someone suggests GraphQL:
+
+"Didn't we try that?"
+"I think so? Not sure what happened."
+"No documentation anywhere."
+"Let's try again from scratch."
+
+→ Waste same time re-exploring
+→ Make same discoveries again
+→ Learn same lessons again
+→ Could have been prevented with documentation
+```
+</examples>

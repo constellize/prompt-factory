@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Constellize marketplace plugin definitions",
+  "marketplace": {
+    "name": "constellize-marketplace",
+    "owner": {
+      "name": "Steve Atkinson",
+      "url": "https://constellize.com"
+    },
+    "description": "Official Constellize methodology plugins for Claude Code"
+  },
+  "plugins": [
+    {
+      "id": "constellize-planning",
+      "name": "Constellize Planning",
+      "description": "Planning and requirements skills and agents for software projects",
+      "chapter": 1,
+      "skills": {
+        "category": "planning",
+        "include": [
+          "business-problem",
+          "vision-statement",
+          "ecosystem-map",
+          "raci-matrix",
+          "specification"
+        ]
+      },
+      "agents": {
+        "subcategories": ["product-managers", "requirements-analysts"]
+      }
+    },
+    {
+      "id": "constellize-architecture",
+      "name": "Constellize Architecture",
+      "description": "Architecture and design skills and agents",
+      "chapter": 3,
+      "skills": {
+        "category": "architecture",
+        "include": [
+          "constellation-map",
+          "gap-analysis",
+          "lock-constellation",
+          "implementation-sketch",
+          "code-generation-plan"
+        ]
+      },
+      "agents": {
+        "subcategories": ["system-architects", "data-specialists", "ux-ui-designers"]
+      }
+    },
+    {
+      "id": "constellize-quality",
+      "name": "Constellize Quality",
+      "description": "Quality gates, testing, and health check skills and agents",
+      "chapter": 4,
+      "skills": {
+        "category": "quality",
+        "include": [
+          "write-unit-tests",
+          "write-integration-tests",
+          "write-contract-tests",
+          "validate-test-coverage",
+          "implement-infrastructure-health-checks",
+          "implement-application-health-validation",
+          "implement-operational-monitoring",
+          "implement-actionable-health-reporting"
+        ]
+      },
+      "agents": {
+        "subcategories": ["qa-engineers", "security-engineers", "performance-engineers"]
+      }
+    },
+    {
+      "id": "constellize-deployment",
+      "name": "Constellize Deployment",
+      "description": "Deployment and operations skills and agents",
+      "chapter": 4,
+      "skills": {
+        "category": "deployment",
+        "include": [
+          "build-reliable-containers",
+          "externalize-configuration",
+          "achieve-environment-independence",
+          "implement-rollback-capability"
+        ]
+      },
+      "agents": {
+        "subcategories": ["devops-engineers", "release-engineers"]
+      }
+    },
+    {
+      "id": "constellize-development",
+      "name": "Constellize Development",
+      "description": "Software development agents",
+      "skills": {
+        "category": null
+      },
+      "agents": {
+        "subcategories": ["software-engineers", "specialized-engineers"]
+      }
+    },
+    {
+      "id": "constellize-excellence",
+      "name": "Constellize Excellence",
+      "description": "Continuous excellence and maintenance skills",
+      "chapter": 4,
+      "skills": {
+        "category": "excellence",
+        "include": [
+          "achieve-documentation-completeness",
+          "ensure-architectural-consistency",
+          "ensure-team-comprehension",
+          "maintain-dependency-hygiene",
+          "establish-feedback-loops",
+          "foster-continuous-learning",
+          "track-quality-metrics"
+        ]
+      },
+      "agents": {
+        "subcategories": []
+      }
+    },
+    {
+      "id": "constellize-ai-workflow",
+      "name": "Constellize AI Workflow",
+      "description": "AI-assisted development and review skills",
+      "chapter": 4,
+      "skills": {
+        "category": "ai-workflow",
+        "include": [
+          "leverage-ai-assistance",
+          "validate-ai-changes",
+          "pre-commit-review",
+          "pre-merge-review",
+          "pre-deployment-review"
+        ]
+      },
+      "agents": {
+        "subcategories": []
+      }
+    },
+    {
+      "id": "constellize-memory-bank",
+      "name": "Constellize Memory Bank",
+      "description": "Memory bank establishment, maintenance, and recovery skills",
+      "chapter": 5,
+      "skills": {
+        "category": "memory-bank",
+        "include": [
+          "establish-memory-bank",
+          "update-memory-bank",
+          "branch-memory-bank",
+          "revise-memory-bank",
+          "retire-memory-bank",
+          "recover-from-staleness-drift",
+          "recover-from-noise-accumulation",
+          "recover-from-abandonment",
+          "establish-stewardship-practices",
+          "rebuild-core-knowledge",
+          "triage-salvageable-knowledge"
+        ]
+      },
+      "agents": {
+        "custom": ["knowledge-steward"]
+      }
+    },
+    {
+      "id": "constellize-operations",
+      "name": "Constellize Operations",
+      "description": "Operational knowledge and incident management skills",
+      "chapter": 7,
+      "skills": {
+        "category": "operations",
+        "include": [
+          "establish-operational-memory-bank",
+          "assess-operational-knowledge-health",
+          "document-incident-investigation",
+          "query-operational-knowledge-during-incidents",
+          "write-incident-postmortem",
+          "create-operational-runbook",
+          "design-proactive-operational-architecture",
+          "cross-reference-operational-dependencies"
+        ]
+      },
+      "agents": {
+        "subcategories": []
+      }
+    },
+    {
+      "id": "constellize-organization",
+      "name": "Constellize Organization",
+      "description": "Organizational knowledge discovery and management skills",
+      "chapter": 6,
+      "skills": {
+        "category": "organization",
+        "include": [
+          "detect-terminology-drift",
+          "discover-organizational-knowledge-connections",
+          "extract-decisions-from-meetings",
+          "surface-duplicated-effort"
+        ]
+      },
+      "agents": {
+        "subcategories": []
+      }
+    },
+    {
+      "id": "constellize-learning",
+      "name": "Constellize Learning",
+      "description": "Team and personal learning skills",
+      "chapter": 8,
+      "skills": {
+        "category": "learning",
+        "include": [
+          "capture-sprint-learnings",
+          "conduct-knowledge-retrospective",
+          "create-knowledge-contribution",
+          "document-personal-learning-journey",
+          "evolve-requirements-from-implementation"
+        ]
+      },
+      "agents": {
+        "subcategories": []
+      }
+    },
+    {
+      "id": "constellize-evolution",
+      "name": "Constellize Evolution",
+      "description": "System evolution and health tracking skills",
+      "chapter": 8,
+      "skills": {
+        "category": "evolution",
+        "include": [
+          "assess-system-health-over-time",
+          "document-architectural-evolution"
+        ]
+      },
+      "agents": {
+        "subcategories": []
+      }
+    },
+    {
+      "id": "constellize-adoption",
+      "name": "Constellize Adoption",
+      "description": "Team onboarding and adoption skills",
+      "chapter": 9,
+      "skills": {
+        "category": "adoption",
+        "include": [
+          "create-memory-bank-training-exercise",
+          "diagnose-adoption-obstacles",
+          "grow-memory-bank-organically",
+          "guide-first-week-adoption",
+          "onboard-team-to-memory-banks"
+        ]
+      },
+      "agents": {
+        "custom": ["adoption-coach"]
+      }
+    }
+  ]
+}

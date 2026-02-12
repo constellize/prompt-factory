@@ -1,0 +1,464 @@
+---
+# === Identity ===
+id: guide-first-week-adoption
+name: Provide structured five-day guidance from curiosity to practice
+version: v1
+
+# === Classification ===
+chapter: 9
+category: adoption
+subcategory: adoption
+tags:
+  - first-week
+  - structured-guidance
+  - daily-path
+  - adoption-momentum
+  - early-wins
+  - five-day-journey
+  - practical-adoption
+  - challenge-solutions
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Provide structured five-day guidance from curiosity to practice.
+    Guide individual or team through first week with daily activities, checkpoints, success indicators, and common challenge solutions—enabling early wins and momentum that lead to continued adoption.
+  argument-hint: "[engineer_name] [context_type] [adoption_style]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: engineer_name
+    description: Individual or team adopting memory bank practices
+    example: "Your name"
+    maps-to: "$0"
+  - name: context_type
+    description: Type of project context
+    example: "Feature development"
+    maps-to: "$1"
+  - name: adoption_style
+    description: Solo or team adoption
+    example: "Solo practice"
+    maps-to: "$2"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/guide-first-week-adoption
+  marketplace:
+    plugin: constellize-adoption
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Guide {{engineer_name}}'s first week of {{adoption_style}} with Constellize memory banks by providing day-by-day guidance through five-day path from curiosity to practice—Day 1: Create minimal memory bank (2 files), Day 2: Document architectural decision, Days 3-4: Try plan-prompt-proceed with real task, Day 5: Reflect and evolve—including checkpoints and success indicators, addressing common first-week challenges, enabling either solo or team adoption with early wins building momentum.
+</task>
+
+<context>
+Engineer/Team: {{engineer_name}}
+Context: {{context_type}}
+Style: {{adoption_style}}
+
+First week is critical. Success here determines whether adoption continues or stalls. First week succeeds when:
+1. Early wins build confidence
+2. Value is visible (not theoretical)
+3. Process feels manageable (not overwhelming)
+4. Support is available (not solo)
+
+Connects to Chapter 9 adoption theme: Structured path from curiosity to practice.
+</context>
+
+<thinking>
+Before first week guidance:
+1. What can {{engineer_name}} accomplish in first week?
+2. What would be early wins?
+3. What would overwhelm?
+4. What support is needed?
+5. How to measure success?
+</thinking>
+
+<output-format>
+
+## Five-Day First Week Path
+
+```
+# First Week Adoption Guide: {{engineer_name}}
+
+Person/Team: {{engineer_name}}
+Week: [YYYY-MM-DD through YYYY-MM-DD]
+Context: {{context_type}}
+Style: {{adoption_style}}
+
+## Five-Day Path: Curiosity to Practice
+
+DAY 1: Create Minimal Memory Bank (1 hour)
+DAY 2: Document One Decision (1 hour)
+DAY 3-4: Plan-Prompt-Proceed (4-6 hours)
+DAY 5: Reflect and Evolve (1 hour)
+
+Total time: 7-9 hours across week
+
+## Day 1: Create Minimal Memory Bank
+
+**Goal:** Build confidence through quick win
+
+**What to do:**
+1. Create team memory bank directory
+2. Create systemPatterns.md:
+   - Add 3-5 key patterns your team uses
+   - Keep it minimal (1-2 paragraphs each)
+3. Create techContext.md:
+   - Add key technologies/versions
+   - Keep it minimal (what someone needs to know)
+
+**Time:** ~1 hour
+**Success:** You have 2 documents, can share with team
+
+**Checkpoint:**
+- [ ] Created memory-bank/ directory
+- [ ] Created systemPatterns.md with 3-5 patterns
+- [ ] Created techContext.md with tech decisions
+- [ ] Both files have real examples
+
+**Common challenge:** Perfectionism ("This isn't complete")
+Response: "Perfect is enemy of done. Start minimal, expand when needed."
+
+## Day 2: Document One Architectural Decision
+
+**Goal:** Experience value of decision documentation
+
+**What to do:**
+1. Identify one architectural decision (past or current)
+2. Create ADR (Architectural Decision Record):
+   - What decision was made?
+   - Why was it made?
+   - What were alternatives?
+   - What are trade-offs?
+3. Save as: decisions/adr-001-[decision-name].md
+
+**Time:** ~1 hour
+**Success:** You have written one ADR
+
+**Checkpoint:**
+- [ ] Identified specific decision
+- [ ] Wrote ADR with context and rationale
+- [ ] Included alternatives considered
+- [ ] Saved in decisions/ directory
+
+**Why this matters:** Show that preserved reasoning enables confident decisions.
+
+## Days 3-4: Try Plan-Prompt-Proceed
+
+**Goal:** Experience full value of memory bank + AI
+
+**What to do:**
+Pick real feature/task to implement. Follow pattern:
+
+**Day 3 (Morning): Planning**
+1. Read your memory bank
+2. Identify relevant patterns
+3. Create implementation plan:
+   - Architecture approach
+   - Key decisions
+   - Known patterns to follow
+
+**Day 3 (Afternoon): Prompting**
+1. Create detailed prompt for AI:
+   - Problem statement
+   - Context from memory bank
+   - Specific requirements
+   - Success criteria
+2. Share with AI assistant
+
+**Day 4: Proceeding**
+1. Review AI suggestions
+2. Compare to memory bank patterns
+3. Implement, checking against patterns
+4. Does implementation follow documented patterns?
+
+**Time:** 4-6 hours (normal development work)
+**Success:** Feature implemented with memory bank reference
+
+**Checkpoint:**
+- [ ] Planning used memory bank
+- [ ] Prompt included memory bank context
+- [ ] Implementation followed documented patterns
+- [ ] Felt faster/better than without memory bank
+
+**Common challenge:** "This is slowing me down"
+Response: "First time slower (learning). Second time faster (pattern reuse)."
+
+## Day 5: Reflect and Evolve
+
+**Goal:** Consolidate learning, plan for future
+
+**What to do:**
+
+**Morning: Individual Reflection (30 min)**
+1. What did I learn?
+2. What memory bank helped with?
+3. What was missing?
+4. What should I add?
+
+**Afternoon: Share and Decide (30 min)**
+1. Share with team/mentor
+2. One key learning
+3. One suggestion for memory bank
+4. Decide: Continue this practice?
+
+**Documentation:**
+- Add reflection to memory-bank/progress.md
+- Create issue for memory bank improvements
+- Plan next week's adoption steps
+
+**Time:** 1 hour
+**Success:** Reflection captured, decision made
+
+**Checkpoint:**
+- [ ] Wrote reflection of week's learning
+- [ ] Shared one key learning with team
+- [ ] Identified one improvement to memory bank
+- [ ] Feel ready to continue practice
+
+**Reflection Questions:**
+- What surprised you about memory banks?
+- What provided most value?
+- What would you do differently next time?
+- Will you continue this practice?
+
+```
+
+---
+
+## Success Indicators by Day
+
+```
+DAY 1: Early Win
+- Created memory bank (even if minimal)
+- Feels manageable (not overwhelming)
+- Small success builds confidence
+
+DAY 2: Value Demonstration
+- Documented decision with reasoning
+- Sees how this helps future decision-makers
+- Understands value of preserving context
+
+DAYS 3-4: Pattern Reuse
+- Uses memory bank during planning
+- AI understands problem through context
+- Implementation follows patterns
+- Feels faster than without memory bank
+
+DAY 5: Reflection and Commitment
+- Captured learning from week
+- Identified value from memory banks
+- Committed to continuing practice
+- Ready for next week
+
+```
+
+---
+
+## Common First-Week Challenges and Solutions
+
+```
+Challenge 1: "Doesn't feel useful yet"
+- Expected: Takes 2-3 practices to feel natural
+- Solution: Complete full week before deciding
+- Perspective: Pattern reuse happens on second use
+
+Challenge 2: "Takes too long to document"
+- Expected: First time slower (learning)
+- Solution: Keep minimal, iterate
+- Perspective: Second time faster (copy pattern, customize)
+
+Challenge 3: "Not sure what to document"
+- Expected: Only document what team actually needs
+- Solution: Document when you ask a question
+- Perspective: If you had to ask, others will too
+
+Challenge 4: "Documentation gets outdated"
+- Expected: Yes, needs active curation
+- Solution: Make updates part of normal workflow
+- Perspective: Imperfect docs better than no docs
+
+Challenge 5: "Team doesn't care"
+- Expected: Takes time to see value
+- Solution: Show concrete examples of time saved
+- Perspective: Early wins convince skeptics
+
+```
+
+---
+
+## Example: First Week Adoption
+
+```markdown
+# First Week: Solo Developer Adopting Memory Banks
+
+Developer: Jordan
+Week: Feb 3-7, 2026
+Context: Feature development (new payment webhook handler)
+
+---
+
+## DAY 1 (Monday): Minimal Memory Bank
+
+**What I did:**
+1. Created memory-bank/ directory
+2. Created systemPatterns.md:
+   - Event sourcing pattern
+   - Async processing pattern
+   - Webhook idempotency pattern
+3. Created techContext.md:
+   - RabbitMQ configuration
+   - Stripe webhook structure
+   - Payment state machine
+
+**Time:** 45 minutes
+
+**Felt:** Quick win! Got 2 documents with 3-5 key patterns, felt achievable
+
+**Checkpoint:** ✓ All items completed
+
+---
+
+## DAY 2 (Tuesday): Architecture Decision
+
+**What I did:**
+1. Wrote ADR about "Use event-driven processing for payments"
+2. Included:
+   - Decision: Async event-driven vs. sync
+   - Context: Scaling requirements, cascading failure risks
+   - Alternatives: Keep monolithic sync, webhook-only
+   - Trade-offs: Operational complexity for scalability
+
+**Time:** 1 hour
+
+**Felt:** Understood why system designed this way. Realized preserved reasoning valuable.
+
+**Checkpoint:** ✓ ADR written, captures key reasoning
+
+---
+
+## DAY 3-4 (Wed-Thu): Plan-Prompt-Proceed
+
+**Feature:** Implement webhook handler for Stripe payment confirmations
+
+**Planning (Wednesday Morning):**
+1. Read memory bank:
+   - Event sourcing pattern (applies!)
+   - Webhook idempotency pattern (applies!)
+   - Async processing pattern (applies!)
+2. Created plan:
+   - Use event sourcing for payment transitions
+   - Idempotent handler (detect duplicates)
+   - Async process, not blocking
+
+**Prompting (Wednesday Afternoon):**
+Created prompt including:
+- Problem: Implement webhook handler for Stripe
+- Context: Event sourcing pattern, idempotency requirement
+- Requirements: Handle duplicate webhooks, record payment state
+- Success criteria: Idempotent, follows event sourcing
+
+**Proceeding (Thursday):**
+1. AI provided webhook implementation outline
+2. Checked against patterns: ✓ Used event sourcing, ✓ Idempotent
+3. Implemented handler
+4. Compared to memory bank patterns: Matched!
+
+**Time:** ~5 hours (normal dev time, included AI collaboration)
+
+**Felt:** Faster planning (found patterns immediately), clearer implementation (knew patterns to follow), fewer design questions
+
+**Checkpoint:** ✓ All phases completed, feature implemented
+
+---
+
+## DAY 5 (Friday): Reflect and Evolve
+
+**Reflection:**
+- What I learned: How memory bank guides implementation, importance of idempotency
+- Memory bank helped: Found webhook idempotency pattern, applied consistently
+- Missing: Common webhook mistakes and recovery strategies
+- To add: Webhook error handling patterns
+
+**Share with team:**
+"Memory bank made planning faster and implementation more consistent. We should add webhook error handling patterns."
+
+**Added to memory bank:**
+- Issue: "Document webhook error scenarios and recovery"
+- Plan: Add to systemPatterns.md after this feature complete
+
+**Reflection questions:**
+- Surprised by: How much context helps AI (clear prompts, better code)
+- Most valuable: Pattern library (didn't have to design from scratch)
+- Next time: Start planning by reading memory bank (do this first)
+- Continue practice: Yes! Plan to use for next feature
+
+---
+
+## Week Summary
+
+Time invested: 8 hours (distributed across week)
+
+Value experienced:
+- Found 3 existing patterns (saved design time)
+- Implemented webhook handler faster than usual
+- More confident in implementation (following documented patterns)
+- Clear improvement for next similar task
+
+Commitment: Continue using for next webhook feature (similar domain)
+
+Next week: Use memory bank for feature 2, expand patterns based on learnings
+
+```
+
+```
+
+</output-format>
+
+<instructions>
+CRITICAL: First week is about experiencing value and building momentum, not mastering everything.
+
+DO NOT:
+- Try to create comprehensive memory bank in one week
+- Expect perfection (iterate and improve)
+- Make it feel like homework (integrate with real work)
+- Overwhelm with all possible practices (focus on core pattern)
+- Expect team adoption without early wins
+
+ALWAYS:
+- Build early wins (Day 1 creates files, Day 2 documents decision)
+- Make value visible quickly (Days 3-4 show benefit)
+- Reflect on learning (Day 5 cements understanding)
+- Support through challenges (anticipate and address)
+- Celebrate progress (weekly summary of value)
+- Enable continuation (plan for week 2)
+
+REMEMBER: First week succeeds when someone thinks "I want to do this again." Design each day for that moment.
+</instructions>
+
+<examples>
+
+[See template example above showing Jordan's first week solo adoption - demonstrates minimal start, early wins, pattern discovery, and value realization]
+
+</examples>

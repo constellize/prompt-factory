@@ -1,0 +1,645 @@
+---
+# === Identity ===
+id: achieve-environment-independence
+name: Achieve environment independence so deployment processes work identically across dev, staging, and production
+version: v1
+
+# === Classification ===
+chapter: 4
+category: deployment
+subcategory: gate-3
+tags:
+  - quality
+  - deployment
+  - environment-independence
+  - migrations
+  - gate-3
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Achieve environment independence so deployment processes work identically across dev, staging, and production.
+    Making deployments work the same way in all environments (Gate 3: Deployment Readiness).
+  argument-hint: "[component_name] [system_name]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: component_name
+    description: The specific component to achieve environment independence for
+    example: "PaymentProcessor"
+    maps-to: "$0"
+  - name: system_name
+    description: The name of your system
+    example: "Payment Processing System"
+    maps-to: "$1"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/achieve-environment-independence
+  marketplace:
+    plugin: constellize-deployment
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Achieve environment independence for {{component_name}} in {{system_name}} so deployment processes work identically across dev, staging, and production.
+
+The same container image and deployment scripts should work everywhere, eliminating environment-specific variations. Service discovery must function in all target environments, finding dependencies regardless of infrastructure. Database migrations need to execute reliably without manual intervention and be rollback-safe. All required dependencies must be available and accessible in target environments.
+
+Follow this process:
+
+1. **Use identical deployment process:**
+   - Same container image across all environments (build once, deploy many)
+   - Same deployment scripts/manifests (Kubernetes YAML, Docker Compose)
+   - Environment differences ONLY in configuration (environment variables)
+   - Version everything (image tags, migration versions, config versions)
+
+2. **Implement service discovery:**
+   - Use DNS-based discovery (not hardcoded IPs)
+   - Support multiple discovery mechanisms (DNS, Consul, Kubernetes)
+   - Retry connection with exponential backoff
+   - Fail fast if required services unavailable after retries
+
+3. **Create reliable database migrations:**
+   - Version migrations (timestamp or sequential numbers)
+   - Idempotent migrations (can run multiple times safely)
+   - Rollback scripts for every migration
+   - Test migrations in staging before production
+   - Lock during migration to prevent conflicts
+
+4. **Verify dependency availability:**
+   - Document all runtime dependencies (databases, caches, APIs)
+   - Test dependency connectivity at startup
+   - Support graceful degradation when optional dependencies unavailable
+   - Provide clear error messages for missing required dependencies
+</task>
+
+<context>
+Component to achieve environment independence:
+{{component_name}}
+
+**Standard Construction Folder Structure:**
+This prompt creates:
+- Deployment manifests (Kubernetes, Docker Compose)
+- Service discovery configuration
+- Database migration scripts with rollback
+- Dependency verification at startup
+- Environment-specific configuration files
+</context>
+
+<thinking>
+Before achieving environment independence, analyze:
+1. What differs between dev/staging/production? (only configuration should differ)
+2. How do services find each other in each environment?
+3. What database schema changes are needed?
+4. What dependencies are required vs optional?
+5. How do we test deployment process before production?
+</thinking>
+
+<output-format>
+Create Kubernetes deployment manifest:
+
+```yaml
+# ENVIRONMENT INDEPENDENCE: {{component_name}}
+# Purpose: Same deployment process for dev/staging/production
+# Usage: kubectl apply -f deployment.yaml
+#
+# Environment differences:
+# - Namespace: dev, staging, production
+# - ConfigMap: config-dev, config-staging, config-production
+# - Replicas: 1 (dev), 2 (staging), 3+ (production)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{component_name}}
+  # CRITICAL: Use same manifest, different namespace
+  namespace: {{ .Values.environment }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{component_name}}
+  template:
+    metadata:
+      labels:
+        app: {{component_name}}
+        version: {{ .Values.imageTag }}
+    spec:
+      containers:
+      - name: {{component_name}}
+        # CRITICAL: Same image across all environments
+        image: registry.example.com/{{component_name}}:{{ .Values.imageTag }}
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 3000
+          name: http
+
+        # CRITICAL: Load environment-specific configuration
+        envFrom:
+        - configMapRef:
+            name: {{component_name}}-config
+        - secretRef:
+            name: {{component_name}}-secrets
+
+        # Health checks (same across environments)
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{component_name}}
+  namespace: {{ .Values.environment }}
+spec:
+  selector:
+    app: {{component_name}}
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: ClusterIP
+```
+
+Implement service discovery:
+
+```[language]
+// SERVICE DISCOVERY: {{component_name}}
+// Purpose: Find dependencies in any environment
+// Supports: DNS, environment variables, service mesh
+//
+// Discovery order:
+// 1. Kubernetes DNS (service-name.namespace.svc.cluster.local)
+// 2. Environment variables (DATABASE_HOST, REDIS_HOST)
+// 3. Hardcoded localhost (development only)
+
+class ServiceDiscovery {
+  private readonly maxRetries = 5;
+  private readonly baseDelay = 1000;
+
+  // DISCOVER DATABASE: Find database in any environment
+  async discoverDatabase(): Promise<DatabaseConnection> {
+    // Try Kubernetes DNS first
+    const k8sUrl = this.tryKubernetesDNS('postgresql', 'database');
+    if (k8sUrl) {
+      return this.connectWithRetry(k8sUrl);
+    }
+
+    // Try environment variable
+    const envUrl = process.env.DATABASE_URL;
+    if (envUrl) {
+      return this.connectWithRetry(envUrl);
+    }
+
+    // Fallback to localhost (dev only)
+    if (process.env.NODE_ENV === 'development') {
+      const devUrl = 'postgresql://localhost:5432/mydb';
+      console.warn('Using localhost database (development only)');
+      return this.connectWithRetry(devUrl);
+    }
+
+    // CRITICAL: Fail fast if can't discover
+    throw new Error(
+      'Database discovery failed. Set DATABASE_URL or ensure Kubernetes DNS is working'
+    );
+  }
+
+  // TRY KUBERNETES DNS: Resolve service via Kubernetes DNS
+  private tryKubernetesDNS(serviceName: string, namespace: string): string | null {
+    try {
+      // In Kubernetes, services are discoverable via DNS
+      // Format: service-name.namespace.svc.cluster.local
+      const hostname = `${serviceName}.${namespace}.svc.cluster.local`;
+
+      // Check if running in Kubernetes
+      if (!process.env.KUBERNETES_SERVICE_HOST) {
+        return null;
+      }
+
+      return `postgresql://${hostname}:5432/mydb`;
+    } catch {
+      return null;
+    }
+  }
+
+  // CONNECT WITH RETRY: Exponential backoff
+  private async connectWithRetry(url: string): Promise<DatabaseConnection> {
+    let lastError: Error;
+
+    for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+      try {
+        const connection = await this.connect(url);
+        console.log(`Connected to database on attempt ${attempt + 1}`);
+        return connection;
+      } catch (error) {
+        lastError = error;
+        const delay = this.baseDelay * Math.pow(2, attempt);
+        console.warn(`Connection attempt ${attempt + 1} failed, retrying in ${delay}ms`);
+        await this.sleep(delay);
+      }
+    }
+
+    // CRITICAL: Fail fast after retries exhausted
+    throw new Error(
+      `Database connection failed after ${this.maxRetries} attempts: ${lastError.message}`
+    );
+  }
+
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+}
+```
+
+Create database migrations:
+
+```[language]
+// DATABASE MIGRATIONS: {{component_name}}
+// Purpose: Reliable schema changes across environments
+// Location: migrations/
+//
+// CRITICAL: Migrations MUST be:
+// - Versioned (timestamp or sequential)
+// - Idempotent (can run multiple times)
+// - Reversible (have rollback scripts)
+// - Tested in staging before production
+
+// Migration: 20260117_001_create_payments_table.ts
+export async function up(db: Database): Promise<void> {
+  // CRITICAL: Check if already applied (idempotent)
+  const exists = await db.query(`
+    SELECT EXISTS (
+      SELECT FROM information_schema.tables
+      WHERE table_name = 'payments'
+    )
+  `);
+
+  if (exists.rows[0].exists) {
+    console.log('Table payments already exists, skipping migration');
+    return;
+  }
+
+  // Apply migration
+  await db.query(`
+    CREATE TABLE payments (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      amount INTEGER NOT NULL,
+      currency VARCHAR(3) NOT NULL,
+      status VARCHAR(20) NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE INDEX idx_payments_status ON payments(status);
+    CREATE INDEX idx_payments_created_at ON payments(created_at);
+  `);
+
+  console.log('Migration applied: create_payments_table');
+}
+
+// Rollback: Reverse migration safely
+export async function down(db: Database): Promise<void> {
+  await db.query(`
+    DROP TABLE IF EXISTS payments CASCADE;
+  `);
+
+  console.log('Migration rolled back: create_payments_table');
+}
+
+// Migration runner with locking
+class MigrationRunner {
+  async runMigrations(): Promise<void> {
+    // CRITICAL: Lock to prevent concurrent migrations
+    await this.acquireLock();
+
+    try {
+      const pendingMigrations = await this.getPendingMigrations();
+
+      for (const migration of pendingMigrations) {
+        console.log(`Running migration: ${migration.name}`);
+        await migration.up(this.db);
+        await this.recordMigration(migration.name);
+      }
+
+      console.log('All migrations completed');
+    } finally {
+      await this.releaseLock();
+    }
+  }
+
+  private async acquireLock(): Promise<void> {
+    // Use advisory lock to prevent concurrent migrations
+    await this.db.query('SELECT pg_advisory_lock(123456)');
+  }
+
+  private async releaseLock(): Promise<void> {
+    await this.db.query('SELECT pg_advisory_unlock(123456)');
+  }
+}
+```
+
+Add dependency verification:
+
+```[language]
+// DEPENDENCY VERIFICATION: {{component_name}}
+// Purpose: Verify all dependencies available at startup
+// Fail fast if required dependencies missing
+
+async function verifyDependencies(): Promise<void> {
+  console.log('Verifying dependencies...');
+
+  const results = {
+    required: [] as { name: string; available: boolean; error?: string }[],
+    optional: [] as { name: string; available: boolean; error?: string }[],
+  };
+
+  // REQUIRED: Database (fail if unavailable)
+  try {
+    await database.query('SELECT 1');
+    results.required.push({ name: 'PostgreSQL Database', available: true });
+  } catch (error) {
+    results.required.push({
+      name: 'PostgreSQL Database',
+      available: false,
+      error: error.message,
+    });
+  }
+
+  // REQUIRED: Redis (fail if unavailable)
+  try {
+    await redis.ping();
+    results.required.push({ name: 'Redis Cache', available: true });
+  } catch (error) {
+    results.required.push({
+      name: 'Redis Cache',
+      available: false,
+      error: error.message,
+    });
+  }
+
+  // OPTIONAL: Stripe API (warn if unavailable, continue)
+  try {
+    await stripe.customers.list({ limit: 1 });
+    results.optional.push({ name: 'Stripe API', available: true });
+  } catch (error) {
+    results.optional.push({
+      name: 'Stripe API',
+      available: false,
+      error: error.message,
+    });
+    console.warn('⚠ Stripe API unavailable, payment processing will be disabled');
+  }
+
+  // CRITICAL: Fail fast if any required dependency unavailable
+  const unavailableRequired = results.required.filter(r => !r.available);
+  if (unavailableRequired.length > 0) {
+    console.error('✗ Required dependencies unavailable:');
+    unavailableRequired.forEach(dep => {
+      console.error(`  - ${dep.name}: ${dep.error}`);
+    });
+    console.error('\nEnsure all required dependencies are running and accessible');
+    process.exit(1);
+  }
+
+  console.log('✓ All required dependencies available');
+
+  // Warn about optional dependencies
+  const unavailableOptional = results.optional.filter(r => !r.available);
+  if (unavailableOptional.length > 0) {
+    console.warn('⚠ Optional dependencies unavailable (functionality degraded):');
+    unavailableOptional.forEach(dep => {
+      console.warn(`  - ${dep.name}: ${dep.error}`);
+    });
+  }
+}
+```
+</output-format>
+
+<instructions>
+CRITICAL: Environment independence requires same deployment process everywhere. Only configuration differs.
+
+NEVER achieve environment independence by:
+- Building different images for different environments (not same artifact)
+- Using different deployment scripts per environment (error-prone)
+- Hardcoding environment-specific values in code (not portable)
+- Requiring manual steps for deployment (not reliable)
+- Skipping migration testing in staging (production risk)
+- Making migrations irreversible (can't roll back)
+
+DO NOT:
+- Use :latest image tag (not versioned)
+- Skip service discovery (hardcoded IPs break)
+- Forget migration rollback scripts
+- Run migrations without locking (race conditions)
+- Deploy without dependency verification
+- Use different Kubernetes manifests per environment
+
+ALWAYS:
+- Build once, deploy many (same image everywhere)
+- Use same deployment manifests (only config differs)
+- Implement service discovery (DNS-based)
+- Version all migrations (timestamp or sequential)
+- Make migrations idempotent (can run multiple times)
+- Provide rollback scripts for every migration
+- Test migrations in staging before production
+- Verify dependencies at startup
+- Support graceful degradation for optional dependencies
+- Fail fast for required dependencies
+
+REPEAT: Same deployment process everywhere. Only configuration differs. Version everything. Migrations must be idempotent and reversible.
+</instructions>
+
+<examples>
+✅ GOOD Kubernetes deployment (environment-independent):
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-processor
+  namespace: {{ .Values.environment }}
+spec:
+  replicas: {{ .Values.replicas }}
+  template:
+    spec:
+      containers:
+      - name: app
+        image: registry.example.com/payment-processor:v1.2.3
+        envFrom:
+        - configMapRef:
+            name: payment-processor-config
+        - secretRef:
+            name: payment-processor-secrets
+```
+
+**Why this is GOOD:**
+- Same manifest for all environments (namespace differs)
+- Specific image tag (v1.2.3, not latest)
+- Configuration externalized (ConfigMap, Secret)
+- Same image across environments (build once)
+
+---
+
+❌ BAD deployment (environment-specific):
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-processor
+  namespace: production
+spec:
+  template:
+    spec:
+      containers:
+      - name: app
+        image: registry.example.com/payment-processor:production-latest
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://prod-db:5432/mydb"
+```
+
+**Why this is BAD:**
+- Hardcoded namespace (needs different file per environment)
+- Uses :production-latest tag (not same image across envs)
+- Hardcoded database URL (not portable)
+- Can't use same manifest in dev/staging
+
+---
+
+✅ GOOD service discovery (works everywhere):
+
+```typescript
+async discoverDatabase(): Promise<string> {
+  // Try Kubernetes DNS
+  if (process.env.KUBERNETES_SERVICE_HOST) {
+    return 'postgresql://postgresql.database.svc.cluster.local:5432/mydb';
+  }
+
+  // Try environment variable
+  if (process.env.DATABASE_URL) {
+    return process.env.DATABASE_URL;
+  }
+
+  // Fallback to localhost (dev only)
+  if (process.env.NODE_ENV === 'development') {
+    return 'postgresql://localhost:5432/mydb';
+  }
+
+  throw new Error('Database discovery failed');
+}
+```
+
+**Why this is GOOD:**
+- Tries Kubernetes DNS first (works in cluster)
+- Falls back to environment variable (works in any env)
+- Development fallback (localhost)
+- Fails fast if can't discover
+- Works in dev/staging/production
+
+---
+
+❌ BAD service discovery (environment-specific):
+
+```typescript
+const dbUrl = process.env.NODE_ENV === 'production'
+  ? 'postgresql://prod-db:5432/mydb'
+  : 'postgresql://localhost:5432/mydb';
+```
+
+**Why this is BAD:**
+- Hardcoded URLs (not discoverable)
+- Different behavior per environment (not independent)
+- Doesn't work in staging
+- Can't override for testing
+
+---
+
+✅ GOOD migration (idempotent, reversible):
+
+```typescript
+export async function up(db: Database): Promise<void> {
+  // Check if already applied
+  const exists = await db.query(`
+    SELECT EXISTS (
+      SELECT FROM information_schema.tables
+      WHERE table_name = 'payments'
+    )
+  `);
+
+  if (exists.rows[0].exists) {
+    console.log('Migration already applied, skipping');
+    return;
+  }
+
+  // Apply migration
+  await db.query('CREATE TABLE payments (...)');
+}
+
+export async function down(db: Database): Promise<void> {
+  await db.query('DROP TABLE IF EXISTS payments CASCADE');
+}
+```
+
+**Why this is GOOD:**
+- Idempotent (checks if already applied)
+- Reversible (has down() function)
+- Safe to run multiple times
+- Can rollback
+- Clear logging
+
+---
+
+❌ BAD migration (not idempotent, no rollback):
+
+```typescript
+export async function up(db: Database): Promise<void> {
+  await db.query('CREATE TABLE payments (...)');
+}
+```
+
+**Why this is BAD:**
+- Not idempotent (fails if run twice)
+- No rollback (can't reverse)
+- No existence check
+- Will crash on retry
+</examples>

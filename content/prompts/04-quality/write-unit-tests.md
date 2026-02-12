@@ -1,0 +1,573 @@
+---
+# === Identity ===
+id: write-unit-tests
+name: Write comprehensive unit tests for component behavior in isolation
+version: v1
+
+# === Classification ===
+chapter: 4
+category: quality
+subcategory: gate-1
+tags:
+  - quality
+  - testing
+  - unit-tests
+  - coverage
+  - tdd
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Write comprehensive unit tests for component behavior in isolation.
+    After code generation plan, write unit tests (Gate 1: Test Integrity).
+  argument-hint: "[component_name] [system_name]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: component_name
+    description: The specific component to write unit tests for
+    example: "RateLimitMiddleware"
+    maps-to: "$0"
+  - name: system_name
+    description: The name of your system
+    example: "Payment Processing System"
+    maps-to: "$1"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/write-unit-tests
+  marketplace:
+    plugin: constellize-quality
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Write comprehensive unit tests for {{component_name}} in {{system_name}} that validate behavior in isolation, independent of constellation stars.
+
+Unit tests are executable documentation—they tell the story of what your component does and why. Write tests that validate behavior, not implementation. Cover happy paths, edge cases, error conditions, and all critical business logic.
+
+Follow this process:
+
+1. **Review component specification:**
+   - Read code generation plan from `construction/design/code-generation-plan-*.md`
+   - Read gap analysis at `construction/requirements/gap-analysis.md` for success criteria
+   - Extract all public methods, edge cases, and error conditions to test
+
+2. **Write happy path tests:**
+   - Test each public method with typical inputs
+   - Verify expected outputs match specification
+   - Use realistic data from constellation context
+
+3. **Write edge case tests:**
+   - Test boundary conditions (empty, max, min, null)
+   - Test unusual but valid inputs
+   - Verify graceful handling
+
+4. **Write error condition tests:**
+   - Test all error paths
+   - Verify error handling per specification
+   - Confirm recovery behavior
+
+5. **Write critical logic tests:**
+   - Achieve 100% branch coverage of business logic
+   - Test all decision paths
+   - Verify against gap success criteria
+</task>
+
+<context>
+Component to test:
+{{component_name}}
+
+**Standard Construction Folder Structure:**
+This prompt reads from:
+- `construction/design/code-generation-plan-*.md` (component specification)
+- `construction/requirements/gap-analysis.md` (success criteria to validate)
+
+And outputs test code to standard test file location based on language conventions.
+</context>
+
+<thinking>
+Before writing tests, analyze:
+1. What are ALL public methods that need testing?
+2. What edge cases exist (boundary conditions, empty inputs, null values)?
+3. What error conditions must be handled?
+4. What is the critical business logic that requires 100% coverage?
+5. How can tests serve as executable documentation?
+</thinking>
+
+<output-format>
+Write unit tests following these patterns:
+
+**Test File Structure Pattern:**
+
+1. **File Header Documentation:**
+   - Component under test
+   - Purpose statement
+   - Specification reference
+   - Coverage summary (happy/edge/error/critical)
+   - Success criteria being validated
+
+2. **Test Organization:**
+   - Group related tests by scenario/feature
+   - Use descriptive names that explain behavior
+   - Follow AAA pattern (Arrange, Act, Assert)
+   - Make tests independent and fast (<100ms each)
+
+3. **Test Categories to Cover:**
+   - Happy paths: typical usage with valid inputs
+   - Edge cases: boundary conditions (empty, null, max, min)
+   - Error conditions: all error paths and recovery
+   - Critical logic: 100% branch coverage of business rules
+
+**File Header Pattern:**
+```
+UNIT TESTS: {{component_name}}
+Purpose: Validate [what behavior] in isolation
+Specification: [reference to design doc]
+
+Test Coverage:
+- Happy paths: [list main scenarios]
+- Edge cases: [list boundaries tested]
+- Error conditions: [list error paths]
+- Critical logic: [list business rule branches]
+
+Success Criteria Validated:
+- [Criterion from gap-analysis]
+- [Another criterion]
+```
+
+**Test Structure Pattern (AAA):**
+
+```
+describe('[Component] - [scenario/feature]', () => {
+  it('[specific behavior being tested]', () => {
+    // Arrange: Setup component and dependencies
+    [Create test objects with realistic data]
+    [Configure mocks and stubs]
+    [Set initial state]
+
+    // Act: Call method under test
+    [Execute single action being tested]
+
+    // Assert: Verify expected behavior
+    [Check return values match spec]
+    [Verify state changes if applicable]
+    [Confirm side effects occurred]
+  });
+});
+```
+
+**Test Naming Pattern:**
+
+Name tests to be self-documenting:
+- Good: "allows request through when under 100 req/sec limit"
+- Good: "queues request at exactly 100 req/sec (boundary condition)"
+- Good: "fails open when Redis connection unavailable"
+- Bad: "works"
+- Bad: "does rate limiting"
+- Bad: "test edge case"
+
+**Critical Logic Testing Pattern:**
+
+For business-critical logic requiring 100% branch coverage:
+
+```
+describe('[Component] - [critical decision logic]', () => {
+  // Comment: This logic decides X vs Y - must have 100% branch coverage
+
+  it('[behavior for branch 1 condition]', () => {
+    // Branch 1: [condition] → [result]
+    [Test setup for this branch]
+    [Verify branch 1 behavior]
+  });
+
+  it('[behavior for branch 2 condition]', () => {
+    // Branch 2: [condition] → [result]
+    [Test setup for this branch]
+    [Verify branch 2 behavior]
+  });
+
+  // [Additional tests for all other branches]
+});
+
+// Comment: [N] branches identified - all [N] tested above = 100% coverage
+```
+
+**Mocking Pattern:**
+
+Mock external dependencies, not your own code:
+- Mock: External APIs, databases, file system, time/randomness
+- Don't mock: Your own methods, pure functions, simple utilities
+- Use realistic test data that mirrors production
+- Make mocks predictable and documented
+
+**Assertion Pattern:**
+
+Be specific in assertions:
+- Good: `expect(result.status).toBe(202)`
+- Good: `expect(error.message).toContain('rate limit')`
+- Bad: `expect(result).toBeTruthy()`
+- Bad: `expect(error).toBeDefined()`
+
+Verify against specification, not just "something happened"
+</output-format>
+
+<instructions>
+CRITICAL: Write tests as executable documentation that tell the story of what your component does.
+
+NEVER write tests that:
+- Test implementation details instead of behavior
+- Use vague assertions like `toBeTruthy()` or `works()`
+- Skip edge cases or error conditions
+- Lack descriptive test names
+- Don't validate against specification
+- Use unrealistic test data
+
+DO NOT:
+- Write "test that it works" - be specific about WHAT works
+- Skip boundary conditions (null, empty, max, min)
+- Forget to test error paths (they MUST be tested)
+- Write tests that depend on other tests (tests MUST be independent)
+- Skip the critical business logic (100% coverage REQUIRED)
+- Use magic numbers without explanation
+
+ALWAYS:
+- Write descriptive test names that explain the scenario
+- Use AAA pattern (Arrange, Act, Assert)
+- Test behavior, not implementation
+- Use realistic data from constellation context
+- Test ALL edge cases and boundary conditions
+- Test ALL error conditions and recovery
+- Achieve 100% branch coverage of critical business logic
+- Make tests fast (unit tests MUST be < 100ms)
+- Make tests independent (no order dependencies)
+- Validate against gap success criteria
+
+REPEAT: Tests are executable documentation. Every test name should read like a specification. Use realistic data. Test behavior, not implementation. CRITICAL business logic requires 100% coverage.
+</instructions>
+
+<examples>
+✅ GOOD Unit Test Pattern (self-documenting):
+
+```typescript
+// UNIT TESTS: RateLimitMiddleware
+// Purpose: Validate rate limiting behavior in isolation
+// Specification: construction/design/code-generation-plan-rate-limiter.md
+//
+// Test Coverage:
+// - Happy paths: allows requests below limit, queues at limit
+// - Edge cases: exactly at limit (100), empty queue, max queue depth
+// - Error conditions: Redis failures, invalid requests
+// - Critical logic: rate calculation, queue decisions
+//
+// Success Criteria Validated:
+// - Handles 500 req/sec without dropping (gap-analysis.md, Gap 1)
+// - Maintains 100 req/sec limit to Stripe (gap-analysis.md, Gap 1)
+
+describe('RateLimitMiddleware - request allowance', () => {
+  it('allows request through when under 100 req/sec limit', async () => {
+    // Arrange: Setup with 50 existing requests (well under limit)
+    const redis = createMockRedis();
+    await redis.zadd('stripe:requests', ...createRequestEntries(50));
+
+    const middleware = new RateLimitMiddleware(redis);
+    const req = createMockRequest({ body: { amount: 1000 } });
+    const res = createMockResponse();
+    const next = jest.fn();
+
+    // Act: Process request when under limit
+    await middleware.handle(req, res, next);
+
+    // Assert: Request allowed through (next called, no 202 response)
+    expect(next).toHaveBeenCalled();
+    expect(res.status).not.toHaveBeenCalledWith(202);
+
+    // Assert: Request tracked in Redis
+    const count = await redis.zcount('stripe:requests', '-inf', '+inf');
+    expect(count).toBe(51); // 50 + 1 new request
+  });
+});
+
+describe('RateLimitMiddleware - edge case at exact limit', () => {
+  it('queues request at exactly 100 req/sec (boundary condition)', async () => {
+    // Arrange: Setup with exactly 99 requests (one below limit)
+    const redis = createMockRedis();
+    await redis.zadd('stripe:requests', ...createRequestEntries(99));
+
+    const middleware = new RateLimitMiddleware(redis);
+    const req = createMockRequest({ body: { amount: 1000 } });
+    const res = createMockResponse();
+    const next = jest.fn();
+
+    // Act: Process 100th request (at exact limit)
+    await middleware.handle(req, res, next);
+
+    // Assert: Request queued (returns 202, doesn't call next)
+    expect(res.status).toHaveBeenCalledWith(202);
+    expect(res.json).toHaveBeenCalledWith({
+      status: 'queued',
+      message: expect.stringContaining('rate limit')
+    });
+    expect(next).not.toHaveBeenCalled();
+
+    // Assert: Request added to queue
+    const queueDepth = await redis.zcount('stripe:queue', '-inf', '+inf');
+    expect(queueDepth).toBe(1);
+  });
+});
+
+describe('RateLimitMiddleware - error handling', () => {
+  it('fails open when Redis connection unavailable', async () => {
+    // Arrange: Mock Redis connection failure
+    const redis = createMockRedis();
+    redis.zcount = jest.fn().mockRejectedValue(new Error('Connection refused'));
+
+    const middleware = new RateLimitMiddleware(redis);
+    const req = createMockRequest({ body: { amount: 1000 } });
+    const res = createMockResponse();
+    const next = jest.fn();
+    const logger = jest.spyOn(console, 'warn');
+
+    // Act: Process request when Redis fails
+    await middleware.handle(req, res, next);
+
+    // Assert: Request continues (fail open per spec)
+    expect(next).toHaveBeenCalled();
+    expect(logger).toHaveBeenCalledWith('Redis unavailable, failing open');
+
+    // Assert: No error thrown (graceful degradation)
+    expect(res.status).not.toHaveBeenCalledWith(500);
+  });
+
+  it('validates request has required amount field', async () => {
+    // Arrange: Request missing required field
+    const redis = createMockRedis();
+    const middleware = new RateLimitMiddleware(redis);
+    const req = createMockRequest({ body: {} }); // Missing amount
+    const res = createMockResponse();
+    const next = jest.fn();
+
+    // Act: Process invalid request
+    await middleware.handle(req, res, next);
+
+    // Assert: Returns 400 validation error
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      error: 'Validation failed',
+      message: expect.stringContaining('amount')
+    });
+    expect(next).not.toHaveBeenCalled();
+  });
+});
+
+describe('RateLimitMiddleware - critical business logic', () => {
+  it('correctly calculates sliding window using timestamps', () => {
+    // Arrange: Requests at various timestamps
+    const now = Date.now();
+    const requests = [
+      { key: 'req1', timestamp: now - 2000 }, // 2 seconds ago (expired)
+      { key: 'req2', timestamp: now - 500 },  // 0.5 seconds ago (valid)
+      { key: 'req3', timestamp: now - 100 },  // 0.1 seconds ago (valid)
+    ];
+
+    const middleware = new RateLimitMiddleware(createMockRedis());
+
+    // Act: Calculate valid requests in 1-second window
+    const count = middleware.countRequestsInWindow(requests, now, 1000);
+
+    // Assert: Only requests within 1-second window counted
+    expect(count).toBe(2); // req2 and req3, not req1
+  });
+
+  it('uses FIFO ordering for queue processing', () => {
+    // Arrange: Multiple queued requests with timestamps
+    const queuedRequests = [
+      { key: 'req1', timestamp: 1000, priority: 'low' },
+      { key: 'req2', timestamp: 2000, priority: 'high' },  // Later timestamp
+      { key: 'req3', timestamp: 1500, priority: 'high' },
+    ];
+
+    const middleware = new RateLimitMiddleware(createMockRedis());
+
+    // Act: Get next request from queue
+    const next = middleware.getNextQueuedRequest(queuedRequests);
+
+    // Assert: Earliest timestamp returned (FIFO), not highest priority
+    expect(next.key).toBe('req1');
+    expect(next.timestamp).toBe(1000);
+  });
+});
+```
+
+**Pattern demonstrates:**
+- File header documents coverage scope
+- Descriptive test names explain exact scenarios
+- AAA pattern clearly separated with comments
+- Tests behavior (what it does) not implementation (how it does it)
+- Realistic test data that mirrors production
+- Complete coverage: happy path, edge case, error, critical logic
+- Specific assertions verify against specification
+- Fast (<100ms per test, using mocks)
+- Independent tests (each has own setup)
+- Validates success criteria from gap analysis
+
+**Key characteristics:**
+- Test names read like specifications
+- Comments explain setup and expectations
+- Assertions verify specific behaviors
+- Mocks external dependencies only
+- Tests remain stable as implementation changes
+- Clear what's being tested and why
+
+**Why this pattern works:**
+- Self-documenting (can understand component from tests)
+- Maintainable (behavior-focused, not implementation-focused)
+- Comprehensive (all paths covered)
+- Fast feedback (completes in milliseconds)
+- Validates requirements (traces to specification)
+
+---
+
+❌ BAD Unit Test Anti-pattern (not self-documenting):
+
+**Anti-pattern characteristics:**
+- Vague test names ("works", "does thing")
+- No AAA structure
+- Trivial assertions (toBeTruthy, toBeDefined)
+- Empty objects instead of realistic data
+- Missing edge cases (TODO comments)
+- No error condition tests
+- No critical business logic coverage
+- Tests implementation details
+- Not traceable to specification
+
+**Why this pattern fails:**
+- Can't understand what component does
+- Breaks when implementation changes
+- Incomplete coverage leaves bugs
+- Not self-documenting
+- No specification validation
+- Slow (may have network/DB calls)
+- Tests depend on each other
+
+---
+
+✅ GOOD Edge Case Testing Pattern:
+
+**Pattern demonstrates:**
+- Tests specific boundary conditions systematically
+- Empty collections tested
+- Null/undefined values tested
+- Maximum/minimum limits tested
+- Validates graceful error handling
+- Specific error responses verified
+- Limits from specification tested
+
+**Boundary conditions to test:**
+```
+Empty: Collections with zero items, empty strings
+Null/undefined: Missing required data
+Maximum: Upper limits (queue depth, string length, numeric max)
+Minimum: Lower limits (zero, negative, smallest valid)
+Just below limit: N-1 when N is the boundary
+Exactly at limit: N when N is the boundary
+Just above limit: N+1 when N is the boundary
+```
+
+**Error handling pattern:**
+- Verify graceful degradation (400 not 500)
+- Check error messages are descriptive
+- Confirm no crashes or unhandled exceptions
+- Validate recovery mechanisms work
+
+**Why this pattern works:**
+- Catches real-world edge cases
+- Prevents crashes in production
+- Documents system limits
+- Verifies spec compliance
+- Tests defensive programming
+
+---
+
+✅ GOOD Critical Business Logic Testing Pattern (100% Coverage):
+
+**Pattern demonstrates:**
+- Critical logic explicitly labeled
+- Every branch tested independently
+- Comments map test to branch number
+- Coverage confirmation at end
+- Each branch has clear condition → result
+- All decision paths validated
+
+**Critical logic testing approach:**
+```
+1. Identify critical decision logic in code
+2. Enumerate all branches/paths
+3. Create one test per branch:
+   - Set up condition for that branch
+   - Execute logic
+   - Verify expected result for that branch
+4. Confirm N branches = N tests = 100% coverage
+```
+
+**Branch identification pattern:**
+```
+Branch 1: [condition A] → [result A]
+Branch 2: [condition B] → [result B]
+Branch 3: [error case] → [fallback behavior]
+...
+Branch N: [final condition] → [result N]
+```
+
+**Coverage verification:**
+```
+// Comment at end: [N] branches in code - all [N] tested = 100% coverage
+```
+
+**Why this pattern works:**
+- Guarantees complete coverage of critical paths
+- Each branch tested in isolation
+- Clear mapping between code and tests
+- Traceable to business rules
+- Catches missing logic branches
+- Confident in correctness
+
+---
+
+❌ BAD Critical Logic Anti-pattern:
+
+**Anti-pattern characteristics:**
+- Single test for complex logic
+- Vague "it works" assertion
+- No branch identification
+- Missing coverage confirmation
+- Doesn't test all paths
+- Assertion doesn't verify behavior
+
+**Why this pattern fails:**
+- Incomplete coverage leaves bugs
+- Can't identify which branch broke
+- No confidence in correctness
+- Business logic not validated
+- Regression risk high
+- Maintenance difficult
+</examples>

@@ -1,0 +1,1241 @@
+---
+# === Identity ===
+id: rebuild-core-knowledge
+name: Rebuild core memory bank files in correct dependency order
+version: v1
+
+# === Classification ===
+chapter: 5
+category: memory-bank
+subcategory: steward
+tags:
+  - documentation
+  - memory-bank
+  - stewardship
+  - rebuild
+  - dependency-order
+  - architecture-discovery
+  - consistency
+  - validation
+  - foundation-first
+  - systematic-reconstruction
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Rebuild core memory bank files in correct dependency order.
+    Systematic reconstruction from foundation to current ensuring consistency and accuracy.
+  argument-hint: "[project_name] [rebuild_priority]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: project_name
+    description: The specific project to rebuild memory bank for
+    example: "E-commerce Platform"
+    maps-to: "$0"
+  - name: rebuild_priority
+    description: Which core files need rebuilding first
+    example: "systemPatterns.md and activeContext.md need complete rewrites"
+    maps-to: "$1"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/rebuild-core-knowledge
+  marketplace:
+    plugin: constellize-memory-bank
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Rebuild core knowledge for {{project_name}} memory bank systematically, starting with foundation and building up to current state.
+
+Start with project foundation by validating projectbrief.md still describes current goals, scope, and constraints accurately. Update system architecture by rewriting systemPatterns.md to reflect actual implementation, current design decisions, and patterns in active use. Document recent major changes in progress.md showing what was completed during staleness period, what lessons were learned, and how the system evolved. Create fresh current state in activeContext.md capturing today's focus, immediate next steps, and recent decisions. Follow dependency order where foundation documents inform architectural documents inform current state, ensuring consistency across rebuilt knowledge.
+
+Treat rebuilding as systematic reconstruction rather than patchwork repair, establishing solid foundation before building dependent knowledge. This approach ensures coherence across memory bank files and prevents propagation of outdated assumptions into newly rebuilt sections.
+
+Follow this process:
+
+1. **Rebuild foundation first:**
+   - Start with projectbrief.md (goals, scope, constraints)
+   - Validate core requirements still accurate
+   - Update if business direction shifted
+   - Establish baseline truth
+   - Foundation informs everything else
+
+2. **Reconstruct architecture:**
+   - Rewrite systemPatterns.md based on actual code
+   - Document current architectural decisions
+   - Capture active patterns with examples
+   - Map current system topology
+   - Architecture defines how we build
+
+3. **Document evolution:**
+   - Update progress.md with completed work
+   - Capture major changes during staleness
+   - Document lessons learned
+   - Show system evolution
+   - History explains how we got here
+
+4. **Establish current state:**
+   - Create fresh activeContext.md
+   - Document today's focus and priorities
+   - Capture recent key decisions
+   - Define clear next steps
+   - Current state guides immediate work
+</task>
+
+<context>
+Project to rebuild memory bank:
+{{project_name}}
+
+Rebuild priority:
+{{rebuild_priority}}
+
+**Standard Construction Folder Structure:**
+This prompt rebuilds:
+- `memory-bank/projectbrief.md` (first - foundation)
+- `memory-bank/systemPatterns.md` (second - architecture)
+- `memory-bank/progress.md` (third - evolution)
+- `memory-bank/activeContext.md` (fourth - current state)
+- `memory-bank/techContext.md` (as needed - tools and setup)
+- `memory-bank/productContext.md` (as needed - user needs)
+
+**Rebuild Order:** Foundation → Architecture → History → Current
+</context>
+
+<thinking>
+Before rebuilding core knowledge, analyze:
+1. Which files form the foundation others depend on?
+2. What's the correct rebuild order to prevent inconsistency?
+3. What current reality must the rebuilt docs reflect?
+4. How do we validate rebuilt sections are accurate?
+5. What dependencies exist between memory bank files?
+6. How do we prevent outdated assumptions in new docs?
+</thinking>
+
+<output-format>
+Create systematic rebuild following these patterns:
+
+**Rebuild Order Pattern:**
+
+Establish correct sequence:
+
+**Dependency-Based Rebuild Order:**
+```
+Level 1 (Foundation - rebuild first):
+projectbrief.md
+└─ Defines: Goals, scope, requirements, constraints
+└─ Depends on: Nothing (foundation)
+└─ Informs: Everything else
+
+Level 2 (Architecture - rebuild second):
+systemPatterns.md
+├─ Defines: How we build, patterns, architecture
+├─ Depends on: projectbrief.md (requirements drive architecture)
+└─ Informs: Implementation decisions
+
+techContext.md
+├─ Defines: What we use (tools, technologies)
+├─ Depends on: systemPatterns.md (architecture drives tool choices)
+└─ Informs: Development setup
+
+Level 3 (Context - rebuild third):
+productContext.md
+├─ Defines: Why we build (user needs, metrics)
+├─ Depends on: projectbrief.md (business goals)
+└─ Informs: Feature prioritization
+
+progress.md
+├─ Defines: Historical evolution, what's done
+├─ Depends on: projectbrief.md, systemPatterns.md
+└─ Informs: Current state understanding
+
+Level 4 (Current - rebuild last):
+activeContext.md
+├─ Defines: Current focus, immediate next steps
+├─ Depends on: All above (foundation + architecture + history)
+└─ Informs: Day-to-day work
+
+Rebuild Sequence:
+1. projectbrief.md (foundation)
+2. systemPatterns.md + techContext.md (parallel - architecture)
+3. productContext.md + progress.md (parallel - context)
+4. activeContext.md (current state - last)
+
+Why this order:
+- Foundation before structure
+- Architecture before current
+- Consistency through dependencies
+- New docs built on accurate foundation
+```
+
+**Critical Rule:**
+```
+NEVER rebuild activeContext.md before systemPatterns.md.
+
+Active context describes work within architecture.
+If architecture doc wrong, active context will be wrong.
+
+Always: Foundation → Architecture → Current
+```
+
+---
+
+**Foundation Rebuild Pattern:**
+
+Start with projectbrief.md:
+
+**Foundation Validation Checklist:**
+```
+Review projectbrief.md for currency:
+
+Project Goals:
+□ Do stated goals still match business direction?
+□ Have priorities shifted?
+□ Are success metrics still relevant?
+□ Has scope expanded or contracted?
+
+Requirements:
+□ Are core requirements still valid?
+□ Have new constraints emerged?
+□ Have any requirements been dropped?
+□ Has compliance landscape changed?
+
+Team & Resources:
+□ Is team structure current?
+□ Have resource constraints changed?
+□ Are timelines still realistic?
+□ Has ownership shifted?
+
+Assumptions:
+□ Are stated assumptions still true?
+□ Have any been invalidated by reality?
+□ Are there new assumptions to document?
+
+If ANY "no": Foundation needs updating before proceeding.
+```
+
+**Foundation Rebuild Template:**
+```
+projectbrief.md Rebuild
+Updated: [Date]
+Last major revision: [Previous date]
+
+# Project: {{project_name}}
+
+## Vision
+[What we're building and why - high level]
+
+## Goals (Current as of [date])
+Primary Objectives:
+1. [Goal 1] - [Success metric]
+2. [Goal 2] - [Success metric]
+3. [Goal 3] - [Success metric]
+
+**Changes from original:**
+- [What shifted and when]
+- [Why it shifted]
+
+## Scope
+
+In Scope:
+- [What we're building]
+- [Key features and capabilities]
+
+Out of Scope (explicitly not included):
+- [What we're not building]
+- [Future considerations]
+
+**Scope Changes:**
+- [Date]: Added [feature] because [reason]
+- [Date]: Removed [feature] because [reason]
+
+## Constraints
+
+Technical Constraints:
+- [Technology limits]
+- [Infrastructure limits]
+- [Integration requirements]
+
+Business Constraints:
+- [Budget limits]
+- [Timeline requirements]
+- [Resource availability]
+
+Compliance Constraints:
+- [Regulatory requirements]
+- [Security standards]
+- [Privacy requirements]
+
+**New Constraints:**
+- [Date]: [New constraint] - [Why it matters]
+
+## Core Requirements
+
+Must Have:
+1. [Requirement] - [Why non-negotiable]
+2. [Requirement] - [Why non-negotiable]
+
+Should Have:
+1. [Requirement] - [Value if included]
+2. [Requirement] - [Value if included]
+
+Could Have:
+1. [Requirement] - [Nice to have]
+
+**Requirements Evolution:**
+- [Date]: [Requirement] added - [Reason]
+- [Date]: [Requirement] dropped - [Reason]
+
+## Assumptions & Validation
+
+Assumption 1: [Statement]
+Status: [Validated / Invalidated / Still assumed]
+Validation: [How we know] ([date])
+
+Assumption 2: [Statement]
+Status: [Validated / Invalidated / Still assumed]
+Validation: [How we know] ([date])
+
+## Success Criteria
+
+We'll know we've succeeded when:
+1. [Measurable criterion]
+2. [Measurable criterion]
+3. [Measurable criterion]
+
+Current Progress:
+- [Criterion 1]: [Status]
+- [Criterion 2]: [Status]
+
+---
+
+**Foundation Review:**
+Last reviewed: [Date]
+Next review: [Date + 6 months]
+Owner: [Name]
+```
+
+**Foundation Validation:**
+```
+Before proceeding to architecture rebuild:
+
+□ Foundation accurately reflects current business direction
+□ Goals are current and measurable
+□ Scope boundaries are clear
+□ Constraints documented
+□ Requirements validated
+□ Assumptions checked
+□ Team agrees this is accurate
+
+If all checked: Proceed to architecture rebuild
+If any unchecked: Fix foundation first
+```
+
+---
+
+**Architecture Rebuild Pattern:**
+
+Rebuild systemPatterns.md from actual code:
+
+**Architecture Discovery Process:**
+```
+Don't write architecture from memory.
+Discover it from actual implementation.
+
+1. Map current system structure (2 hours):
+   - Draw diagram from actual code
+   - List all services/components that exist
+   - Document communication paths
+   - Map data flows
+   - Note deployment topology
+
+2. Extract active patterns (3 hours):
+   - Review recent PRs for patterns used
+   - Identify consistent approaches
+   - Document with real code examples
+   - Note conventions being followed
+   - Capture rationale where evident
+
+3. Document decisions (2 hours):
+   - Identify major architectural choices
+   - Research why chosen (git history, team)
+   - Document alternatives considered
+   - Capture trade-offs made
+   - Link to current implementation
+
+4. Validate with team (1 hour):
+   - Review architecture doc with engineers
+   - Confirm accuracy
+   - Add missing context
+   - Correct misunderstandings
+
+Total: 8 hours for thorough architecture rebuild
+```
+
+**Architecture Rebuild Template:**
+```
+systemPatterns.md Rebuild
+Updated: [Date]
+Reflects system as of: [Date]
+
+# System Architecture
+
+## Overview
+[High-level architecture description]
+
+Current Architecture:
+[Diagram or ASCII art showing actual system]
+
+Key Components:
+- [Component 1]: [Purpose] - [Location]
+- [Component 2]: [Purpose] - [Location]
+
+Communication:
+- [How components communicate]
+
+Data Flow:
+- [How data moves through system]
+
+**Architecture Evolution:**
+- [Date]: [Change] - [Why]
+- [Date]: [Change] - [Why]
+
+## Core Patterns
+
+### Pattern: [Name]
+
+**Purpose:** [What problem it solves]
+
+**When to Use:**
+- [Scenario 1]
+- [Scenario 2]
+
+**Structure:**
+[Pattern structure - code template or architecture]
+
+**Implementation Example:**
+```
+[Real code from current codebase]
+Location: [File path]
+```
+
+**Rationale:**
+- [Why we chose this pattern]
+- [What alternatives we considered]
+- [Trade-offs we accepted]
+
+**Used in:**
+- [Component 1]
+- [Component 2]
+
+[Repeat for each major pattern...]
+
+## Architectural Decisions
+
+### Decision: [What was decided]
+
+**Date:** [When decided]
+**Context:** [What prompted this decision]
+
+**Decision:**
+[Clear statement of choice made]
+
+**Rationale:**
+- [Reason 1]
+- [Reason 2]
+
+**Alternatives Considered:**
+- [Alternative A]: [Why not chosen]
+- [Alternative B]: [Why not chosen]
+
+**Trade-offs:**
+- Gained: [Benefits]
+- Cost: [What we gave up]
+
+**Current Status:**
+[Still current / Modified / Superseded]
+
+**Implementation:**
+[Where to see this in code]
+
+[Repeat for each major decision...]
+
+## Design Principles
+
+Principle 1: [Name]
+- [What it means]
+- [Why it matters]
+- [How we apply it]
+
+Principle 2: [Name]
+- [What it means]
+- [Why it matters]
+- [How we apply it]
+
+---
+
+**Architecture Review:**
+Last reviewed: [Date]
+Next review: [Date + 3 months]
+Validated by: [Names]
+```
+
+**Architecture Validation:**
+```
+Validate rebuilt architecture:
+
+□ Diagram matches actual system deployment
+□ All components mentioned exist in codebase
+□ Patterns documented are patterns used (check recent PRs)
+□ Code examples compile and run
+□ Decisions match actual choices made
+□ Team confirms "yes, this is how we build"
+
+Test: Give to new engineer
+Question: "Can you understand our architecture from this?"
+
+If yes: Architecture rebuild successful
+If no: Identify gaps and fill
+```
+
+---
+
+**Evolution Documentation Pattern:**
+
+Capture history in progress.md:
+
+**History Reconstruction Process:**
+```
+Document what happened during staleness period:
+
+1. Review git log (1 hour):
+   - Scan commits since last memory bank update
+   - Identify major features shipped
+   - Note significant refactorings
+   - Find architectural changes
+
+2. Extract from PRs (2 hours):
+   - Review merged PRs
+   - Capture feature completions
+   - Note technical challenges solved
+   - Document lessons learned
+
+3. Interview team (1 hour):
+   - What major things happened?
+   - What were the hard problems?
+   - What did we learn?
+   - What changed our thinking?
+
+4. Document chronologically (1 hour):
+   - Organize by date
+   - Show progression
+   - Capture milestones
+   - Note pivots
+
+Total: 5 hours to reconstruct history
+```
+
+**Evolution Rebuild Template:**
+```
+progress.md Update
+Updated: [Date]
+Covers period: [Last update] to [Today]
+
+# Recent Completions
+
+## [Month Year]
+
+### [Feature/Change Name] (Completed [Date])
+
+**What was done:**
+[Description of work completed]
+
+**Technical approach:**
+[How it was implemented]
+
+**Challenges solved:**
+- [Challenge 1]: [How we solved it]
+- [Challenge 2]: [How we solved it]
+
+**Lessons learned:**
+- [Learning 1]: [Insight gained]
+- [Learning 2]: [Insight gained]
+
+**Impact:**
+- [User impact]
+- [Technical impact]
+- [Business impact]
+
+**Location:**
+- [Code location]
+- [Documentation]
+
+[Repeat for each major completion...]
+
+# System Evolution
+
+**Major Changes:**
+
+[Date]: [Change]
+- What: [Description]
+- Why: [Rationale]
+- Impact: [How it affected system]
+
+[Date]: [Change]
+- What: [Description]
+- Why: [Rationale]
+- Impact: [How it affected system]
+
+# What We Learned
+
+**Technical Learnings:**
+1. [Learning]: [Context] → [Insight] → [Future application]
+2. [Learning]: [Context] → [Insight] → [Future application]
+
+**Process Learnings:**
+1. [Learning]: [What happened] → [What we learned] → [What we'll do differently]
+
+**Team Learnings:**
+1. [Learning]: [Observation] → [Understanding] → [Improvement]
+
+# Current Status
+
+**In Progress:**
+- [Initiative 1]: [Status] - [Next milestone]
+- [Initiative 2]: [Status] - [Next milestone]
+
+**Blocked:**
+- [Item]: [Blocker] - [Resolution plan]
+
+**Upcoming:**
+- [Next 1-2 priorities]
+
+**Known Issues:**
+- [Issue]: [Impact] - [Plan or workaround]
+
+---
+
+**Progress Review:**
+Last reviewed: [Date]
+Covers through: [Date]
+```
+
+---
+
+**Current State Rebuild Pattern:**
+
+Fresh activeContext.md for today:
+
+**Current State Creation:**
+```
+activeContext.md should always be fresh.
+
+Don't reconstruct from history.
+Capture current reality.
+
+Current Focus (10 minutes):
+- What are we working on right now?
+- What's the current sprint about?
+- What's consuming team attention?
+
+Immediate Next Steps (15 minutes):
+- What are the next 3 concrete actions?
+- Who's doing what?
+- What's blocking us?
+
+Recent Decisions (20 minutes):
+- What did we decide in last 2 weeks?
+- Why did we decide that?
+- What's the impact?
+
+Current State Checklist (15 minutes):
+- Team structure current?
+- Tech stack current?
+- Active patterns listed?
+- Open questions documented?
+
+Total: 1 hour for fresh active context
+```
+
+**Current State Template:**
+```
+activeContext.md Fresh State
+Updated: [Date]
+Represents: Current moment
+
+# Current Focus
+
+**Sprint Goal (ends [date]):**
+[What we're trying to achieve this sprint]
+
+**Top Priorities:**
+1. [Priority 1] - [Who] - [Target date]
+2. [Priority 2] - [Who] - [Target date]
+3. [Priority 3] - [Who] - [Target date]
+
+**Why These Priorities:**
+[Context for why these are top focus]
+
+# Immediate Next Steps
+
+**Next Actions (in order):**
+
+1. **[Action]** - [Who] - [By when]
+   - Context: [Why this is next]
+   - Blocks: [What this unblocks]
+   - Success: [What done looks like]
+
+2. **[Action]** - [Who] - [By when]
+   - Context: [Why this is next]
+   - Blocks: [What this unblocks]
+   - Success: [What done looks like]
+
+3. **[Action]** - [Who] - [By when]
+   - Context: [Why this is next]
+   - Blocks: [What this unblocks]
+   - Success: [What done looks like]
+
+# Recent Decisions (Last 2 Weeks)
+
+## Decision: [What was decided]
+**Date:** [When]
+**Decided by:** [Who]
+**Context:** [What prompted this]
+
+**Decision:**
+[Clear statement of choice]
+
+**Rationale:**
+- [Primary reason]
+- [Secondary reason]
+
+**Impact:**
+- [What changes]
+- [What stays same]
+
+**Next Actions:**
+- [Follow-up required]
+
+[Repeat for recent decisions...]
+
+# Current State
+
+**Team:**
+- [Person]: [Role] - [Current focus]
+- [Person]: [Role] - [Current focus]
+
+**Active Patterns:**
+- [Pattern 1]: Being used in [where]
+- [Pattern 2]: Being used in [where]
+
+**Tech Stack:**
+- [Technology]: [Version] - [Purpose]
+
+**Infrastructure:**
+- [Environment]: [Status]
+
+# Open Questions
+
+**Question 1:** [Specific question]
+- Why it matters: [Impact]
+- Who can answer: [Person]
+- Target resolution: [Date]
+
+**Question 2:** [Specific question]
+- Why it matters: [Impact]
+- Who can answer: [Person]
+- Target resolution: [Date]
+
+# Current Blockers
+
+**Blocker 1:** [What's blocked]
+- Impact: [Who/what affected]
+- Why blocked: [Root cause]
+- Resolution: [Plan to unblock]
+- Owner: [Who's resolving]
+- Target: [When]
+
+[None if no blockers]
+
+---
+
+**Active Context Review:**
+Updated: [Date] (should be updated weekly minimum)
+Next update: [Date + 1 week]
+Owner: [Current steward]
+```
+
+---
+
+**Consistency Validation Pattern:**
+
+Ensure rebuilt files align:
+
+**Cross-File Consistency Checks:**
+```
+After rebuilding all core files:
+
+□ projectbrief.md goals ↔ activeContext.md priorities
+  Check: Current work advances stated goals
+
+□ systemPatterns.md architecture ↔ techContext.md tools
+  Check: Tool choices support architectural patterns
+
+□ systemPatterns.md patterns ↔ activeContext.md recent decisions
+  Check: Recent decisions align with established patterns
+
+□ progress.md completions ↔ projectbrief.md success criteria
+  Check: Completed work progresses success metrics
+
+□ activeContext.md next steps ↔ systemPatterns.md architecture
+  Check: Next actions consistent with architecture
+
+□ All files reference same current reality
+  Check: No conflicting information across files
+
+If inconsistencies found:
+1. Identify which file is accurate (check code)
+2. Update others to match truth
+3. Add cross-references for clarity
+```
+
+---
+
+**Rebuild Workflow Pattern:**
+
+Step-by-step execution:
+
+**Rebuild Schedule:**
+```
+Day 1: Foundation (3 hours)
+- Review and update projectbrief.md (2 hours)
+- Validate with team (30 min)
+- Get approval to proceed (30 min)
+
+Day 2-3: Architecture (8 hours)
+- Map current system structure (2 hours)
+- Extract active patterns (3 hours)
+- Document decisions (2 hours)
+- Validate with team (1 hour)
+
+Day 4: Context (6 hours)
+- Reconstruct history for progress.md (5 hours)
+- Update productContext.md if needed (1 hour)
+
+Day 5: Current State (2 hours)
+- Create fresh activeContext.md (1 hour)
+- Cross-file consistency check (30 min)
+- Final team review (30 min)
+
+Total: 19 hours over 1 week
+Result: Complete core knowledge rebuilt
+
+Can parallelize some work:
+- techContext.md alongside systemPatterns.md
+- productContext.md alongside progress.md
+```
+
+</output-format>
+
+<instructions>
+CRITICAL: Rebuild systematically in dependency order.
+
+NEVER rebuild by:
+- Starting with activeContext.md (current depends on foundation)
+- Writing from memory (must reflect actual code)
+- Rebuilding files in parallel without dependencies (inconsistency)
+- Skipping validation (might be wrong)
+- Forgetting to check cross-file consistency (conflicts)
+
+DO NOT:
+- Rebuild current state before architecture
+- Document aspirational architecture (must be actual)
+- Skip team validation
+- Leave inconsistencies between files
+- Rush through rebuild
+- Copy old content without verification
+
+ALWAYS:
+- Follow dependency order (foundation → architecture → current)
+- Discover architecture from actual code
+- Validate rebuilt sections with team
+- Check cross-file consistency
+- Document evolution, not just current state
+- Create fresh activeContext.md (not historical)
+
+REPEAT: Rebuild in order (foundation → architecture → history → current). Validate each level before proceeding. Ensure consistency across files.
+</instructions>
+
+<examples>
+✅ GOOD Rebuild (systematic, validated, consistent):
+
+**Pattern demonstrates:**
+- Correct rebuild order
+- Architecture from actual code
+- Team validation
+- Cross-file consistency
+- Fresh current state
+
+**Example rebuild:**
+```
+Core Knowledge Rebuild: API Service
+Timeline: 1 week (Jan 15-19, 2026)
+
+---
+
+DAY 1: FOUNDATION (3 hours)
+
+Reviewed projectbrief.md:
+
+Found:
+- Goals still accurate ✓
+- Scope expanded (added mobile API)
+- New constraint (PCI compliance required)
+- Success metrics still relevant ✓
+
+Updated projectbrief.md:
+
+Scope Changes:
+- Added: Mobile API support (Dec 2025)
+  Reason: Business prioritized mobile app
+
+New Constraints:
+- PCI DSS Level 1 compliance required
+  Added: Jan 2026
+  Impact: Architecture, security, audit requirements
+
+Team validation:
+- Reviewed with product manager: Approved ✓
+- Reviewed with tech lead: Approved ✓
+
+Foundation is now accurate.
+Proceeding to architecture.
+
+---
+
+DAY 2-3: ARCHITECTURE (8 hours)
+
+Mapped current system from code:
+
+Discovered actual structure:
+- API Gateway (Express) - routes requests
+- Auth Service (microservice) - JWT handling
+- Payment Service (microservice) - Stripe integration
+- Notification Service (microservice) - push notifications
+- PostgreSQL (primary data)
+- Redis (caching, sessions)
+
+NOT what old docs said:
+- Old docs: Monolith
+- Reality: Microservices
+- Migration: Happened Dec 2025
+
+Extracted active patterns from last 20 PRs:
+
+Pattern 1: Service Error Handling
+- Every service uses try-catch with structured logging
+- Custom error types extend base Error
+- Example from PaymentService.js:
+  ```javascript
+  try {
+    const result = await stripe.charge(amount);
+    logger.info('Payment succeeded', { orderId, transactionId });
+    return result;
+  } catch (error) {
+    logger.error('Payment failed', { orderId, amount, error });
+    throw new PaymentError('Payment processing failed', error);
+  }
+  ```
+- Location: src/services/*/
+
+Pattern 2: API Authentication
+- JWT in Authorization header
+- Gateway validates, attaches user to request
+- Services trust gateway validation
+- Example from authMiddleware.js
+- Location: src/middleware/authMiddleware.js
+
+Pattern 3: Inter-Service Communication
+- gRPC for service-to-service
+- REST/JSON for client-to-gateway
+- Event bus (RabbitMQ) for async
+- Example from OrderService calling PaymentService
+- Location: src/services/*/clients/
+
+Documented architectural decisions:
+
+Decision: Microservices Architecture
+- Date: Dec 2025
+- Context: Monolith couldn't scale, team wanted service ownership
+- Rationale: Better scalability, clearer boundaries, independent deploy
+- Alternatives: Keep monolith (rejected - scale limit), serverless (rejected - complexity)
+- Trade-offs: Gained scale, lost simplicity
+- Status: Current, working well
+
+Decision: gRPC for Inter-Service
+- Date: Dec 2025
+- Context: Need fast inter-service communication
+- Rationale: Performance, type safety, streaming support
+- Alternatives: REST (rejected - slower), message queue (rejected - not request/response)
+- Trade-offs: Gained performance, lost REST simplicity
+- Status: Current
+
+Rebuilt systemPatterns.md (6 hours):
+- Architecture section: Microservices diagram
+- 8 core patterns documented
+- 5 major decisions captured
+- All with real code examples
+
+Team validation (1 hour):
+- Reviewed with 4 engineers
+- Confirmed architecture accurate
+- Added 2 clarifications
+- Approved ✓
+
+Architecture is now accurate.
+Proceeding to history and current state.
+
+---
+
+DAY 4: EVOLUTION (5 hours)
+
+Reconstructed history for progress.md:
+
+Reviewed git log Nov 2025 - Jan 2026:
+- 156 commits
+- 12 major features
+- 2 large refactorings
+- 4 significant bug fixes
+
+Major completions documented:
+
+November 2025:
+- Stripe Integration: 3 weeks, payment processing
+  Challenge: PCI compliance complexity
+  Learning: Start compliance early, not at end
+  Impact: Revenue processing capability
+
+- Mobile API: 2 weeks, REST to GraphQL
+  Challenge: Migration complexity
+  Learning: Dual API support eased transition
+  Impact: Mobile app unblocked
+
+December 2025:
+- Microservices Migration: 4 weeks, monolith → services
+  Challenge: Database splitting hardest part
+  Learning: Service boundaries harder than expected
+  Impact: Scalability achieved, deployment complexity increased
+
+January 2026:
+- PCI Compliance: 3 weeks, security hardening
+  Challenge: Audit requirements extensive
+  Learning: Compliance is ongoing, not one-time
+  Impact: Able to process cards directly
+
+Updated progress.md:
+- 12 feature completions detailed
+- 8 major learnings captured
+- System evolution timeline shown
+- Current status updated
+
+---
+
+DAY 5: CURRENT STATE (2 hours)
+
+Created fresh activeContext.md:
+
+Current Focus (Sprint ending Jan 26):
+- Performance optimization
+- Mobile app bug fixes
+- PCI audit preparation
+
+Top Priorities:
+1. API response time (Alice) - 300ms → 150ms target
+2. iOS crash fix (Bob) - Blocking app release
+3. Audit documentation (Charlie) - Needed for compliance
+
+Recent Decisions (last 2 weeks):
+- Jan 15: Use Redis for API caching
+  Rationale: 50% of requests cache-able, huge latency win
+  Impact: Need caching strategy, monitoring
+
+- Jan 18: Add GraphQL query complexity limits
+  Rationale: Prevent DoS via expensive queries
+  Impact: Need monitoring, potential breaking change
+
+Team:
+- Alice (Senior): Performance lead
+- Bob (Mid): Mobile/iOS specialist
+- Charlie (Mid): Security/compliance
+- Diana (Junior): API features
+
+Open Questions:
+- Should we add rate limiting? (Decision needed by Jan 30)
+- WebSocket for real-time? (Exploring, decision Feb 15)
+
+Current Blockers:
+- iOS crash: Hard to reproduce (Bob investigating)
+
+activeContext.md created (fresh, current).
+
+---
+
+CONSISTENCY CHECK (30 min):
+
+Cross-file validation:
+
+✓ projectbrief.md goals ↔ activeContext.md priorities
+  - Goal: "Fast, reliable API" matches priority "API response time"
+
+✓ systemPatterns.md architecture ↔ techContext.md tools
+  - Microservices documented, services in techContext match
+
+✓ systemPatterns.md patterns ↔ activeContext.md decisions
+  - Recent caching decision aligns with patterns
+
+✓ progress.md completions ↔ projectbrief.md success
+  - Stripe integration advances revenue goal
+
+✓ activeContext.md next steps ↔ systemPatterns.md
+  - Performance work aligns with architecture
+
+✓ All files reference current reality
+  - No conflicts found
+
+Consistency validated ✓
+
+---
+
+FINAL TEAM REVIEW (30 min):
+
+Reviewed rebuilt memory bank with team:
+
+Feedback:
+- "Finally accurate again!"
+- "Architecture section really helpful"
+- "History captures what we learned"
+- "Current state matches sprint board"
+
+Approval: UNANIMOUS ✓
+
+---
+
+RESULTS:
+
+Time invested: 19 hours over 1 week
+Files rebuilt: 4 core files (projectbrief, systemPatterns, progress, activeContext)
+
+Quality:
+- All files validated by team
+- Architecture matches actual code
+- History captures evolution
+- Current state is fresh
+- Cross-file consistency confirmed
+
+Team confidence: 9/10 (was 3/10)
+New engineer feedback: "Memory bank makes sense now"
+
+Core knowledge successfully rebuilt.
+Systematic approach prevented inconsistencies.
+Foundation → architecture → current order worked perfectly.
+```
+
+**Why this works:**
+- Followed dependency order strictly
+- Architecture discovered from actual code, not memory
+- Each level validated before proceeding
+- Cross-file consistency checked
+- Team validation at each stage
+- Fresh current state created
+- Realistic time investment
+- Clear result: accurate, consistent memory bank
+
+---
+
+❌ BAD Rebuild (wrong order, no validation, inconsistent):
+
+**Anti-pattern characteristics:**
+- Wrong rebuild order
+- Architecture from memory
+- No validation
+- Inconsistent across files
+
+**Bad rebuild:**
+```
+Rebuilt memory bank:
+
+Day 1: Rewrote activeContext.md with current work
+Day 2: Updated systemPatterns.md from memory
+Day 3: Touched up other files
+
+Done!
+
+(Wrong order: current before architecture)
+(No code validation: architecture from memory)
+(No team validation: might be wrong)
+(No consistency check: files might conflict)
+```
+
+**Why this fails:**
+```
+What happened:
+
+Week later:
+- New engineer: "activeContext doesn't match systemPatterns"
+- Engineer: "Which is correct?"
+- Team: "Not sure, need to check code"
+
+Investigation revealed:
+- activeContext based on outdated architecture understanding
+- systemPatterns doesn't match actual code
+- Files contradict each other
+- Memory bank still confusing
+
+Result:
+- 3 days wasted on wrong rebuild order
+- Files inconsistent
+- Team still doesn't trust memory bank
+- Have to redo properly
+
+Could have been prevented:
+- Follow correct order: foundation → architecture → current
+- Validate against actual code
+- Check cross-file consistency
+- Get team approval
+```
+
+**Lesson:**
+```
+Rebuild order matters enormously.
+
+Current state depends on architecture.
+Architecture must reflect actual code.
+Foundation informs everything.
+
+Wrong order = wasted time + inconsistent docs.
+Right order = coherent, trusted knowledge.
+
+Take time to do it right.
+Shortcuts cost more in long run.
+```
+</examples>

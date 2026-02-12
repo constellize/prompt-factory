@@ -1,0 +1,585 @@
+---
+# === Identity ===
+id: ensure-team-comprehension
+name: Ensure team comprehension so any team member can work effectively in the codebase
+version: v1
+
+# === Classification ===
+chapter: 4
+category: excellence
+subcategory: gate-4
+tags:
+  - quality
+  - documentation
+  - team
+  - comprehension
+  - maintainability
+  - gate-4
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Ensure team comprehension so any team member can work effectively in the codebase.
+    Making codebase understandable for all team members (Gate 4: Maintainability in Context).
+  argument-hint: "[component_name] [system_name]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: component_name
+    description: The specific component to ensure team comprehension for
+    example: "PaymentProcessor"
+    maps-to: "$0"
+  - name: system_name
+    description: The name of your system
+    example: "Payment Processing System"
+    maps-to: "$1"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/ensure-team-comprehension
+  marketplace:
+    plugin: constellize-excellence
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Ensure team comprehension for {{component_name}} in {{system_name}} so any team member can work effectively in the codebase.
+
+Code structure should be self-evident, with clear organization that makes finding things intuitive. Complex business logic needs thorough explanation since it embeds domain knowledge that may not be obvious. Setup and development workflows must be documented so new team members can contribute quickly. Testing approaches should be clear and repeatable, not tribal knowledge that only seniors understand.
+
+Follow this process:
+
+1. **Organize code structure clearly:**
+   - Use standard project layout (src/, tests/, docs/)
+   - Group related files in feature folders
+   - Name files and directories descriptively
+   - Follow consistent file naming conventions
+   - Provide navigation guide (ARCHITECTURE.md)
+
+2. **Explain complex business logic:**
+   - Document business rules and constraints
+   - Explain domain concepts and terminology
+   - Clarify calculations and algorithms
+   - Provide examples of edge cases
+   - Link to business requirements or tickets
+
+3. **Document development workflows:**
+   - Explain how to set up local environment
+   - Document build and test commands
+   - Describe branch and commit conventions
+   - Explain code review process
+   - Provide troubleshooting guides
+
+4. **Make testing approaches clear:**
+   - Explain testing philosophy (unit, integration, E2E)
+   - Document how to run specific test suites
+   - Provide examples of good tests
+   - Explain mocking and fixture strategies
+   - Document how to debug failing tests
+</task>
+
+<context>
+Component to ensure comprehension:
+{{component_name}}
+
+**Standard Construction Folder Structure:**
+This prompt creates/updates:
+- `ARCHITECTURE.md` (code organization guide)
+- `docs/business-logic.md` (domain concepts)
+- `docs/development.md` (workflows)
+- `docs/testing.md` (testing guide)
+- Inline documentation in code
+</context>
+
+<thinking>
+Before ensuring comprehension, analyze:
+1. Can a new team member find relevant code easily?
+2. Are business rules documented or only in code?
+3. Is development setup documented step-by-step?
+4. Can anyone run and understand tests?
+5. What knowledge is tribal vs documented?
+</thinking>
+
+<output-format>
+Create architecture guide following this pattern:
+
+**Architecture Guide Structure:**
+
+1. **Purpose Statement:**
+   - What the component does
+   - Why this guide exists (help find things)
+
+2. **Code Organization:**
+   - Visual directory tree with annotations
+   - Layer separation (API/services/repositories/models)
+   - Standard folder purposes
+
+3. **Request/Data Flow:**
+   - Numbered sequence showing path through system
+   - File/module locations for each step
+
+4. **Finding Things Guide:**
+   - "Where do I...?" FAQs
+   - Step-by-step procedures for common tasks
+
+5. **Key Concepts:**
+   - Domain-specific patterns (state machines, rate limiting, error handling)
+   - Implementation references
+
+6. **Quick Reference:**
+   - Major dependencies
+   - Testing approach
+   - Deployment overview
+
+**Organization Pattern:**
+```
+[component-name]/
+├── [api-layer]/          # HTTP/interface layer
+├── [business-layer]/     # Business logic
+├── [data-layer]/         # Data access
+├── [models]/             # Data structures
+├── [tests]/
+│   ├── [unit]/
+│   ├── [integration]/
+│   └── [fixtures]/
+└── [docs]/
+```
+
+**Request Flow Pattern:**
+```
+1. Entry point → [location]
+2. Authentication → [location]
+3. Validation → [location]
+4. Business logic → [location]
+5. Data access → [location]
+6. Response → [location]
+```
+
+**Finding Things Pattern:**
+```
+Task: [Common development task]
+Steps:
+1. [First file to modify]
+2. [Second file to modify]
+3. [Testing location]
+```
+
+**Business Logic Documentation Pattern:**
+
+Document domain-specific rules and concepts:
+
+**Documentation Structure:**
+1. **Business Rules:**
+   - Rule description
+   - Rationale (why it exists)
+   - Implementation reference
+
+2. **Domain Concepts:**
+   - Concept name
+   - Definition
+   - Relationships
+   - Storage/ownership
+   - Identifier pattern
+
+3. **Edge Cases:**
+   - Scenario description
+   - Handling approach
+   - Recovery mechanism
+
+**Business Rule Pattern:**
+```
+Rule: [Constraint or behavior]
+Rationale:
+- [Business reason]
+- [Technical reason]
+- [Regulatory reason if applicable]
+
+Implementation: [Where to find code]
+```
+
+**Domain Concept Pattern:**
+```
+Concept: [Entity or pattern]
+Definition: [What it represents]
+Relationships: [How it relates to other concepts]
+Storage: [Where/how persisted]
+Identifier: [ID pattern]
+Lifecycle: [State transitions if applicable]
+```
+
+**Edge Case Pattern:**
+```
+Scenario: [What can happen]
+Handling:
+- [Immediate response]
+- [Recovery mechanism]
+- [User experience impact]
+```
+
+**Development Workflow Documentation Pattern:**
+
+Document step-by-step development procedures:
+
+**Workflow Guide Structure:**
+1. **First-Time Setup:**
+   - Prerequisites
+   - Installation steps with commands
+   - Verification procedure
+
+2. **Daily Development:**
+   - Starting work
+   - Making changes
+   - Running tests
+   - Debugging approaches
+
+3. **Code Review Process:**
+   - Pre-review checklist
+   - Requesting review
+   - Addressing feedback
+   - Merging procedure
+
+4. **Troubleshooting:**
+   - Common issues
+   - Symptoms and solutions
+   - Diagnostic commands
+
+**Setup Pattern:**
+```
+1. [Task description]
+   [Command to execute]
+
+2. [Task description]
+   [Command to execute]
+
+3. Verify: [How to confirm success]
+   [Verification command]
+   [Expected result]
+```
+
+**Development Cycle Pattern:**
+```
+1. Create branch: [naming convention]
+2. Make changes: [development server command]
+3. Test: [test commands]
+4. Code style: [linting/formatting commands]
+5. Commit: [convention format]
+6. Push and review: [PR creation]
+```
+
+**Troubleshooting Pattern:**
+```
+Issue: [Problem description]
+Symptom: [What you see]
+Cause: [Why it happens]
+Solution: [How to fix]
+  [Diagnostic commands]
+  [Fix commands]
+```
+
+**Testing Guide Documentation Pattern:**
+
+Document testing philosophy and practices:
+
+**Testing Guide Structure:**
+1. **Testing Philosophy:**
+   - Test types used (unit/integration/contract)
+   - Testing pyramid ratios
+   - When to use each type
+
+2. **Running Tests:**
+   - All test commands
+   - Filtered test commands
+   - Watch mode and coverage
+
+3. **Writing Tests:**
+   - Test structure pattern (AAA)
+   - Mocking guidelines
+   - Test data management
+
+4. **Debugging Tests:**
+   - Running single tests
+   - Debug mode techniques
+   - Verbose output
+
+5. **Common Patterns:**
+   - Async testing
+   - Error testing
+   - State change testing
+
+**Test Structure Pattern:**
+```
+describe('[Component]', () => {
+  describe('[Method]', () => {
+    it('[Behavior]', () => {
+      // Arrange: Set up test data
+      [Setup code]
+
+      // Act: Execute function
+      [Execution code]
+
+      // Assert: Verify result
+      [Assertion code]
+    });
+  });
+});
+```
+
+**Mocking Guidelines:**
+```
+Mock:
+- External APIs
+- Database queries
+- Time/randomness
+- File system
+
+Don't mock:
+- Your own code
+- Pure functions
+- Simple utilities
+```
+
+**Test Data Pattern:**
+```
+Create fixtures for reusable test data:
+- Standard valid cases
+- Standard error cases
+- Edge cases
+- Shared constants
+```
+</output-format>
+
+<instructions>
+CRITICAL: Team comprehension ensures any team member can work effectively in the codebase.
+
+NEVER ensure comprehension by:
+- Creating complex folder structures (hard to navigate)
+- Leaving business logic undocumented (domain knowledge lost)
+- Assuming everyone knows development workflow (tribal knowledge)
+- Making testing approaches implicit (newcomers confused)
+- Using inconsistent naming (hard to find things)
+- Hiding edge cases in code (maintainers surprised)
+
+DO NOT:
+- Skip ARCHITECTURE.md (navigation guide)
+- Leave business rules only in code
+- Forget to document development setup
+- Assume testing patterns are obvious
+- Use jargon without explanation
+- Create deep nesting (hard to find files)
+
+ALWAYS:
+- Use standard project layout
+- Document business rules and domain concepts
+- Explain development workflows step-by-step
+- Make testing approaches explicit
+- Name files and folders descriptively
+- Provide troubleshooting guides
+- Document edge cases and constraints
+- Include examples for common tasks
+- Write for team members without context
+- Update docs when workflows change
+
+REPEAT: Any team member should understand codebase. Clear structure. Business logic documented. Development workflows explicit. Testing approaches clear.
+</instructions>
+
+<examples>
+✅ GOOD Code Organization Pattern (intuitive):
+
+**Pattern demonstrates:**
+- Standard layer separation (API/business/data)
+- Self-documenting folder names
+- Shallow directory structure
+- Parallel test structure
+- Documentation folder
+
+**Organization characteristics:**
+```
+- Clear layer boundaries
+- Consistent naming
+- Easy navigation
+- Scalable structure
+```
+
+**Why this works:**
+- Familiar to new team members
+- Easy to find related files
+- Clear separation of concerns
+- Not deeply nested
+- Documentation co-located
+
+---
+
+❌ BAD Code Organization Anti-pattern (confusing):
+
+**Anti-pattern characteristics:**
+- Non-standard layout
+- Vague folder names ("stuff", "things")
+- Deep nesting (4+ levels)
+- No clear layer separation
+- Missing documentation
+- Monolithic test files
+
+**Why this fails:**
+- Hard to find files
+- Tribal knowledge required
+- Unclear boundaries
+- Navigation frustrating
+- Poor scalability
+
+---
+
+✅ GOOD Business Logic Documentation Pattern (clear):
+
+**Pattern demonstrates:**
+- Rule stated clearly
+- Business rationale explained
+- Technical constraints noted
+- Regulatory requirements referenced
+- Implementation location provided
+
+**Documentation structure:**
+```
+Rule: [What the constraint is]
+Rationale:
+- Business reason
+- Technical reason
+- Regulatory reason (if applicable)
+Implementation: [Where to find code]
+```
+
+**Why this works:**
+- WHY explained, not just WHAT
+- Business context preserved
+- Can evaluate if still appropriate
+- Links to implementation
+- Accessible to non-technical stakeholders
+
+---
+
+❌ BAD Business Logic Anti-pattern (missing):
+
+**Anti-pattern characteristics:**
+- No documentation, only code
+- Magic numbers without explanation
+- Business context lost
+- No rationale for constraints
+- Can't trace to requirements
+
+**Why this fails:**
+- Business knowledge lost
+- Can't evaluate if still needed
+- Maintenance confusion
+- No requirement traceability
+- Tribal knowledge required
+
+---
+
+✅ GOOD Development Workflow Pattern (step-by-step):
+
+**Pattern demonstrates:**
+- Numbered sequential steps
+- Concrete commands provided
+- Verification procedure included
+- Prerequisites stated upfront
+- No assumed knowledge
+
+**Workflow structure:**
+```
+1. [Task]: [Command]
+2. [Task]: [Command]
+3. Verify: [Command] → [Expected result]
+```
+
+**Why this works:**
+- New team member can follow independently
+- No tribal knowledge needed
+- Verification confirms success
+- Concrete and actionable
+- Reduces onboarding time
+
+---
+
+❌ BAD Development Workflow Anti-pattern (vague):
+
+**Anti-pattern characteristics:**
+- Vague instructions
+- No concrete commands
+- Missing verification
+- Assumes existing knowledge
+- No troubleshooting
+
+**Why this fails:**
+- Can't onboard independently
+- Tribal knowledge required
+- No way to verify success
+- Team becomes bottleneck
+- Frustrates new members
+
+---
+
+✅ GOOD Testing Guide Pattern (clear patterns):
+
+**Pattern demonstrates:**
+- Clear test structure (AAA)
+- Example provided
+- Mocking guidelines explicit
+- When to use each approach
+- Consistent patterns
+
+**Testing pattern structure:**
+```
+Pattern: [Name (e.g., AAA)]
+Structure:
+- Arrange: [Setup]
+- Act: [Execute]
+- Assert: [Verify]
+
+Mocking:
+- Do: [External APIs, DB, time]
+- Don't: [Own code, pure functions]
+```
+
+**Why this works:**
+- Repeatable approach
+- Clear guidelines
+- Consistent tests across team
+- New members follow patterns
+- Quality maintained
+
+---
+
+❌ BAD Testing Anti-pattern (no guidance):
+
+**Anti-pattern characteristics:**
+- No pattern explanation
+- Vague test names
+- Inconsistent structure
+- No mocking guidelines
+- No examples
+
+**Why this fails:**
+- Inconsistent test quality
+- New members invent own patterns
+- Hard to understand tests
+- No standard approach
+- Technical debt accumulates
+</examples>

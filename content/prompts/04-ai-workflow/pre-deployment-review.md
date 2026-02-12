@@ -1,0 +1,1013 @@
+---
+# === Identity ===
+id: pre-deployment-review
+name: Enforce pre-deployment quality gates to ensure production safety
+version: v1
+
+# === Classification ===
+chapter: 4
+category: ai-workflow
+subcategory: review
+tags:
+  - quality
+  - review
+  - pre-deployment
+  - e2e-tests
+  - infrastructure
+  - rollback
+  - monitoring
+  - observability
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Enforce pre-deployment quality gates to ensure production safety.
+    Before code reaches production, validate deployment safety (Gate 5: Review Process).
+  argument-hint: "[component_name] [system_name]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: component_name
+    description: The specific component to enforce pre-deployment quality gates for
+    example: "PaymentProcessor"
+    maps-to: "$0"
+  - name: system_name
+    description: The name of your system
+    example: "Payment Processing System"
+    maps-to: "$1"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/pre-deployment-review
+  marketplace:
+    plugin: constellize-ai-workflow
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Enforce pre-deployment quality gates for {{component_name}} in {{system_name}} to ensure deployment safety before reaching production.
+
+Before code reaches production, final validation ensures deployment safety. End-to-end tests exercise full system functionality from the user's perspective, catching integration issues that only surface in realistic scenarios. Infrastructure tests verify that deployment scripts and configurations work correctly in the target environment. Rollback procedures are validated to ensure that if something goes wrong, recovery is swift and predictable. Monitoring setup confirms that appropriate alerts and dashboards are in place so the team will know immediately if the new code causes problems.
+
+Follow this process:
+
+1. **Run end-to-end tests:**
+   - Test complete user workflows from UI to database
+   - Verify critical business processes work end-to-end
+   - Test with production-like data volumes
+   - Validate third-party integrations with real endpoints
+   - Ensure authentication and authorization work across system
+
+2. **Validate infrastructure and deployment:**
+   - Test deployment scripts in staging environment
+   - Verify database migrations execute correctly
+   - Validate configuration for target environment
+   - Test service dependencies and health checks
+   - Ensure deployment can complete without manual intervention
+
+3. **Test rollback procedures:**
+   - Verify rollback script functions correctly
+   - Test database migration rollback
+   - Validate that rolled-back system works correctly
+   - Measure rollback time (must meet recovery time objective)
+   - Document rollback procedure and decision criteria
+
+4. **Verify monitoring and observability:**
+   - Confirm metrics are being collected
+   - Verify alerts are configured correctly
+   - Test alert delivery to correct channels
+   - Validate dashboards show relevant metrics
+   - Ensure logs are being collected and queryable
+</task>
+
+<context>
+Component to enforce pre-deployment gates:
+{{component_name}}
+
+**Standard Construction Folder Structure:**
+This prompt creates/updates:
+- Deployment pipeline configuration
+- `docs/quality-gates/pre-deployment.md` (gate documentation)
+- End-to-end test suites
+- Infrastructure test scripts
+- Rollback procedures and tests
+- Monitoring and alerting configuration
+</context>
+
+<thinking>
+Before enforcing pre-deployment gates, analyze:
+1. What end-to-end workflows are critical for business operations?
+2. What infrastructure changes need validation before production?
+3. What rollback scenarios must be tested and timed?
+4. What monitoring and alerts are needed to detect issues quickly?
+5. How long can the deployment gate take before blocking release velocity?
+</thinking>
+
+<output-format>
+Create pre-deployment gate configuration following these patterns:
+
+**End-to-End Test Gate Pattern:**
+
+Test complete user workflows in production-like environment:
+
+**Test Scenarios:**
+
+1. **Critical User Journeys:**
+   - Happy path: Most common user workflow
+   - Error path: User encounters error, recovers
+   - Edge cases: Boundary conditions, unusual inputs
+   - Multi-step workflows: Complete business processes
+
+2. **Cross-System Integration:**
+   - Authentication flow from login to authorized request
+   - Data flow from user input through all layers to storage
+   - Event flow through message queues to consumers
+   - External API calls with real test accounts
+
+3. **Non-Functional Scenarios:**
+   - Load handling with realistic concurrent users
+   - Data volume handling with production-scale data
+   - Timeout and retry behavior
+   - Graceful degradation when dependencies fail
+
+**Test Environment Pattern:**
+```
+E2E test environment requirements:
+- Production-like architecture: Same services, same topology
+- Production-scale data: Realistic volumes, not toy data
+- Real integrations: Actual external services (test accounts)
+- Production configuration: Same settings, environment variables
+- Isolated from production: Separate databases, accounts
+
+Environment management:
+- Automated provisioning: Scripts create environment
+- State management: Reset to known state between runs
+- Data seeding: Load realistic test data
+- Cleanup: Remove test data, reset state after run
+```
+
+**Test Execution Pattern:**
+```
+E2E test workflow:
+1. Setup: Provision environment, seed data
+2. Execute: Run critical user journeys
+3. Validate: Verify expected outcomes across system
+4. Cleanup: Reset environment state
+
+Execution approach:
+- Sequential: Tests may depend on system state
+- Retries: Retry flaky tests once, then fail
+- Screenshots/videos: Capture UI tests for debugging
+- Tracing: Distributed traces for request flow
+
+Duration: 10-20 minutes for critical scenarios
+```
+
+**Test Failure Handling Pattern:**
+```
+E2E test failure analysis:
+1. Categorize failure:
+   - Test environment issue (staging service down)
+   - Real bug (behavior broken)
+   - Test flakiness (timing issue)
+   - Infrastructure change (config mismatch)
+
+2. Action per category:
+   - Environment: Fix staging, retry
+   - Real bug: Block deployment, fix bug
+   - Flakiness: Block deployment, fix test
+   - Infrastructure: Update deployment scripts
+
+3. Diagnostics captured:
+   - Screenshots/videos of failure
+   - Application logs across all services
+   - Database state at failure time
+   - Network request/response logs
+   - Distributed trace for failed request
+```
+
+**Smoke Test Pattern:**
+```
+Quick smoke tests post-deployment:
+- Health endpoints return 200
+- Database connection working
+- Cache connection working
+- External services reachable
+- Authentication working
+- Critical API endpoints responding
+
+Execute immediately after deployment:
+Duration: <2 minutes
+Failure action: Trigger immediate rollback
+```
+
+---
+
+**Infrastructure & Deployment Test Gate Pattern:**
+
+Validate deployment process and infrastructure:
+
+**Deployment Validation:**
+
+1. **Deployment Scripts:**
+   - Execute deployment in staging environment
+   - Verify all services start successfully
+   - Check health endpoints report healthy
+   - Validate service discovery and load balancing
+   - Confirm no manual intervention needed
+
+2. **Database Migrations:**
+   - Execute migrations against staging database
+   - Verify schema changes applied correctly
+   - Test data migrations preserve data integrity
+   - Validate rollback migration works
+   - Measure migration duration
+
+3. **Configuration Management:**
+   - Verify environment variables loaded correctly
+   - Test secrets management integration
+   - Validate feature flags configured properly
+   - Confirm service URLs and endpoints correct
+   - Check resource limits (memory, CPU) appropriate
+
+**Deployment Script Testing Pattern:**
+```
+Infrastructure test execution:
+1. Staging deployment:
+   - Deploy to staging environment
+   - Verify deployment completes without errors
+   - Check all services healthy post-deployment
+   - Validate configurations applied correctly
+
+2. Database migration test:
+   - Run migrations on staging database
+   - Verify schema matches expected state
+   - Test data migrations with production-scale data
+   - Measure migration duration
+   - Test rollback migration
+
+3. Service startup validation:
+   - All services start within timeout
+   - Health checks pass within grace period
+   - Services register with service discovery
+   - Load balancers route traffic correctly
+
+Duration: 5-10 minutes
+Failure action: Block production deployment
+```
+
+**Zero-Downtime Deployment Pattern:**
+```
+Deployment strategy validation:
+- Blue-green: Both environments healthy before switch
+- Rolling: New instances healthy before old terminated
+- Canary: Small percentage healthy before full rollout
+
+Health check requirements:
+- Liveness: Service is running
+- Readiness: Service ready to accept traffic
+- Startup: Service initialized (long startup grace period)
+
+Traffic shifting validation:
+- New version receives test traffic successfully
+- Old version continues serving during transition
+- No dropped requests during cutover
+- Graceful connection draining
+```
+
+**Infrastructure Test Pattern:**
+```
+Infrastructure requirements verification:
+- Resource limits: Memory/CPU sufficient for load
+- Storage: Disk space adequate for data growth
+- Network: Bandwidth sufficient for traffic
+- Dependencies: Required services reachable
+- Permissions: Service accounts have needed access
+
+Validation approach:
+1. Deploy to staging with production settings
+2. Run load tests to verify resource adequacy
+3. Test dependency connectivity
+4. Verify service accounts can access resources
+5. Measure startup time and health check timing
+```
+
+---
+
+**Rollback Validation Gate Pattern:**
+
+Ensure fast, reliable rollback capability:
+
+**Rollback Testing:**
+
+1. **Automated Rollback:**
+   - Trigger rollback in staging environment
+   - Verify previous version redeploys successfully
+   - Test health checks pass after rollback
+   - Validate system functions correctly on old version
+   - Measure total rollback time
+
+2. **Database Rollback:**
+   - Execute rollback migration in staging
+   - Verify schema reverts correctly
+   - Test application works with reverted schema
+   - Validate no data loss during rollback
+   - Handle migrations that can't be rolled back
+
+3. **Configuration Rollback:**
+   - Revert configuration changes
+   - Restore previous feature flag states
+   - Reset environment variables
+   - Validate system behavior matches pre-deployment
+
+**Rollback Procedure Pattern:**
+```
+Rollback procedure testing:
+1. Deploy new version to staging
+2. Run smoke tests (should pass)
+3. Trigger rollback process
+4. Verify rollback completes successfully:
+   - Services revert to previous version
+   - Health checks pass
+   - Database schema reverted if needed
+   - Configuration restored
+
+5. Run smoke tests again (should pass)
+6. Measure total rollback time
+
+Acceptance criteria:
+- Rollback completes without manual intervention
+- System functional after rollback
+- Rollback time < recovery time objective (RTO)
+```
+
+**Rollback Decision Criteria Pattern:**
+```
+When to rollback:
+- Critical functionality broken
+- Severe performance degradation
+- Data corruption detected
+- Security vulnerability introduced
+- Error rate exceeds threshold
+
+Rollback triggers:
+- Automated: Health checks fail after deployment
+- Automated: Error rate spike detected
+- Manual: On-call engineer decision
+- Manual: Incident commander decision
+
+Rollback process:
+1. Decision made: Rollback needed
+2. Execute rollback script
+3. Monitor health checks
+4. Verify error rate decreases
+5. Run smoke tests
+6. Confirm system stable
+7. Communicate rollback completed
+```
+
+**Irreversible Change Handling Pattern:**
+```
+Changes that can't be rolled back:
+- Database migrations that delete data
+- Breaking API changes already consumed
+- External state changes (payment processed)
+
+Mitigation strategies:
+- Feature flags: Disable new behavior without rollback
+- Backward compatible migrations: Make in multiple steps
+- Compensating transactions: Undo external changes
+- Blue-green deployment: Keep old version running
+
+Testing approach:
+1. Identify irreversible changes in deployment
+2. Verify mitigation strategy in place
+3. Test feature flag toggles functionality
+4. Document forward-fix procedure
+```
+
+**Rollback Time Measurement Pattern:**
+```
+Rollback time tracking:
+- Detection time: How long to detect issue
+- Decision time: How long to decide rollback needed
+- Execution time: How long rollback takes
+- Validation time: How long to confirm success
+
+Total rollback time = Detection + Decision + Execution + Validation
+
+Target: Total time < RTO (Recovery Time Objective)
+Example RTO: 15 minutes from detection to stable
+
+Measure in staging:
+1. Deploy new version
+2. Inject failure scenario
+3. Trigger rollback
+4. Measure each phase
+5. Validate total time meets RTO
+```
+
+---
+
+**Monitoring & Observability Gate Pattern:**
+
+Ensure adequate visibility before deployment:
+
+**Monitoring Requirements:**
+
+1. **Metrics Collection:**
+   - Application metrics: Request rate, latency, error rate
+   - Business metrics: Transactions, revenue, user actions
+   - Resource metrics: CPU, memory, disk, network
+   - Dependency metrics: Database queries, external API calls
+
+2. **Log Collection:**
+   - Structured logs with correlation IDs
+   - Error logs with stack traces
+   - Audit logs for security events
+   - Log aggregation and searchability
+
+3. **Distributed Tracing:**
+   - Request traces across services
+   - Performance bottleneck identification
+   - Error propagation tracking
+   - Dependency latency measurement
+
+**Alert Configuration Pattern:**
+```
+Alert requirements per deployment:
+- Error rate alerts: Spike in 5xx errors
+- Latency alerts: P95 latency exceeds threshold
+- Availability alerts: Health check failures
+- Business metric alerts: Transaction rate drops
+
+Alert configuration validation:
+1. Verify alert rules exist for new service/endpoint
+2. Test alert triggers with simulated issues
+3. Confirm alert routes to correct channel
+4. Validate on-call receives notification
+5. Check alert includes runbook link
+
+Alert testing:
+- Inject error in staging
+- Verify alert fires within expected time
+- Confirm alert delivers to correct recipients
+- Validate alert message has sufficient context
+```
+
+**Dashboard Validation Pattern:**
+```
+Dashboard requirements:
+- Service health: All services status
+- Key metrics: Traffic, latency, errors
+- Business metrics: Transactions, conversions
+- Resource usage: CPU, memory, connections
+- Dependency status: Database, cache, external APIs
+
+Dashboard validation:
+1. Deploy to staging
+2. Generate test traffic
+3. Verify metrics appear on dashboard
+4. Check metric accuracy (compare to known values)
+5. Validate refresh rate and historical data
+
+Required dashboards:
+- Service overview: All services at a glance
+- Service detail: Deep dive per service
+- Business metrics: Transaction volume, revenue
+- On-call dashboard: Issues requiring attention
+```
+
+**Observability Testing Pattern:**
+```
+Pre-deployment observability check:
+1. Metrics verification:
+   - Deploy to staging
+   - Generate traffic
+   - Verify metrics collected correctly
+   - Check metric cardinality not excessive
+
+2. Log verification:
+   - Check logs appearing in aggregator
+   - Verify log structure and fields
+   - Test log search and filtering
+   - Validate sensitive data redaction
+
+3. Trace verification:
+   - Generate requests
+   - Verify traces captured end-to-end
+   - Check trace sampling rate appropriate
+   - Validate trace propagation across services
+
+4. Alert verification:
+   - Inject failure scenarios
+   - Verify alerts fire correctly
+   - Check alert timing and accuracy
+   - Validate alert message quality
+
+Gate pass criteria:
+✓ Metrics collected for new service/endpoints
+✓ Logs structured and searchable
+✓ Traces capture request flow
+✓ Alerts configured and tested
+```
+
+**Runbook Validation Pattern:**
+```
+Runbook requirements:
+- Service description and dependencies
+- Common issues and solutions
+- Rollback procedure
+- Key metrics and thresholds
+- Log locations and queries
+- Alert response procedures
+
+Runbook validation:
+1. Verify runbook exists for component
+2. Check runbook covers new functionality
+3. Validate troubleshooting steps are current
+4. Confirm rollback procedure tested
+5. Ensure contact information up to date
+
+Runbook testing:
+- Follow runbook to troubleshoot staged issue
+- Verify commands and queries work
+- Check links to dashboards and logs valid
+- Confirm rollback steps accurate
+```
+
+---
+
+**Pre-Deployment Pipeline Pattern:**
+
+Orchestrate all gates before production:
+
+**Pipeline Structure:**
+```
+Pre-deployment pipeline:
+
+Stage 1: Deploy to staging - 5 minutes
+├─ Execute deployment scripts
+├─ Run database migrations
+├─ Verify service health
+└─ Validate configuration
+
+Stage 2: E2E tests - 15 minutes
+├─ Critical user journeys
+├─ Cross-system integration
+└─ Production-scale data tests
+
+Stage 3: Infrastructure validation - 5 minutes
+├─ Resource adequacy tests
+├─ Dependency connectivity
+└─ Performance under load
+
+Stage 4: Rollback validation - 5 minutes
+├─ Execute rollback in staging
+├─ Verify system functional
+└─ Measure rollback time
+
+Stage 5: Monitoring validation - 3 minutes
+├─ Verify metrics collection
+├─ Test alert firing
+└─ Validate dashboard display
+
+Total: ~30-35 minutes
+Success: Approve production deployment
+Failure: Block deployment, investigate
+```
+
+**Deployment Approval Pattern:**
+```
+Automated approval:
+- All gates passed
+- No manual intervention required
+- Deployment proceeds automatically
+
+Manual approval required:
+- Infrastructure changes (scaling, new services)
+- Database migrations (data risk)
+- Breaking API changes (coordination needed)
+- High-risk deployments (major releases)
+
+Approval workflow:
+1. All automated gates pass
+2. Generate deployment summary
+3. Notify approver with summary
+4. Approver reviews changes and gate results
+5. Approver approves or rejects
+6. If approved, deployment proceeds
+```
+
+**Deployment Timing Pattern:**
+```
+Optimal deployment timing:
+- Business hours: Team available for issues
+- Low traffic: Minimize user impact
+- After freeze periods: Not during holidays
+- Coordinated: Dependent services aligned
+
+Deployment scheduling:
+- Preferred: Weekday mornings
+- Avoid: Friday afternoons, late nights
+- Consider: Time zones for global services
+- Plan: Maintenance windows for risky changes
+
+Emergency deployments:
+- Override timing constraints
+- Require higher approval
+- Ensure on-call coverage
+- Prepare rollback plan
+```
+
+</output-format>
+
+<instructions>
+CRITICAL: Pre-deployment quality gates ensure production deployment safety.
+
+NEVER implement pre-deployment gates by:
+- Skipping E2E tests because they're slow (catches critical issues)
+- Deploying without testing rollback (recovery impossible)
+- Assuming monitoring works without testing (blind deployment)
+- Running E2E tests in pre-merge (wrong stage, too slow)
+- Ignoring staging deployment failures (will fail in production)
+- Deploying without smoke tests (no fast feedback)
+
+DO NOT:
+- Run unit or integration tests again (covered in earlier gates)
+- Test in production-like environment without production-scale data
+- Deploy without verifying rollback procedure
+- Assume alerts work without testing them
+- Skip infrastructure validation for "small" changes
+- Deploy without monitoring in place
+
+ALWAYS:
+- Run E2E tests in production-like environment
+- Test deployment scripts in staging first
+- Validate rollback procedure and measure time
+- Verify monitoring and alerts before deployment
+- Use production-scale data in E2E tests
+- Test zero-downtime deployment strategy
+- Ensure smoke tests run immediately post-deployment
+- Document rollback decision criteria
+- Validate infrastructure resources adequate
+- Test alert delivery to on-call
+
+REPEAT: Pre-deployment gates test complete system, validate deployment process, ensure rollback works, confirm monitoring ready. E2E tests with production data. Test rollback procedure. Verify alerts fire correctly.
+</instructions>
+
+<examples>
+✅ GOOD Pre-Deployment Pipeline Pattern (comprehensive, production-ready):
+
+**Pattern demonstrates:**
+- Complete E2E testing
+- Infrastructure validation
+- Rollback tested and timed
+- Monitoring verified
+- Production-ready checks
+
+**Pipeline execution:**
+```
+Pre-deployment pipeline: v2.3.0 → Production
+
+Stage 1: Staging deployment (4m 30s) ✓
+  ✓ Deployment script executed successfully
+  ✓ Database migrations applied (3 migrations, 45s)
+  ✓ All 8 services healthy
+  ✓ Configuration validated
+
+Stage 2: E2E tests (12m 45s) ✓
+  ✓ User registration and login flow
+  ✓ Payment processing complete workflow
+  ✓ Order fulfillment end-to-end
+  ✓ Notification delivery across channels
+  ✓ Production-scale data (1M records)
+
+Stage 3: Infrastructure validation (4m 15s) ✓
+  ✓ Resources adequate for expected load
+  ✓ All dependencies reachable
+  ✓ Load test passed (500 req/s sustained)
+  ✓ No resource exhaustion
+
+Stage 4: Rollback validation (5m 30s) ✓
+  ✓ Rollback executed successfully
+  ✓ Previous version functional
+  ✓ Database rollback verified
+  ✓ Total rollback time: 4m 15s (under 15m RTO)
+
+Stage 5: Monitoring validation (2m 45s) ✓
+  ✓ Metrics collected for new endpoints
+  ✓ Alerts fire correctly (tested with injected errors)
+  ✓ Logs searchable and structured
+  ✓ Dashboard displays new metrics
+
+Total time: 29 minutes 45 seconds
+Result: ✅ All gates passed
+
+Ready for production deployment:
+- Deployment window: Today 10:00 AM PST
+- On-call: Alice (primary), Bob (backup)
+- Rollback criteria: Error rate >5%, P95 latency >500ms
+- Runbook: https://wiki/runbooks/payment-service
+```
+
+**Why this works:**
+- Comprehensive testing in production-like environment
+- Rollback tested and timed (meets RTO)
+- Monitoring verified before deployment
+- Clear deployment plan with criteria
+- Reasonable duration (~30 minutes)
+
+---
+
+❌ BAD Pre-Deployment Anti-pattern (incomplete, risky):
+
+**Anti-pattern characteristics:**
+- No E2E tests
+- Rollback not tested
+- Monitoring assumed working
+- Deployed without staging validation
+- No clear rollback criteria
+
+**Bad "pipeline":**
+```
+Pre-deployment: v2.3.0 → Production
+
+Checks:
+  ✓ Unit tests passed (in pre-commit)
+  ✓ Integration tests passed (in pre-merge)
+
+Deploying directly to production...
+```
+
+**Production incident:**
+```
+15:37 - Deployment started
+15:42 - Error rate spiking: 35%
+15:43 - P95 latency: 2500ms (was 150ms)
+15:44 - Team scrambling to understand issue
+15:50 - Rollback decision made
+15:51 - Rollback fails: Migration can't be reverted
+16:05 - Forward fix deployed
+16:20 - System stable
+
+Incident duration: 43 minutes
+Customer impact: High
+Root cause: Payment gateway integration broken
+Detection method: Customer reports (no monitoring)
+
+What was missing:
+- E2E test would have caught integration issue
+- Rollback test would have revealed migration problem
+- Monitoring would have alerted before customers called
+- Staging deployment would have validated changes
+```
+
+**Why this fails:**
+- No E2E testing missed integration issue
+- Untested rollback failed when needed
+- No monitoring delayed detection
+- Skipped staging deployment
+- Long incident with customer impact
+
+---
+
+✅ GOOD E2E Test Pattern (production-like, comprehensive):
+
+**Pattern demonstrates:**
+- Complete user workflows
+- Production-scale data
+- Real integrations
+- Cross-system validation
+
+**E2E test suite:**
+```
+Critical User Journeys (12 minutes):
+
+1. New user registration and first purchase (2m 30s) ✓
+   - User signs up with email
+   - Email verification delivered
+   - User logs in
+   - User adds product to cart
+   - User completes payment
+   - Order confirmation email sent
+   - Order appears in fulfillment system
+
+   Validation:
+   ✓ User record in database
+   ✓ Payment recorded in payment service
+   ✓ Order recorded in order service
+   ✓ Notification sent via email service
+   ✓ Fulfillment system has order
+
+2. Returning user reorder workflow (1m 45s) ✓
+   - User logs in
+   - User views order history
+   - User reorders previous item
+   - Payment uses saved payment method
+   - Order processed
+
+3. Error recovery workflow (2m 15s) ✓
+   - User attempts purchase
+   - Payment gateway returns error
+   - User sees clear error message
+   - User retries with different card
+   - Purchase succeeds
+
+Test environment:
+- 1M user records (production-scale)
+- 10M historical orders
+- Real payment gateway (test mode)
+- Real email service (test account)
+- Distributed tracing enabled
+
+Validation:
+✓ All workflows complete successfully
+✓ Data consistent across services
+✓ External integrations working
+✓ Error handling functional
+```
+
+**Why this works:**
+- Tests complete workflows end-to-end
+- Production-scale data finds issues
+- Real integrations tested (not mocked)
+- Error scenarios validated
+- Cross-system data consistency checked
+
+---
+
+❌ BAD E2E Test Anti-pattern (unit tests in disguise):
+
+**Anti-pattern characteristics:**
+- Mocked external services
+- Toy data (10 records)
+- No cross-system validation
+- Happy path only
+
+**Bad "E2E" tests:**
+```
+E2E Tests (30 seconds):
+
+1. User registration (10s) ✓
+   - Mock: POST /users returns 201
+   - Assert: Response has user ID
+
+2. User login (10s) ✓
+   - Mock: POST /login returns token
+   - Assert: Token present
+
+3. Create order (10s) ✓
+   - Mock: POST /orders returns order ID
+   - Assert: Order created
+
+Test environment:
+- Empty database
+- All external services mocked
+- No real integrations
+```
+
+**Problem found in production:**
+```
+Production issue: Email service integration broken
+- User registration succeeds
+- Verification email never sent
+- Users can't complete signup
+
+Root cause: Email service API changed
+Why not caught: External service was mocked in "E2E" tests
+```
+
+**Why this fails:**
+- Mocked external services hide integration issues
+- No real data means unrealistic scenarios
+- No cross-system validation
+- Essentially unit tests, not E2E
+- Missed production-breaking integration issue
+
+---
+
+✅ GOOD Rollback Validation Pattern (tested, timed, automated):
+
+**Pattern demonstrates:**
+- Rollback tested in staging
+- Time measured against RTO
+- Database rollback verified
+- System functional after rollback
+
+**Rollback test:**
+```
+Rollback Validation Test:
+
+1. Baseline: Staging at v2.2.0 (current production)
+   ✓ Smoke tests pass
+   ✓ Health checks green
+
+2. Deploy v2.3.0 to staging
+   ✓ Deployment successful (4m 30s)
+   ✓ Migrations applied (3 forward migrations)
+   ✓ Smoke tests pass
+
+3. Trigger rollback to v2.2.0
+   Start time: 14:25:00
+
+   14:25:00 - Rollback initiated
+   14:25:15 - Traffic stopped to new version (15s)
+   14:25:45 - Old version redeployed (45s)
+   14:26:30 - Database migrations rolled back (45s)
+   14:27:00 - Health checks passing (30s)
+   14:27:15 - Smoke tests passed (15s)
+
+   End time: 14:27:15
+   Total rollback time: 2m 15s
+
+4. Validation:
+   ✓ System functional on v2.2.0
+   ✓ Database schema reverted correctly
+   ✓ No data loss during rollback
+   ✓ All services healthy
+   ✓ Smoke tests pass
+
+Result: ✅ Rollback validated
+- Rollback time: 2m 15s (under 15m RTO)
+- Process automated (no manual steps)
+- System functional post-rollback
+```
+
+**Why this works:**
+- Rollback tested before production
+- Time measured (meets RTO)
+- Database rollback verified
+- System functionality validated
+- No manual intervention needed
+
+---
+
+❌ BAD Rollback Anti-pattern (untested, manual, slow):
+
+**Anti-pattern characteristics:**
+- Rollback never tested
+- Manual procedure (error-prone)
+- Database rollback forgotten
+- No time measurement
+
+**Untested rollback procedure:**
+```
+Rollback Procedure (documented but never tested):
+
+1. SSH to each server
+2. Stop application
+3. Checkout previous version
+4. Restart application
+5. (Database rollback not mentioned)
+```
+
+**Production incident:**
+```
+17:30 - Production deployment v2.3.0 causes issues
+17:35 - Decision to rollback
+17:36 - Following manual procedure
+17:40 - Application rolled back on server 1
+17:43 - Application rolled back on server 2
+17:46 - Application rolled back on server 3
+17:48 - All applications started
+17:49 - Error: Database schema incompatible
+17:50 - Realize database needs rollback too
+17:52 - Find database rollback procedure
+18:05 - Database rollback complete
+18:08 - System functional
+
+Total time: 38 minutes (RTO was 15 minutes)
+Issues:
+- Manual process slow and error-prone
+- Database rollback forgotten initially
+- No prior testing
+- Exceeded RTO significantly
+```
+
+**Why this fails:**
+- Never tested rollback before production
+- Manual procedure slow and error-prone
+- Database rollback not in procedure
+- No time measurement against RTO
+- Incident extended due to rollback issues
+</examples>

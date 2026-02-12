@@ -1,0 +1,539 @@
+---
+# === Identity ===
+id: externalize-configuration
+name: Externalize configuration to eliminate environment-specific values from code
+version: v1
+
+# === Classification ===
+chapter: 4
+category: deployment
+subcategory: gate-3
+tags:
+  - quality
+  - configuration
+  - environment-variables
+  - deployment
+  - gate-3
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Externalize configuration to eliminate environment-specific values from code.
+    Loading configuration from external sources with validation (Gate 3: Deployment Readiness).
+  argument-hint: "[component_name] [system_name]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: component_name
+    description: The specific component to externalize configuration for
+    example: "PaymentProcessor"
+    maps-to: "$0"
+  - name: system_name
+    description: The name of your system
+    example: "Payment Processing System"
+    maps-to: "$1"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/externalize-configuration
+  marketplace:
+    plugin: constellize-deployment
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Externalize configuration for {{component_name}} in {{system_name}} to eliminate environment-specific values from code.
+
+Hardcoded values like database URLs or API keys prevent portability across environments. All configurations should load from external sources—environment variables, configuration servers, or mounted volumes. Provide sensible defaults for non-critical configurations to reduce required setup. Validate configuration at startup with clear error messages that tell operators exactly what's missing or invalid.
+
+Follow this process:
+
+1. **Identify all configuration:**
+   - Review code for hardcoded values (URLs, ports, credentials, timeouts)
+   - Extract environment-specific settings (dev/staging/production differences)
+   - List ALL configuration items (database, cache, APIs, feature flags, limits)
+   - Separate critical (REQUIRED) from optional (has defaults)
+
+2. **Externalize critical configuration:**
+   - Load from environment variables (DATABASE_URL, REDIS_URL, API_KEY)
+   - Use configuration server for centralized management (optional)
+   - Support mounted config files for Kubernetes secrets
+   - NEVER commit credentials to version control
+
+3. **Provide sensible defaults:**
+   - Non-critical settings have reasonable defaults (timeouts, retry limits)
+   - Defaults work for development environment
+   - Production requires explicit overrides for safety
+   - Document all defaults and when to override
+
+4. **Validate at startup:**
+   - Check required environment variables exist
+   - Validate format (URLs, numbers, enums)
+   - Test connectivity to required services
+   - Fail fast with specific error messages
+   - Log all configuration (redact secrets)
+</task>
+
+<context>
+Component to externalize configuration:
+{{component_name}}
+
+**Standard Construction Folder Structure:**
+This prompt creates:
+- Configuration loading module
+- Environment variable definitions
+- Startup validation logic
+- `.env.example` file with all required variables
+- Configuration documentation
+</context>
+
+<thinking>
+Before externalizing configuration, analyze:
+1. What values change between environments (dev/staging/production)?
+2. What values are secrets that need protection?
+3. What values have reasonable defaults?
+4. What values MUST be provided (no sane default)?
+5. How do we validate configuration correctness?
+</thinking>
+
+<output-format>
+Create configuration module for component:
+
+```[language]
+// CONFIGURATION EXTERNALIZATION: {{component_name}}
+// Purpose: Load configuration from external sources
+// Env file: .env (local), environment variables (deployed)
+//
+// CRITICAL Configuration (REQUIRED, no defaults):
+// - DATABASE_URL: PostgreSQL connection string
+// - REDIS_URL: Redis connection string
+// - STRIPE_SECRET_KEY: Stripe API key
+//
+// Optional Configuration (has defaults):
+// - PORT: Server port (default: 3000)
+// - LOG_LEVEL: Logging level (default: info)
+// - REQUEST_TIMEOUT: Request timeout ms (default: 30000)
+
+import { z } from 'zod';
+
+// CONFIGURATION SCHEMA: Define all configuration with validation
+const configSchema = z.object({
+  // CRITICAL: Required configuration (no defaults)
+  database: z.object({
+    url: z.string().url().startsWith('postgresql://'),
+  }),
+
+  redis: z.object({
+    url: z.string().url().startsWith('redis://'),
+  }),
+
+  stripe: z.object({
+    secretKey: z.string().startsWith('sk_'),
+  }),
+
+  // Optional: Has sensible defaults
+  server: z.object({
+    port: z.number().int().min(1).max(65535).default(3000),
+    host: z.string().default('0.0.0.0'),
+  }),
+
+  logging: z.object({
+    level: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+  }),
+
+  timeouts: z.object({
+    request: z.number().int().min(1000).max(300000).default(30000),
+    database: z.number().int().min(1000).max(60000).default(5000),
+  }),
+});
+
+type Config = z.infer<typeof configSchema>;
+
+// LOAD CONFIGURATION: From environment with validation
+export function loadConfiguration(): Config {
+  try {
+    // Load from environment variables
+    const rawConfig = {
+      database: {
+        url: process.env.DATABASE_URL,
+      },
+      redis: {
+        url: process.env.REDIS_URL,
+      },
+      stripe: {
+        secretKey: process.env.STRIPE_SECRET_KEY,
+      },
+      server: {
+        port: process.env.PORT ? parseInt(process.env.PORT, 10) : undefined,
+        host: process.env.HOST,
+      },
+      logging: {
+        level: process.env.LOG_LEVEL,
+      },
+      timeouts: {
+        request: process.env.REQUEST_TIMEOUT ? parseInt(process.env.REQUEST_TIMEOUT, 10) : undefined,
+        database: process.env.DATABASE_TIMEOUT ? parseInt(process.env.DATABASE_TIMEOUT, 10) : undefined,
+      },
+    };
+
+    // CRITICAL: Validate configuration with clear errors
+    const config = configSchema.parse(rawConfig);
+
+    // Log configuration (NEVER log secrets)
+    console.log('Configuration loaded:', {
+      database: { url: maskUrl(config.database.url) },
+      redis: { url: maskUrl(config.redis.url) },
+      stripe: { secretKey: '***REDACTED***' },
+      server: config.server,
+      logging: config.logging,
+      timeouts: config.timeouts,
+    });
+
+    return config;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      // CRITICAL: Provide specific error messages
+      console.error('Configuration validation failed:');
+      error.errors.forEach((err) => {
+        console.error(`  - ${err.path.join('.')}: ${err.message}`);
+      });
+
+      // Provide helpful guidance
+      console.error('\nRequired environment variables:');
+      console.error('  DATABASE_URL: PostgreSQL connection string (postgresql://...)');
+      console.error('  REDIS_URL: Redis connection string (redis://...)');
+      console.error('  STRIPE_SECRET_KEY: Stripe secret key (sk_...)');
+      console.error('\nOptional environment variables (have defaults):');
+      console.error('  PORT: Server port (default: 3000)');
+      console.error('  LOG_LEVEL: Logging level (default: info)');
+      console.error('  REQUEST_TIMEOUT: Request timeout in ms (default: 30000)');
+      console.error('\nSee .env.example for complete list');
+
+      process.exit(1);
+    }
+    throw error;
+  }
+}
+
+// MASK URL: Hide credentials in logs
+function maskUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    if (parsed.username || parsed.password) {
+      return `${parsed.protocol}//*****:*****@${parsed.host}${parsed.pathname}`;
+    }
+    return url;
+  } catch {
+    return '***INVALID_URL***';
+  }
+}
+
+// EXPORT: Configuration instance
+export const config = loadConfiguration();
+```
+
+Create .env.example file:
+
+```bash
+# CONFIGURATION: {{component_name}}
+# Purpose: Example environment variables for all environments
+# Copy to .env for local development
+# Set in deployment environment (Kubernetes secrets, etc.)
+
+# ============================================================
+# CRITICAL: Required Configuration (NO DEFAULTS)
+# ============================================================
+
+# Database connection string
+# Format: postgresql://username:password@host:port/database
+# Example: postgresql://user:pass@localhost:5432/payments
+DATABASE_URL=postgresql://localhost:5432/mydb
+
+# Redis connection string
+# Format: redis://[[username:]password@]host:port/database
+# Example: redis://:password@localhost:6379/0
+REDIS_URL=redis://localhost:6379
+
+# Stripe API secret key
+# Get from: https://dashboard.stripe.com/apikeys
+# Format: Starts with sk_test_ (test) or sk_live_ (production)
+STRIPE_SECRET_KEY=sk_test_your_key_here
+
+# ============================================================
+# Optional Configuration (Has Defaults)
+# ============================================================
+
+# Server port (default: 3000)
+PORT=3000
+
+# Server host (default: 0.0.0.0)
+HOST=0.0.0.0
+
+# Logging level (default: info)
+# Options: debug, info, warn, error
+LOG_LEVEL=info
+
+# Request timeout in milliseconds (default: 30000)
+REQUEST_TIMEOUT=30000
+
+# Database query timeout in milliseconds (default: 5000)
+DATABASE_TIMEOUT=5000
+```
+
+Add startup validation:
+
+```[language]
+// STARTUP VALIDATION: {{component_name}}
+// Purpose: Validate configuration and connectivity at startup
+// Fail fast if environment is misconfigured
+
+async function validateStartup() {
+  console.log('Validating startup configuration...');
+
+  // 1. Configuration already validated by loadConfiguration()
+  console.log('✓ Configuration validated');
+
+  // 2. Test database connectivity
+  try {
+    await database.query('SELECT 1');
+    console.log('✓ Database connection validated');
+  } catch (error) {
+    console.error('✗ Database connection failed:', error.message);
+    console.error('  Check DATABASE_URL is correct and database is running');
+    process.exit(1);
+  }
+
+  // 3. Test Redis connectivity
+  try {
+    await redis.ping();
+    console.log('✓ Redis connection validated');
+  } catch (error) {
+    console.error('✗ Redis connection failed:', error.message);
+    console.error('  Check REDIS_URL is correct and Redis is running');
+    process.exit(1);
+  }
+
+  // 4. Validate API credentials
+  try {
+    await stripe.customers.list({ limit: 1 });
+    console.log('✓ Stripe API key validated');
+  } catch (error) {
+    console.error('✗ Stripe API key invalid:', error.message);
+    console.error('  Check STRIPE_SECRET_KEY is correct');
+    process.exit(1);
+  }
+
+  console.log('✓ All startup validations passed');
+}
+
+// Run validation before starting server
+validateStartup()
+  .then(() => {
+    server.listen(config.server.port, () => {
+      console.log(`Server started on port ${config.server.port}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Startup validation failed:', error);
+    process.exit(1);
+  });
+```
+</output-format>
+
+<instructions>
+CRITICAL: Configuration MUST be externalized. NEVER hardcode environment-specific values.
+
+NEVER externalize configuration by:
+- Hardcoding database URLs in code (not portable)
+- Committing secrets to version control (security risk)
+- Using different code for different environments (not same artifact)
+- Requiring manual configuration file edits (error-prone)
+- Providing defaults for critical values like credentials (insecure)
+- Silently ignoring missing configuration (fail loudly)
+
+DO NOT:
+- Use process.env directly without validation (type unsafe)
+- Forget to document required environment variables
+- Log secrets to console or files
+- Start server before validating configuration
+- Use magic strings for configuration keys
+- Forget .env.example file
+
+ALWAYS:
+- Load all configuration from environment variables
+- Validate configuration at startup with schema (Zod, Joi, etc.)
+- Fail fast with specific error messages for missing/invalid config
+- Provide .env.example file with all variables documented
+- Use sensible defaults ONLY for non-critical settings
+- Log configuration on startup (redact secrets)
+- Test connectivity to dependencies at startup
+- Use type-safe configuration objects (not raw process.env)
+- Document what each configuration value controls
+- Provide examples of valid values
+
+REPEAT: Configuration MUST be external. Validate at startup. Fail fast with clear errors. Document all variables. NEVER commit secrets.
+</instructions>
+
+<examples>
+✅ GOOD configuration (validated, type-safe, documented):
+
+```typescript
+const configSchema = z.object({
+  database: z.object({
+    url: z.string().url().startsWith('postgresql://'),
+  }),
+  redis: z.object({
+    url: z.string().url().startsWith('redis://'),
+  }),
+  stripe: z.object({
+    secretKey: z.string().startsWith('sk_'),
+  }),
+  server: z.object({
+    port: z.number().int().min(1).max(65535).default(3000),
+  }),
+});
+
+const config = configSchema.parse({
+  database: { url: process.env.DATABASE_URL },
+  redis: { url: process.env.REDIS_URL },
+  stripe: { secretKey: process.env.STRIPE_SECRET_KEY },
+  server: { port: process.env.PORT ? parseInt(process.env.PORT) : undefined },
+});
+```
+
+**Why this is GOOD:**
+- Schema validation (catches errors at startup)
+- Type-safe (TypeScript knows structure)
+- Required values have no defaults (DATABASE_URL, REDIS_URL, STRIPE_SECRET_KEY)
+- Optional values have sensible defaults (PORT)
+- Validates format (URLs, prefixes, ranges)
+- Clear error messages from Zod
+
+---
+
+❌ BAD configuration (hardcoded, no validation):
+
+```typescript
+const config = {
+  database: {
+    url: 'postgresql://localhost:5432/mydb', // Hardcoded!
+  },
+  redis: {
+    url: process.env.REDIS_URL || 'redis://localhost:6379', // Default for critical value!
+  },
+  stripe: {
+    secretKey: 'sk_test_abc123', // Committed to git!
+  },
+};
+```
+
+**Why this is BAD:**
+- Hardcoded database URL (not portable)
+- Default for Redis URL (hides missing config)
+- Secret committed to code (security risk)
+- No validation (type unsafe)
+- Can't change without code change
+
+---
+
+✅ GOOD .env.example (comprehensive, documented):
+
+```bash
+# CRITICAL: Required Configuration
+# DATABASE_URL: PostgreSQL connection string
+# Format: postgresql://username:password@host:port/database
+DATABASE_URL=postgresql://localhost:5432/mydb
+
+# REDIS_URL: Redis connection string
+# Format: redis://[[username:]password@]host:port/database
+REDIS_URL=redis://localhost:6379
+
+# STRIPE_SECRET_KEY: Stripe API key
+# Get from: https://dashboard.stripe.com/apikeys
+STRIPE_SECRET_KEY=sk_test_your_key_here
+
+# Optional Configuration (Has Defaults)
+# PORT: Server port (default: 3000)
+PORT=3000
+```
+
+**Why this is GOOD:**
+- Documents all required variables
+- Explains format for each variable
+- Provides example values
+- Indicates which have defaults
+- Shows where to get values (Stripe dashboard)
+- Clear sections (required vs optional)
+
+---
+
+❌ BAD .env.example (incomplete, unclear):
+
+```bash
+DATABASE_URL=
+REDIS_URL=
+API_KEY=
+```
+
+**Why this is BAD:**
+- No documentation (what format?)
+- No examples (what values?)
+- Missing variables (incomplete)
+- No indication of required vs optional
+- No help text for operators
+
+---
+
+✅ GOOD validation error (specific, actionable):
+
+```
+Configuration validation failed:
+  - database.url: Required
+  - stripe.secretKey: Invalid input
+
+Required environment variables:
+  DATABASE_URL: PostgreSQL connection string (postgresql://...)
+  STRIPE_SECRET_KEY: Stripe secret key (sk_...)
+
+See .env.example for complete list
+```
+
+**Why this is GOOD:**
+- Lists specific missing/invalid variables
+- Explains expected format
+- Provides remediation (see .env.example)
+- Actionable (operator knows what to fix)
+
+---
+
+❌ BAD validation error (vague, unhelpful):
+
+```
+Error: Invalid configuration
+```
+
+**Why this is BAD:**
+- No specifics (which variable?)
+- No format info (what's valid?)
+- No remediation (how to fix?)
+- Not actionable (operator stuck)
+</examples>

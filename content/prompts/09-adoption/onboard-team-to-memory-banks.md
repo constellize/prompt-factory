@@ -1,0 +1,573 @@
+---
+# === Identity ===
+id: onboard-team-to-memory-banks
+name: Create effective team onboarding plan for memory bank adoption
+version: v1
+
+# === Classification ===
+chapter: 9
+category: adoption
+subcategory: adoption
+tags:
+  - team-onboarding
+  - adoption-planning
+  - hands-on-learning
+  - memory-bank-adoption
+  - team-conventions
+  - change-management
+  - early-wins
+  - sustainable-practices
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Create effective team onboarding plan for memory bank adoption.
+    Plan team-wide memory bank adoption with hands-on exercises, gradual complexity, early wins, and shared conventions—enabling smooth transition from curiosity to confident adoption with minimal friction and maximum momentum.
+  argument-hint: "[team_name] [team_size] [onboarding_timeline] [memory_bank_location]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: team_name
+    description: Team being onboarded to memory banks
+    example: "PaymentAPI Team"
+    maps-to: "$0"
+  - name: team_size
+    description: Number of people on team
+    example: "4 engineers"
+    maps-to: "$1"
+  - name: onboarding_timeline
+    description: How long to spread onboarding
+    example: "One sprint"
+    maps-to: "$2"
+  - name: memory_bank_location
+    description: Where team memory bank lives
+    example: "memory-bank/"
+    maps-to: "$3"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/onboard-team-to-memory-banks
+  marketplace:
+    plugin: constellize-adoption
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Create team onboarding plan for {{team_name}} ({{team_size}}) to adopt memory banks by developing practical exercises for first experiences, structuring gradual introduction from minimal to full system, creating shared vocabulary and conventions, setting up collaborative practices, addressing common concerns and objections, measuring early adoption success—enabling team-wide memory bank adoption with minimal friction and maximum early wins.
+</task>
+
+<context>
+Team: {{team_name}}
+Size: {{team_size}}
+Timeline: {{onboarding_timeline}}
+Documentation: {{memory_bank_location}}
+
+Successful team adoption requires more than introducing a tool or process. It requires:
+1. Hands-on experience (learn by doing, not by reading)
+2. Gradual complexity increase (start minimal, build mastery)
+3. Shared understanding (team aligned on vocabulary, conventions)
+4. Early wins (momentum and confidence)
+5. Clear value demonstration (why this helps)
+6. Addressing real concerns (not dismissing objections)
+
+Connects to Chapter 9 theme of practical adoption—from curiosity to competence through guided practice.
+</context>
+
+<thinking>
+Before onboarding team:
+1. What's team's current knowledge level?
+2. What are team's main concerns about memory banks?
+3. How to build confidence through early wins?
+4. What minimal viable memory bank to start with?
+5. How to transition from minimal to comprehensive system?
+6. What shared conventions needed for collaboration?
+7. How to measure adoption success?
+8. What obstacles to anticipate?
+</thinking>
+
+<output-format>
+
+## Team Onboarding Plan Pattern
+
+```
+# Memory Bank Team Onboarding Plan: {{team_name}}
+
+Team: {{team_name}}
+Size: {{team_size}}
+Timeline: {{onboarding_timeline}}
+Start Date: [YYYY-MM-DD]
+End Date: [YYYY-MM-DD]
+Led By: [Names]
+Location: {{memory_bank_location}}
+
+## Onboarding Goals
+
+By end of onboarding:
+- [ ] All team members can create/update memory bank documents
+- [ ] Team has shared vocabulary and conventions
+- [ ] Team references memory bank during normal work
+- [ ] Team practices plan-prompt-proceed pattern
+- [ ] Team excited about memory bank value
+
+## Team Baseline
+
+### Current State
+
+Team's current practices:
+- How do team members currently capture knowledge? [Process]
+- Where is current documentation? [Locations]
+- What knowledge is lost/unclear? [Gaps]
+- What's team's experience with memory banks? [Level]
+
+Concerns and objections:
+- Concern 1: [What team worried about]
+  - Response: [How to address]
+- Concern 2: [What team worried about]
+  - Response: [How to address]
+
+### Success Indicators
+
+How we'll know adoption is working:
+- Metric 1: [Measurable indicator]
+- Metric 2: [Measurable indicator]
+- Metric 3: [Measurable indicator]
+
+Example metrics:
+- Number of memory bank updates per sprint: [Target: N]
+- Team members referencing memory bank per day: [Target: X%]
+- Time to answer "How do we...?" questions: [Target: <5 minutes]
+
+```
+
+---
+
+## Onboarding Phases Pattern
+
+```
+## Phase 1: Kickoff and Shared Vocabulary
+
+**Duration:** 1 week
+
+### Kickoff Workshop (2 hours)
+
+Agenda:
+1. Memory banks overview: What, why, how (30 min)
+   - Show example memory bank (existing or template)
+   - Demonstrate how it helps developers
+   - Address team's specific concerns
+
+2. Plan-prompt-proceed pattern walkthrough (30 min)
+   - Demonstrate pattern with real example
+   - Show how memory bank feeds each stage
+   - Why pattern helps
+
+3. Shared conventions discussion (45 min)
+   - Document organization: How should we structure ours?
+   - File naming: How do we name files?
+   - Format conventions: Markdown structure?
+   - Update process: Who, when, how?
+   - Q&A: Address team questions
+
+4. First steps preview (15 min)
+   - Show minimal memory bank we're starting with
+   - Timeline: When you'll be using this
+   - Support: Who to ask for help
+
+### Shared Conventions Document
+
+Create team-specific conventions:
+- Document organization (systemPatterns.md, techContext.md, etc.)
+- File naming (kebab-case, .md extension, etc.)
+- Format conventions (headings, code blocks, cross-references)
+- Update process (who can update, when, how to review)
+- Example files showing conventions applied
+
+Activity: Have team review conventions, suggest adjustments, agree together.
+
+---
+
+## Phase 2: Hands-On Minimal Adoption
+
+**Duration:** 1-2 weeks
+
+### Week 1: Create Minimal Memory Bank
+
+Activity: Create team's first memory bank with only 2 files:
+
+1. **systemPatterns.md**: Key architectural decisions and patterns
+   - Keep it minimal (5-10 patterns max)
+   - Include: What, why, when to use, examples
+   - Activity: Team brainstorms together, one person drafts, team reviews
+
+2. **techContext.md**: Current technical decisions and assumptions
+   - Keep it minimal (key technologies, versions, important context)
+   - Activity: Junior engineer leads with senior helping
+   - Benefit: Junior learns system context, senior learns what's implicit
+
+### Week 2: Experience Minimal Memory Bank
+
+Activity: Use memory bank in 2-3 real development tasks
+
+During these tasks:
+1. Before starting task: Team member checks memory bank for relevant context
+2. During task: Team member references memory bank documentation
+3. After task: Team member updates memory bank if needed
+
+Reflection after week:
+- Was memory bank helpful?
+- What was missing?
+- How could it be better?
+- What should we add next?
+
+---
+
+## Phase 3: Structured Expansion
+
+**Duration:** 1-2 weeks
+
+### Adding Documentation Based on Needs
+
+Don't create everything upfront. Add docs when they're needed:
+
+Week 1: Team identifies gaps discovered in Phase 2
+- Did you need info about X? (If yes, write techContext section about X)
+- Do we have pattern for Y? (If no, document systemPatterns section about Y)
+- What operational knowledge should we capture? (Add operations/ section)
+
+Week 2: Team creates additional sections based on identified needs
+- Don't create everything at once
+- Create docs when team needs them (need-driven growth)
+- Team practices: Ask "Is this in memory bank?" before rediscovering
+
+### Practicing Plan-Prompt-Proceed
+
+Team tries pattern on 2-3 real features:
+
+Feature implementation flow:
+1. **Plan**: Team examines memory bank, creates context for prompt
+2. **Prompt**: Using memory bank context, create detailed prompt
+3. **Proceed**: AI assists with implementation, team refines
+
+Reflection after trying pattern:
+- Did memory bank help planning?
+- Did AI understand problem better with context?
+- Were results better with memory bank than without?
+
+---
+
+## Phase 4: Team Practices and Sustainability
+
+**Duration:** Ongoing after onboarding
+
+### Weekly Practices
+
+Establish sustainable practices:
+- Sprint planning: What memory bank updates needed this sprint?
+- After sprint: Quick learning capture (30 minutes)
+- Code review: Does change need memory bank update?
+- Problem solving: Check memory bank first, contribute learning after
+
+### Monthly Review
+
+Monthly (every 4 weeks):
+- Review memory bank health (is it current, useful, organized?)
+- Team retrospective: How's adoption going? What's working? What's hard?
+- Adjust practices if needed
+
+### Resistance Points and Solutions
+
+If team resists memory bank:
+
+Resistance 1: "Takes too long to document"
+- Solution: Start with very minimal entries, iterate
+- Show ROI: Time saved by having context vs. rediscovering
+
+Resistance 2: "Documentation gets stale"
+- Solution: Make updates part of normal work (code review checklist)
+- Link to failing tests: If test fails, update docs
+
+Resistance 3: "We don't know what to document"
+- Solution: Document when someone asks a question
+- If you had to ask, others will too
+
+```
+
+---
+
+## Shared Conventions Template
+
+```
+# {{team_name}} Memory Bank Conventions
+
+## Document Organization
+
+Memory bank structure:
+```
+memory-bank/
+├── systemPatterns.md          # Architectural patterns, system decisions
+├── techContext.md             # Technical decisions, tool choices, versions
+├── decisions/                 # Architectural decision records (ADRs)
+│   ├── adr-001-xxx.md
+│   └── adr-002-xxx.md
+└── operations/                # Operational procedures
+    ├── runbooks/
+    │   ├── deployment-runbook.md
+    │   └── incident-response.md
+    └── performance/
+        └── capacity-planning.md
+```
+
+## File Naming Conventions
+
+- Use kebab-case: `file-name.md` (not `fileName.md` or `file_name.md`)
+- Use descriptive names: `circuit-breaker-pattern.md` (not `pattern1.md`)
+- ADRs: `adr-NNN-title.md` (e.g., `adr-001-event-driven-architecture.md`)
+
+## Format Conventions
+
+### Headings
+```
+# Main topic (Page title)
+## Major sections
+### Subsections
+```
+
+### Code blocks
+```
+# For pseudocode or explanation:
+Pattern:
+```[language]
+[code example]
+```
+
+# For file references:
+File: path/to/file.ext
+```
+
+### Cross-references
+```
+Link to related docs: [Related doc name](../path/to/doc.md)
+Reference section: [Section](#section-name)
+Link to external: [External resource](https://url)
+```
+
+### Examples
+Every technical entry should include:
+- Real example from codebase
+- When to use it
+- When not to use it
+
+```
+
+---
+
+## Early Wins Strategy
+
+```
+## Designing for Early Wins
+
+Early wins build momentum and confidence. Plan activities that show value quickly:
+
+### Win 1: Solve Recent Problem Using Memory Bank
+
+Example: "Last sprint, we had a bug related to circuit breaker thresholds. We documented that learning. This sprint, when new team member asked about circuit breaker tuning, they found the answer in memory bank in 2 minutes instead of us spending 30 minutes explaining."
+
+Activity: Show how memory bank solved actual problem.
+
+### Win 2: Improve Onboarding for New Team Member
+
+Use memory bank to onboard someone new:
+- New engineer reads systemPatterns.md and techContext.md (2-3 hours)
+- New engineer gets context that used to take 1-2 days of pair programming
+- Show before/after: How much faster onboarding with memory bank?
+
+### Win 3: Speed Up Feature Planning
+
+Demonstrate: Planning complex feature using memory bank vs. without
+- With memory bank: Found relevant patterns, tech context, decision history (fast)
+- Without: Rediscovering same patterns and decisions (slow)
+- Show time saved
+
+### Win 4: Catch Design Issues Early
+
+Example: Code review where engineer checked memory bank before implementing
+- Found existing pattern that applied
+- Avoided reimplementing same thing differently
+- Saved implementation and maintenance time
+
+```
+
+---
+
+## Metrics and Success Tracking
+
+```
+## Measuring Adoption Success
+
+Track adoption progress with these metrics:
+
+### Usage Metrics
+
+- Memory bank updates per sprint: [Target]
+- Team members updating per week: [Target: X% of team]
+- Memory bank references in PRs: [Target: X% of PRs]
+- "Check memory bank first" adoption: [Observed in retrospective]
+
+### Value Metrics
+
+- Time to answer team questions: [Baseline: 30 min → Target: <5 min]
+- Onboarding time for new team member: [Baseline: 2 days → Target: 0.5 day]
+- Pattern reuse: [Baseline: 0% → Target: 50%+]
+- Rework due to missing knowledge: [Baseline: X% → Target: <10%]
+
+### Health Metrics
+
+- Documentation currency: % of docs matching actual system [Target: >90%]
+- Doc accessibility: Team easily finds what they need [Self-reported]
+- Conventions compliance: % of new entries following conventions [Target: >95%]
+
+### Team Satisfaction
+
+Monthly survey:
+- How useful is memory bank? (1-5 scale)
+- Is memory bank current? (1-5 scale)
+- Would you recommend to other teams? (1-5 scale)
+
+```
+
+---
+
+## Example: Payment API Team Onboarding
+
+```markdown
+# Memory Bank Team Onboarding: PaymentAPI Team
+
+Team: PaymentAPI Team (4 engineers)
+Timeline: 2 weeks (Sprints 24 kickoff)
+Led by: Morgan Lee, Alex Chen
+
+## Phase 1: Kickoff (Week 1)
+
+### Kickoff Workshop (Jan 30, 2026)
+
+Agenda:
+1. Memory banks overview (30 min)
+   - Show existing memory bank structure
+   - Demo: How memory bank helped PaymentAPI team
+
+2. Plan-prompt-proceed pattern (30 min)
+   - Live demo: Using memory bank to plan feature
+   - Show AI prompts that included memory bank context
+
+3. Team conventions (45 min)
+   - Agreed on: File naming (kebab-case), structure, update process
+   - Decision: Update after each sprint, reviewed in retrospective
+
+4. Next steps preview (15 min)
+   - Week 1: Create minimal memory bank
+   - Week 2: Use in 2-3 real tasks
+   - Reflection: What's working, what's missing
+
+### Minimal Memory Bank Created (Jan 31 - Feb 1)
+
+**systemPatterns.md** (10 patterns):
+- Event-driven architecture (why, how, when to use)
+- Circuit breaker pattern (tuning, config)
+- Payment state machine (valid transitions)
+- Database migration N-1 compatibility
+- Validation result pattern
+- [5 more patterns]
+
+**techContext.md**:
+- Stripe API V3 (changes from V2, webhook structure)
+- RabbitMQ configuration
+- PaymentAPI infrastructure
+- Key technologies and versions
+
+## Phase 2: Hands-On Adoption (Week 2)
+
+### Using Memory Bank in Real Work
+
+Feature 1: Alex implementing new retry policy
+- Checked systemPatterns.md#circuit-breaker (found existing pattern)
+- Used documented thresholds instead of guessing
+- Result: Implementation faster, more confident in thresholds
+
+Feature 2: Jordan investigating payment webhook issue
+- Checked techContext.md#stripe-api (found webhook structure docs)
+- Quickly understood issue, fixed in 1 hour vs. 3 hours without docs
+- Result: Faster debugging
+
+Feature 3: Casey reviewing payment validation code
+- Checked systemPatterns.md#validation-result (found pattern)
+- Code followed existing pattern, review easier
+- Result: Consistent approach team-wide
+
+### Team Reflection (Feb 5)
+
+Results:
+- Everyone used memory bank at least once
+- Memory bank was helpful for 3/4 features
+- Missing: Operational runbooks for common payment issues
+- Enthusiasm: "This would have saved me time last month"
+
+Decision: Add operations/ section with payment troubleshooting guide next.
+
+## Phase 3-4: Sustainable Practices
+
+Monthly review:
+- Updates per sprint: 5-7 updates (healthy level)
+- Team satisfaction: 4.2/5 average ("useful and current")
+- New team member onboarded in 0.5 day using memory bank
+
+```
+```
+
+</output-format>
+
+<instructions>
+CRITICAL: Team onboarding isn't about adoption rate or compliance. It's about helping team experience value.
+
+DO NOT:
+- Make it mandatory ("You have to use memory bank")
+- Create everything upfront (team won't use what they didn't create)
+- Overload team in Week 1 (start minimal)
+- Skip addressing objections (listen to concerns)
+- Treat as one-time training (ongoing practice needed)
+
+ALWAYS:
+- Start with hands-on experience (learn by doing)
+- Plan for early wins (show value quickly)
+- Build team shared understanding (align on conventions)
+- Start minimal and grow based on need (not theory)
+- Address real obstacles (make it easy to adopt)
+- Measure adoption (track progress)
+- Celebrate milestones (build momentum)
+
+REMEMBER: Best adoptions start with "wow, this saves me time" not "we have a process." Engineer the early experience to create that moment.
+</instructions>
+
+<examples>
+
+[See template example above showing PaymentAPI team onboarding - demonstrates kickoff, minimal adoption, hands-on experience, reflection, and evolution to sustainable practices]
+
+</examples>

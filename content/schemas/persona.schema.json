@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://constellize.com/schemas/persona.schema.json",
+  "title": "Constellize Persona",
+  "description": "Schema for Constellize personas/agents - source of truth for website and Claude Code marketplace",
+  "type": "object",
+  "required": ["id", "name", "title", "category"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier (kebab-case)",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Persona's name (e.g., 'Alex', 'Quinn')"
+    },
+    "title": {
+      "type": "string",
+      "description": "Professional title (e.g., 'Principal System Architect')"
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version",
+      "default": "1.0.0"
+    },
+    "category": {
+      "type": "string",
+      "description": "Main category",
+      "enum": [
+        "design-architecture",
+        "development",
+        "operations-deployment",
+        "planning-requirements",
+        "quality-testing"
+      ]
+    },
+    "subcategory": {
+      "type": "string",
+      "description": "Specific role type",
+      "enum": [
+        "system-architects",
+        "data-specialists",
+        "ux-ui-designers",
+        "software-engineers",
+        "specialized-engineers",
+        "devops-engineers",
+        "release-engineers",
+        "product-managers",
+        "requirements-analysts",
+        "qa-engineers",
+        "security-engineers",
+        "performance-engineers"
+      ]
+    },
+    "expertise": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Areas of expertise"
+    },
+    "use-with": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "When to use this persona (activities/tasks)"
+    },
+    "agent": {
+      "type": "object",
+      "description": "Claude Code agent configuration",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "When Claude should delegate to this agent"
+        },
+        "tools": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tools this agent can use"
+        },
+        "disallowed-tools": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tools this agent should NOT use"
+        },
+        "model": {
+          "type": "string",
+          "enum": ["haiku", "sonnet", "opus", "inherit"],
+          "description": "Recommended model for complex reasoning"
+        },
+        "skills": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Skills to pre-load for this agent"
+        },
+        "max-turns": {
+          "type": "integer",
+          "description": "Maximum agentic turns before stopping"
+        },
+        "permission-mode": {
+          "type": "string",
+          "enum": ["default", "acceptEdits", "dontAsk", "delegate", "bypassPermissions", "plan"],
+          "default": "default"
+        }
+      }
+    },
+    "is-aggregate": {
+      "type": "boolean",
+      "description": "True if this is a synthesized aggregate persona",
+      "default": false
+    },
+    "synthesized-from": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of persona IDs this aggregate was synthesized from"
+    },
+    "variants": {
+      "type": "array",
+      "description": "Specialized variants of this persona",
+      "items": {
+        "type": "object",
+        "required": ["id", "focus"],
+        "properties": {
+          "id": { "type": "string" },
+          "focus": { "type": "string" },
+          "model": { "type": "string" }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "description": "Output target configuration",
+      "properties": {
+        "website": {
+          "type": "object",
+          "properties": {
+            "include": { "type": "boolean", "default": true },
+            "aggregate": {
+              "type": "boolean",
+              "description": "Include in aggregate synthesis",
+              "default": true
+            }
+          }
+        },
+        "marketplace": {
+          "type": "object",
+          "properties": {
+            "plugin": {
+              "type": "string",
+              "description": "Target plugin name"
+            }
+          }
+        }
+      }
+    }
+  }
+}

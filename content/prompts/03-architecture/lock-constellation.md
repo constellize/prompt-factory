@@ -1,0 +1,317 @@
+---
+# === Identity ===
+id: lock-constellation
+name: Lock constellation scope and prevent feature creep
+version: v1
+
+# === Classification ===
+chapter: 3
+category: architecture
+
+tags:
+  - architecture
+  - scope
+  - discipline
+  - requirements
+  - governance
+
+# === Skill Configuration (for Claude Code marketplace) ===
+skill:
+  description: >
+    Lock constellation scope and prevent feature creep.
+    After gap analysis, before implementation to maintain discipline.
+  argument-hint: "[system_name]"
+  allowed-tools:
+    - Read
+    - Glob
+    - Grep
+    - Write
+    - Bash
+  model: sonnet
+  context: inline
+  user-invocable: true
+  disable-model-invocation: false
+
+# === Variables ===
+variables:
+  - name: system_name
+    description: The name of your system
+    example: "Payment Processing System"
+    maps-to: "$0"
+
+# === Output Targets ===
+outputs:
+  book:
+    include: true
+    format: callout
+  website:
+    include: true
+    path: /prompts/lock-constellation
+  marketplace:
+    plugin: constellize-architecture
+
+# === Related ===
+related:
+  personas: []
+  skills: []
+---
+
+<task>
+Lock the scope of {{system_name}} after constellation mapping and gap analysis to prevent feature creep and maintain implementation discipline.
+
+A common trap when building from reusable parts is overextending: adding features just because the system is halfway there. The key is restraint—only build what closes the gap between your current stars and your goal. If a piece doesn't directly serve the needs uncovered during problem breakdown, it likely doesn't belong.
+
+Follow this process:
+
+1. **Review completed artifacts:**
+   - Read constellation map at `construction/requirements/constellation-map.md`
+   - Read gap analysis at `construction/requirements/gap-analysis.md`
+   - Extract all documented stars
+   - Extract all validated gaps
+
+2. **Create scope lock document:**
+   - List all approved features from gap analysis
+   - Define governance process for new requests
+   - Establish traceability rules
+   - Document review criteria
+
+3. **For each future feature request, enforce checklist:**
+   - Does this feature exist in our gap list?
+   - If not, has a new requirement been filed and reviewed?
+   - Does the requirement trace back to stakeholder analysis?
+   - Has the team approved expanding scope?
+
+4. **Reject opportunistic features:**
+   - Features "because we're already building X"
+   - Features "because it would be easy to add"
+   - Features without documented stakeholder need
+   - Features that don't close a validated gap
+</task>
+
+<context>
+**Standard Construction Folder Structure:**
+This prompt reads from:
+- `construction/requirements/constellation-map.md` (star catalog)
+- `construction/requirements/gap-analysis.md` (identified gaps)
+
+And outputs to: `construction/requirements/scope-lock.md` (scope governance)
+</context>
+
+<thinking>
+Before locking scope, analyze:
+1. Are all gaps in the PRD validated and traced to stakeholder needs?
+2. What features might be tempting to add "while we're at it"?
+3. How will we handle new feature requests that arise during implementation?
+4. What process prevents scope creep without blocking legitimate requirements?
+</thinking>
+
+<output-format>
+Format your output as `construction/requirements/scope-lock.md`:
+
+# Scope Lock: {{system_name}}
+
+## Approved Scope
+
+### Constellation Review
+**Stars in Use:** [Count]
+
+List of stars from `construction/requirements/constellation-map.md`:
+- **[Star Name]**: [Capability]
+- **[Star Name]**: [Capability]
+- **[Star Name]**: [Capability]
+
+### Approved Gaps to Build
+**Total Gaps:** [Count] (from `construction/requirements/gap-analysis.md`)
+
+For each gap from gap analysis:
+
+#### Gap: [Gap Name]
+**Priority:** [Critical/High/Medium/Low]
+**Status:** 🟢 Approved for implementation
+**Traceability:**
+- Documented in: `construction/requirements/gap-analysis.md`
+- Stakeholder need: [Reference to requirement]
+- Success criteria: [Reference to measurable criteria]
+
+---
+
+## Governance Process
+
+### New Feature Request Evaluation
+
+When a new feature is proposed during implementation, apply this checklist:
+
+**Evaluation Checklist:**
+- [ ] Does this feature exist in our approved gaps list above?
+- [ ] If not, has a new gap entry been filed in `construction/requirements/gap-analysis.md`?
+- [ ] Does the new gap trace back to documented stakeholder needs?
+- [ ] Has the new gap been validated against constellation map?
+- [ ] Has the team formally approved expanding scope?
+
+**Decision Tree:**
+
+1. **Is this feature in the approved gaps list above?**
+   - YES → Proceed with implementation
+   - NO → Go to step 2
+
+2. **Is this feature required to close an approved gap?**
+   - YES → Document dependency and proceed
+   - NO → Go to step 3
+
+3. **Does this feature address a new stakeholder need?**
+   - YES → File new requirement, update gap analysis, seek approval
+   - NO → REJECT - this is opportunistic feature creep
+
+### Review Authority
+
+**Who can approve scope expansion:**
+[Define who has authority to approve new gaps]
+
+**Process for scope expansion:**
+1. File new requirement with stakeholder justification
+2. Update gap analysis document
+3. Validate against constellation map
+4. Obtain formal approval
+5. Update this scope lock document
+
+---
+
+## Prohibited Patterns (Scope Creep Signals)
+
+NEVER add features for these reasons:
+
+❌ **"While we're building X, we might as well add Y"**
+- Reject unless Y closes a validated gap
+
+❌ **"This would be easy to add"**
+- Reject unless it closes a validated gap
+
+❌ **"Users might want this in the future"**
+- Reject unless documented in stakeholder analysis
+
+❌ **"This is a best practice"**
+- Reject unless it addresses a specific constraint in the gap analysis
+
+❌ **"We did this in our last project"**
+- Reject unless it closes a validated gap in THIS project
+
+---
+
+## Scope Change Log
+
+Track all approved scope changes here:
+
+### [Date]: [Feature Name]
+**Reason for addition:** [Stakeholder need]
+**Documented in:** [Link to updated gap analysis]
+**Approved by:** [Authority]
+**Impact:** [What changed in scope]
+
+---
+
+## Validation
+
+- [ ] All gaps from `construction/requirements/gap-analysis.md` are listed above
+- [ ] All gaps trace to stakeholder needs
+- [ ] Governance process is defined
+- [ ] Review authority is established
+- [ ] Prohibited patterns are documented
+- [ ] Team has reviewed and approved this scope lock
+</output-format>
+
+<instructions>
+CRITICAL: The scope lock is a defensive document. Its purpose is to say NO to feature creep, not to enable gold-plating.
+
+NEVER approve features that:
+- Don't appear in the validated gap analysis
+- Can't trace back to documented stakeholder needs
+- Are added "because we're already building nearby"
+- Are justified by "it would be easy"
+- Come from "best practices" without specific requirements
+
+DO NOT:
+- Allow scope expansion without formal review
+- Skip the evaluation checklist for "small" features
+- Bypass governance because "it's obviously needed"
+- Add features during implementation without documentation
+- Let "while we're at it" thinking justify scope creep
+
+ALWAYS:
+- Enforce the evaluation checklist for every new feature
+- Require traceability to stakeholder needs
+- Document scope changes in the change log
+- Reject opportunistic features
+- Maintain discipline throughout implementation
+
+REPEAT: Every feature must justify its existence through documented, validated gaps. No opportunistic features.
+</instructions>
+
+<examples>
+✅ Good scope lock decision:
+**Feature Request:** "Add email notifications when rate limit is hit"
+
+**Evaluation:**
+1. In approved gaps list? NO
+2. Required to close approved gap? YES - Gap "API Rate Limiter Between Gateway and Stripe API" has success criterion "Graceful degradation if Redis unavailable" which requires notification
+3. Decision: APPROVED - Document as dependency of Gap 1
+
+**Documentation:**
+Added to scope lock under Gap 1 dependencies: "Email notification system required for rate limiter degradation alerting"
+
+---
+
+❌ Bad scope lock decision:
+**Feature Request:** "Add comprehensive logging framework while we're building the rate limiter"
+
+**Evaluation:**
+1. In approved gaps list? NO
+2. Required to close approved gap? NO - Rate limiter gap has specific logging requirements, not a comprehensive framework
+3. Decision: SHOULD REJECT but approved anyway because "it's a best practice"
+
+**Why this is wrong:**
+- No documented stakeholder need for comprehensive logging
+- Gap analysis specified specific logging for rate limiter only
+- "Best practice" justification bypassed governance
+- This is classic scope creep
+
+**Correct decision:** REJECT. Implement only the logging specified in the rate limiter gap. If comprehensive logging is needed, file a new requirement with stakeholder justification.
+
+---
+
+✅ Good scope expansion request:
+**Feature Request:** "Add health check endpoint for rate limiter"
+
+**Evaluation:**
+1. In approved gaps list? NO
+2. Required to close approved gap? Unclear
+3. New stakeholder need? YES
+
+**Process followed:**
+1. Filed new requirement: "DevOps team needs health checks for all services for Kubernetes liveness probes"
+2. Updated gap analysis with new gap: "Service Health Monitoring"
+3. Validated against constellation map: No existing star provides this
+4. Obtained team approval
+5. Updated scope lock document
+
+**Decision:** APPROVED after following full governance process
+
+---
+
+❌ Bad scope expansion:
+**Feature Request:** "Add GraphQL API while we're building the REST endpoints for rate limiter"
+
+**Evaluation:**
+1. In approved gaps list? NO
+2. Required to close approved gap? NO
+3. New stakeholder need? NO - not documented anywhere
+
+**Justification given:** "GraphQL is better and we're already building API endpoints"
+
+**Why this is wrong:**
+- Classic "while we're at it" thinking
+- No stakeholder need documented
+- Technical preference, not requirement
+- Would significantly expand scope
+
+**Correct decision:** REJECT. Rate limiter gap specifies REST API integration. If GraphQL is needed, it must come from documented stakeholder needs, not developer preference.
+</examples>
