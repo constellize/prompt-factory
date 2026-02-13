@@ -1,7 +1,7 @@
 {
   "name": "prompt-factory",
-  "version": "0.1.0",
-  "description": "Generate effective AI prompts from book content for Constellize website-starter",
+  "version": "0.2.0",
+  "description": "Source of truth for Constellize prompts and personas - generates book, website, and Claude Code marketplace outputs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -16,7 +16,12 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "validate": "node dist/validate.js",
     "deploy": "node dist/deploy.js",
-    "create-prompt": "./bin/create-prompt"
+    "create-prompt": "./bin/create-prompt",
+    "generate:website": "npx ts-node build/generate-website.ts",
+    "generate:marketplace": "npx ts-node build/generate-marketplace.ts",
+    "generate:all": "npm run generate:website && npm run generate:marketplace",
+    "migrate:prompts": "npx ts-node build/migrate-prompts.ts",
+    "migrate:personas": "npx ts-node build/migrate-personas.ts"
   },
   "keywords": [
     "prompts",

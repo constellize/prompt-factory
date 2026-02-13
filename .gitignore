@@ -6,8 +6,10 @@ yarn-error.log*
 
 # Build outputs
 dist/
-build/
+
+# Ignore compiled JS but keep build scripts (TypeScript)
 *.js
+!build/**/*.ts
 *.js.map
 *.d.ts
 
