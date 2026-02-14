@@ -133,7 +133,7 @@ function generatePersonasMetadata(personas: Persona[]): string {
 
     return {
       id: p.frontmatter.subcategory,
-      name: p.frontmatter.name.replace(' (Aggregate)', 's'),
+      name: p.frontmatter.name.replace(' (Aggregate)', ''),
       category: p.frontmatter.category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' & '),
       subcategory: p.frontmatter.subcategory.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
       title: p.frontmatter.title,
