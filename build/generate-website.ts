@@ -1,13 +1,13 @@
 #!/usr/bin/env npx ts-node
 
 /**
- * Generate website-starter output from unified content
+ * Generate website output from unified content
  *
  * Outputs:
- * - ../website-starter/public/prompts/<id>/prompt.txt
- * - ../website-starter/public/personas/<category>/<subcategory>/<name>.md
- * - ../website-starter/src/data/prompts/index.ts (metadata)
- * - ../website-starter/src/data/personas/metadata.ts (metadata)
+ * - ../website/public/prompts/<id>/prompt.txt
+ * - ../website/public/personas/<category>/<subcategory>/<name>.md
+ * - ../website/src/data/prompts/index.ts (metadata)
+ * - ../website/src/data/personas/metadata.ts (metadata)
  */
 
 import * as fs from 'fs';
@@ -15,9 +15,9 @@ import * as path from 'path';
 import { loadPrompts, loadPersonas, getAggregatePersonas } from './lib/parser';
 import { Prompt, Persona } from './lib/types';
 
-const WEBSITE_STARTER = '../website-starter';
-const PROMPTS_OUTPUT = path.join(WEBSITE_STARTER, 'public/prompts');
-const PERSONAS_OUTPUT = path.join(WEBSITE_STARTER, 'public/personas');
+const WEBSITE_DIR = '../website';
+const PROMPTS_OUTPUT = path.join(WEBSITE_DIR, 'public/prompts');
+const PERSONAS_OUTPUT = path.join(WEBSITE_DIR, 'public/personas');
 
 /**
  * Extract just the prompt content (removing frontmatter sections for website)
@@ -176,11 +176,11 @@ export const getAllPersonaSubcategories = (): string[] => {
  * Main execution
  */
 function main() {
-  console.log('Generating website-starter output...\n');
+  console.log('Generating website output...\n');
 
-  // Check if website-starter exists
-  if (!fs.existsSync(WEBSITE_STARTER)) {
-    console.error(`website-starter not found at: ${WEBSITE_STARTER}`);
+  // Check if website exists
+  if (!fs.existsSync(WEBSITE_DIR)) {
+    console.error(`website not found at: ${WEBSITE_DIR}`);
     process.exit(1);
   }
 
@@ -210,20 +210,20 @@ function main() {
 
   // Prompts metadata (JSON for now, could be TypeScript)
   const promptsMetadata = generatePromptsMetadata(prompts);
-  const promptsMetadataPath = path.join(WEBSITE_STARTER, 'src/data/prompts/generated-metadata.json');
+  const promptsMetadataPath = path.join(WEBSITE_DIR, 'src/data/prompts/generated-metadata.json');
   fs.mkdirSync(path.dirname(promptsMetadataPath), { recursive: true });
   fs.writeFileSync(promptsMetadataPath, JSON.stringify(promptsMetadata, null, 2));
   console.log(`✓ Prompts metadata: ${promptsMetadataPath}`);
 
   // Personas metadata (TypeScript)
   const personasMetadataContent = generatePersonasMetadata(personas);
-  const personasMetadataPath = path.join(WEBSITE_STARTER, 'src/data/personas/generated-metadata.ts');
+  const personasMetadataPath = path.join(WEBSITE_DIR, 'src/data/personas/generated-metadata.ts');
   fs.mkdirSync(path.dirname(personasMetadataPath), { recursive: true });
   fs.writeFileSync(personasMetadataPath, personasMetadataContent);
   console.log(`✓ Personas metadata: ${personasMetadataPath}`);
 
   console.log('\n--- Complete ---');
-  console.log(`Generated ${prompts.length} prompts and ${aggregatePersonas.length} aggregate personas for website-starter`);
+  console.log(`Generated ${prompts.length} prompts and ${aggregatePersonas.length} aggregate personas for website`);
 }
 
 main();

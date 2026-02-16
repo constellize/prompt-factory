@@ -3,7 +3,7 @@
 /**
  * Generate Claude Code marketplace output from unified content
  *
- * Outputs to: ../constellize-marketplace/
+ * Outputs to: ../marketplace/
  * Structure:
  *   plugins/
  *     <plugin-id>/
@@ -24,7 +24,7 @@ import {
 } from './lib/parser';
 import { Prompt, Persona, PluginDefinition, PluginsConfig } from './lib/types';
 
-const MARKETPLACE_DIR = '../constellize-marketplace';
+const MARKETPLACE_DIR = '../marketplace';
 
 /**
  * Generate SKILL.md content from a prompt
@@ -157,7 +157,7 @@ function generatePluginJson(plugin: PluginDefinition, promptCount: number, agent
  */
 function generateMarketplaceJson(plugins: PluginDefinition[]): object {
   return {
-    name: 'constellize-marketplace',
+    name: 'marketplace',
     owner: {
       name: 'Constellize',
       url: 'https://constellize.com'
@@ -291,7 +291,7 @@ This marketplace provides the complete Constellize methodology as Claude Code pl
 Add this marketplace to Claude Code:
 
 \`\`\`bash
-/plugin marketplace add constellize/constellize-marketplace
+/plugin marketplace add constellize/marketplace
 \`\`\`
 
 Then install individual plugins:

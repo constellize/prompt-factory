@@ -1,16 +1,16 @@
 #!/usr/bin/env npx ts-node
 
 /**
- * Migration script to copy personas from website-starter and add frontmatter
+ * Migration script to copy personas from website and add frontmatter
  *
- * Reads from: ../website-starter/public/personas/
+ * Reads from: ../website/public/personas/
  * Writes to: content/personas/
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 
-const WEBSITE_STARTER = '../website-starter';
+const WEBSITE_STARTER = '../website';
 const PERSONAS_SOURCE = path.join(WEBSITE_STARTER, 'public/personas');
 const PERSONAS_TARGET = 'content/personas';
 
@@ -281,7 +281,7 @@ outputs:
 }
 
 function main() {
-  console.log('Migrating personas from website-starter...\n');
+  console.log('Migrating personas from website...\n');
 
   if (!fs.existsSync(PERSONAS_SOURCE)) {
     console.error(`Source directory not found: ${PERSONAS_SOURCE}`);
