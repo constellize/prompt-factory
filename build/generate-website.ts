@@ -188,7 +188,10 @@ function main() {
   const prompts = loadPrompts('content');
   const personas = loadPersonas('content');
 
-  console.log(`Loaded ${prompts.length} prompts and ${personas.length} personas\n`);
+  // Filter to only aggregate personas for website
+  const aggregatePersonas = getAggregatePersonas(personas);
+
+  console.log(`Loaded ${prompts.length} prompts and ${personas.length} personas (${aggregatePersonas.length} aggregates)\n`);
 
   // Generate prompt outputs
   console.log('--- Prompts ---');
@@ -196,9 +199,9 @@ function main() {
     generatePromptOutput(prompt);
   }
 
-  // Generate persona outputs
-  console.log('\n--- Personas ---');
-  for (const persona of personas) {
+  // Generate persona outputs (aggregates only)
+  console.log('\n--- Personas (Aggregates Only) ---');
+  for (const persona of aggregatePersonas) {
     generatePersonaOutput(persona);
   }
 
@@ -220,7 +223,7 @@ function main() {
   console.log(`✓ Personas metadata: ${personasMetadataPath}`);
 
   console.log('\n--- Complete ---');
-  console.log(`Generated ${prompts.length} prompts and ${personas.length} personas for website-starter`);
+  console.log(`Generated ${prompts.length} prompts and ${aggregatePersonas.length} aggregate personas for website-starter`);
 }
 
 main();
