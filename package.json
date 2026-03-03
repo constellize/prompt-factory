@@ -20,6 +20,7 @@
     "generate:website": "npx ts-node build/generate-website.ts",
     "generate:marketplace": "npx ts-node build/generate-marketplace.ts",
     "generate:all": "npm run generate:website && npm run generate:marketplace",
+    "validate:book": "npx ts-node build/validate-book-refs.ts",
     "migrate:prompts": "npx ts-node build/migrate-prompts.ts",
     "migrate:personas": "npx ts-node build/migrate-personas.ts"
   },
