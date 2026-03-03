@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Recover from staleness drift** where documentation describes the system as it was. Identify stale entries by comparing against current code, audit actual code structure and active patterns, update entries to match reality, and implement prevention measures.
+    preview: |
+      "...compare memory bank to current codebase identifying stale references, obsolete decisions, outdated patterns..."
   website:
     include: true
     path: /prompts/recover-from-staleness-drift

@@ -53,8 +53,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 8
+    description: |
+      **Track system health trends across architectural debt, code quality, complexity, and operational burden** to understand whether system is improving or degrading and identify priorities for health improvements enabling confident evolution.
+    preview: |
+      "...Q4 trend: Throughput exceeding projections (positive), but test coverage declining 91%→82%, operational complexity growing. Priorities: Automate RabbitMQ management, restore test coverage, decouple services..."
   website:
     include: true
     path: /prompts/assess-system-health-over-time

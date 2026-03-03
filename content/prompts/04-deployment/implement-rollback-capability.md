@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Build rollback capability** to recover quickly when deployments fail. The previous version must be restorable within 5 minutes to minimize downtime during incidents. Database migrations require reversibility so schema changes can be undone safely. Configuration changes need revert procedures that restore previous working state. Test rollback procedures regularly and document them so any team member can execute them under pressure.
+    preview: |
+      "...enable version rollback tagging all images and keeping previous versions available. Document and test rollback procedures quarterly with step-by-step runbooks..."
   website:
     include: true
     path: /prompts/implement-rollback-capability

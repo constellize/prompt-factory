@@ -47,8 +47,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Maintain dependency hygiene** to keep your codebase secure and maintainable. Every dependency should be justified and documented—explain why it's needed and what alternatives were considered. Regularly scan for known security vulnerabilities in the dependency chain and address them promptly. Keep dependencies current with security patches without blindly upgrading everything. Minimize your dependency footprint by avoiding unnecessary libraries that add weight without clear value.
+    preview: |
+      "...audit and justify dependencies. Scan for security vulnerabilities. Keep dependencies current with security patches. Minimize footprint..."
   website:
     include: true
     path: /prompts/maintain-dependency-hygiene

@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Leverage AI assistance** to accelerate quality engineering without sacrificing rigor. Generate comprehensive test suites that cover edge cases you might not have considered, automatically creating test data and mock configurations with descriptive names that serve as executable documentation. Automate documentation creation by generating clear code comments explaining complex business logic, comprehensive README files with setup instructions, and current API contracts with usage examples. Enforce code quality standards through AI-powered initial code reviews before human review, automatically refactoring code to match team conventions and generating consistent error handling patterns. Accelerate deployment readiness by generating container configurations, health check implementations, monitoring setups, and rollback procedures.
+    preview: |
+      "...generate test suites covering edge cases. Automate documentation creation. Enforce quality standards through AI-powered reviews. Accelerate deployment readiness..."
   website:
     include: true
     path: /prompts/leverage-ai-assistance

@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Write comprehensive unit tests** that cover the full spectrum of component behavior. Start with the happy path scenarios that validate normal operation, then expand to edge cases and boundary conditions where systems often fail unexpectedly. Include explicit tests for error conditions and recovery—how does the component behave when things go wrong? Every public method and behavior should have corresponding test coverage that documents expected outcomes.
+    preview: |
+      "...validate behavior in isolation, independent of constellation stars. Unit tests are executable documentation—they tell the story of what your component does and why..."
   website:
     include: true
     path: /prompts/write-unit-tests

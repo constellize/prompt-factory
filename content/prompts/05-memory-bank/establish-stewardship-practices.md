@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Establish stewardship practices** to prevent future degradation. Implement automated review scheduling, create rotating steward role with weekly rotation, integrate updates into development workflow, and build cultural expectation through leadership endorsement.
+    preview: |
+      "...implement automated reminders, create rotating steward role, integrate into workflow via definition of done and code review..."
   website:
     include: true
     path: /prompts/establish-stewardship-practices

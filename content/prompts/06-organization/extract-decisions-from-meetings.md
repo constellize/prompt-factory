@@ -50,8 +50,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 6
+    description: |
+      **Extract actionable decisions from unstructured meeting notes** and convert them into memory bank entries. Identify decisions made, constraints discovered, and action items assigned. Format output as memory bank updates with cross-references to affected systems.
+    preview: |
+      "...scan meeting transcript for: explicit decisions (phrases like 'we decided', 'agreed to', 'will proceed with'), implicit constraints (phrases like 'can't because', 'blocked by', 'depends on'), action items with owners. Output structured memory bank entries..."
   website:
     include: true
     path: /prompts/extract-decisions-from-meetings

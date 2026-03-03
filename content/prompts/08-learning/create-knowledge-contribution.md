@@ -56,8 +56,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 8
+    description: |
+      **Package personal insight for team sharing** by documenting problem, solution approach, reusable patterns, and implementation guidance—transforming individual expertise into team asset that prevents knowledge loss and accelerates teammates' learning.
+    preview: |
+      "...Problem: Engineers guess circuit breaker thresholds. Solution: Empirical load testing with failure injection. Pattern: Load test template with baseline + failure modes. Benefit: Team doesn't reinvent threshold tuning..."
   website:
     include: true
     path: /prompts/create-knowledge-contribution

@@ -5,6 +5,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import YAML from 'yaml';
 import {
   Prompt,
   PromptFrontmatter,
@@ -13,139 +14,6 @@ import {
   PluginsConfig,
   PluginDefinition
 } from './types';
-
-/**
- * Simple YAML frontmatter parser
- * Handles nested objects and arrays
- */
-function parseYamlFrontmatter(yamlContent: string): Record<string, any> {
-  const result: Record<string, any> = {};
-  const lines = yamlContent.split('\n');
-
-  let currentKey: string | null = null;
-  let currentIndent = 0;
-  let inArray = false;
-  let arrayKey: string | null = null;
-  let nestedObject: Record<string, any> | null = null;
-  let nestedKey: string | null = null;
-
-  for (const line of lines) {
-    // Skip comments and empty lines
-    if (line.trim().startsWith('#') || line.trim() === '') {
-      continue;
-    }
-
-    const indent = line.search(/\S/);
-    const trimmed = line.trim();
-
-    // Array item
-    if (trimmed.startsWith('- ')) {
-      const value = trimmed.slice(2).trim();
-      if (arrayKey) {
-        if (!result[arrayKey]) {
-          result[arrayKey] = [];
-        }
-        // Check if it's a nested object in array
-        if (value.includes(': ')) {
-          const [k, v] = value.split(': ').map(s => s.trim());
-          const obj: Record<string, any> = {};
-          obj[k] = parseValue(v);
-          result[arrayKey].push(obj);
-        } else {
-          result[arrayKey].push(parseValue(value));
-        }
-      } else if (nestedKey && nestedObject) {
-        if (!nestedObject[nestedKey]) {
-          nestedObject[nestedKey] = [];
-        }
-        nestedObject[nestedKey].push(parseValue(value));
-      }
-      continue;
-    }
-
-    // Key-value pair
-    if (trimmed.includes(': ')) {
-      const colonIndex = trimmed.indexOf(': ');
-      const key = trimmed.slice(0, colonIndex).trim();
-      const value = trimmed.slice(colonIndex + 2).trim();
-
-      if (indent === 0) {
-        // Top-level key
-        if (value === '' || value === '>') {
-          // Start of nested object or multiline
-          currentKey = key;
-          currentIndent = indent;
-          nestedObject = {};
-          result[key] = nestedObject;
-          arrayKey = null;
-          nestedKey = null;
-        } else if (value === '[]') {
-          result[key] = [];
-          arrayKey = null;
-        } else {
-          result[key] = parseValue(value);
-          arrayKey = null;
-          nestedObject = null;
-        }
-      } else if (indent > 0 && nestedObject) {
-        // Nested key
-        if (value === '' || value === '[]') {
-          nestedKey = key;
-          if (value === '[]') {
-            nestedObject[key] = [];
-          }
-          arrayKey = null;
-        } else {
-          nestedObject[key] = parseValue(value);
-          nestedKey = null;
-        }
-      }
-    } else if (trimmed.endsWith(':')) {
-      // Key without value (start of array or nested object)
-      const key = trimmed.slice(0, -1).trim();
-      if (indent === 0) {
-        arrayKey = key;
-        result[key] = [];
-        nestedObject = null;
-        nestedKey = null;
-      } else if (nestedObject) {
-        nestedKey = key;
-        nestedObject[key] = [];
-        arrayKey = null;
-      }
-    }
-  }
-
-  return result;
-}
-
-function parseValue(value: string): any {
-  // Remove quotes
-  if ((value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))) {
-    return value.slice(1, -1);
-  }
-
-  // Boolean
-  if (value === 'true') return true;
-  if (value === 'false') return false;
-
-  // Number
-  if (/^-?\d+$/.test(value)) return parseInt(value, 10);
-  if (/^-?\d+\.\d+$/.test(value)) return parseFloat(value);
-
-  // Null/empty
-  if (value === 'null' || value === '~' || value === '') return null;
-
-  // Array shorthand
-  if (value.startsWith('[') && value.endsWith(']')) {
-    const inner = value.slice(1, -1).trim();
-    if (inner === '') return [];
-    return inner.split(',').map(s => parseValue(s.trim()));
-  }
-
-  return value;
-}
 
 /**
  * Parse a markdown file with YAML frontmatter
@@ -173,7 +41,8 @@ function parseMarkdownWithFrontmatter(filePath: string): { frontmatter: Record<s
   const yamlContent = fileContent.slice(4, endIndex);
   const content = fileContent.slice(endIndex + 5).trim();
 
-  const frontmatter = parseYamlFrontmatter(yamlContent);
+  // Use proper YAML parser for multiline strings, etc.
+  const frontmatter = YAML.parse(yamlContent) || {};
 
   return { frontmatter, content };
 }

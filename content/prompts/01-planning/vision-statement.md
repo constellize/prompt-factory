@@ -41,8 +41,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 1
+    description: |
+      Generate product vision statement
+    preview: |
+      "Write a vision statement for {{product_name}} using the following template: For..."
   website:
     include: true
     path: /prompts/vision-statement

@@ -61,8 +61,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 7
+    description: |
+      **Write incident postmortem transforming incidents into institutional learning** by documenting timeline with key decision points, capturing hypotheses explored (successful and failed), recording remediation options considered and rationale, analyzing root cause and contributing factors, identifying systemic improvements (not just immediate fixes), linking to affected system constellations.
+    preview: |
+      "...Root Cause Analysis: Immediate Cause → Contributing Factors → Root Cause [Design assumption violated] / Causal Chain [Root cause → Enabled → Immediate cause → Effects → Symptoms] / Prevention: Immediate Short-term Medium-term Long-term Strategic [Addresses root cause] / REMEMBER: The goal is not to prevent this exact incident—it's to make the system more resilient against entire classes of failures..."
   website:
     include: true
     path: /prompts/write-incident-postmortem

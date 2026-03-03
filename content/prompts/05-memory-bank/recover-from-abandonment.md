@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Recover from abandonment** where teams stopped updating entirely. Assess extent by checking last update date, capture critical current state first, bootstrap missing knowledge through team interviews, and establish sustainable maintenance rhythm.
+    preview: |
+      "...capture critical current state documenting system today, active patterns. Bootstrap missing knowledge through team interviews..."
   website:
     include: true
     path: /prompts/recover-from-abandonment

@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Rebuild core knowledge systematically** in correct dependency order. Start with project foundation, update system architecture from actual code, document recent changes in progress.md, and create fresh activeContext.md. Validate each level before proceeding.
+    preview: |
+      "...follow dependency order: foundation first, then architecture from actual code, then evolution, finally current state..."
   website:
     include: true
     path: /prompts/rebuild-core-knowledge

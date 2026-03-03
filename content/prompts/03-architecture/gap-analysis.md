@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 3
+    description: |
+      Identify and document architectural gaps
+    preview: |
+      "Identify gaps between trusted components and document missing capabilities..."
   website:
     include: true
     path: /prompts/gap-analysis

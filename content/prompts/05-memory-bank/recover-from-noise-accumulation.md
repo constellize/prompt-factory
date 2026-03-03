@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Recover from noise accumulation** where obsolete entries pile up making information hard to find. Identify conflicting entries and duplicates, prune by retiring superseded entries, consolidate duplicates, and restructure for clarity.
+    preview: |
+      "...identify noise sources finding conflicts and duplicates. Prune systematically, consolidate to single authoritative entry..."
   website:
     include: true
     path: /prompts/recover-from-noise-accumulation

@@ -23,6 +23,10 @@ export interface PromptVariable {
 
 export interface PromptOutputs {
   book?: {
+    chapter?: number;
+    description?: string;
+    preview?: string;
+    // Legacy fields
     include?: boolean;
     format?: 'callout' | 'section' | 'appendix';
   };

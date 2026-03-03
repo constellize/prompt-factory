@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Triage salvageable knowledge** to determine what remains accurate, what needs updates, and what must be archived. Categorize entries by accuracy level, estimate recovery effort, and create phased recovery plan prioritizing high-value items first.
+    preview: |
+      "...categorize entries as accurate, minor updates needed, major updates, obsolete, or uncertain. Prioritize by value and effort..."
   website:
     include: true
     path: /prompts/triage-salvageable-knowledge

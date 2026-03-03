@@ -59,8 +59,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 7
+    description: |
+      **Establish operational memory bank structure** by systematically assessing organizational factors to choose between separate, integrated, or hybrid structure. Decision depends on team organization, access requirements, and how operational knowledge evolves relative to development changes.
+    preview: |
+      "...RECOMMENDATION: [SEPARATE / INTEGRATED / HYBRID] / REMEMBER: The structure serves engineers during incidents. If on-call engineers can't quickly find knowledge when systems are failing, the structure is wrong regardless of how elegant it seems..."
   website:
     include: true
     path: /prompts/establish-operational-memory-bank

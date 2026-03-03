@@ -49,8 +49,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Pre-deployment review** ensures production safety before code reaches users. End-to-end tests exercise full system functionality from the user's perspective, catching integration issues that only surface in realistic scenarios. Infrastructure tests verify that deployment scripts and configurations work correctly in the target environment. Rollback procedures are validated to ensure that if something goes wrong, recovery is swift and predictable. Monitoring setup confirms that appropriate alerts and dashboards are in place so the team will know immediately if the new code causes problems.
+    preview: |
+      "...run end-to-end tests exercising complete user workflows. Validate infrastructure and deployment. Test rollback procedures. Verify monitoring and observability..."
   website:
     include: true
     path: /prompts/pre-deployment-review

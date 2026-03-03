@@ -50,8 +50,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Track quality metrics** to measure system health and guide continuous improvement. Quality metrics like test coverage, code complexity, and technical debt show whether the codebase remains maintainable. Performance metrics including response times, throughput, and error rates indicate whether the system meets user expectations. Business metrics such as feature adoption, user satisfaction, and system reliability connect technical work to business outcomes. Process metrics like deployment frequency, lead time, and mean time to recovery reveal team velocity and operational excellence.
+    preview: |
+      "...track test coverage, code complexity, and technical debt. Measure response times, throughput, and error rates. Monitor deployment frequency and mean time to recovery..."
   website:
     include: true
     path: /prompts/track-quality-metrics

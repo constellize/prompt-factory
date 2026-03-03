@@ -19,8 +19,10 @@
     "create-prompt": "./bin/create-prompt",
     "generate:website": "npx ts-node build/generate-website.ts",
     "generate:marketplace": "npx ts-node build/generate-marketplace.ts",
-    "generate:all": "npm run generate:website && npm run generate:marketplace",
+    "generate:all": "npm run generate:website && npm run generate:marketplace && npm run generate:book",
     "validate:book": "npx ts-node build/validate-book-refs.ts",
+    "generate:book": "npx ts-node build/generate-book.ts",
+    "migrate:book-refs": "npx ts-node build/migrate-book-refs.ts",
     "migrate:prompts": "npx ts-node build/migrate-prompts.ts",
     "migrate:personas": "npx ts-node build/migrate-personas.ts"
   },
@@ -47,6 +49,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "js-tiktoken": "^1.0.10"
+    "js-tiktoken": "^1.0.10",
+    "yaml": "^2.8.2"
   }
 }

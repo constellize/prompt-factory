@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Foster continuous learning** through structured reflection and proactive improvement. Post-incident reviews extract lessons from failures without blame, building organizational resilience. Architecture reviews provide regular assessment of system design decisions, ensuring they remain aligned with current needs. Technology updates involve evaluating and adopting new tools and practices that improve effectiveness. Team development through skill building and knowledge sharing strengthens the collective capability.
+    preview: |
+      "...conduct post-incident reviews with blameless retrospectives. Perform architecture reviews. Evaluate technology updates. Invest in team development..."
   website:
     include: true
     path: /prompts/foster-continuous-learning

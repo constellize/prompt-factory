@@ -50,8 +50,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 6
+    description: |
+      **Detect patterns suggesting teams are solving similar problems independently** by analyzing memory bank entries for overlapping challenges, similar architectural decisions, or parallel implementations.
+    preview: |
+      "...analyze memory banks for: similar problem statements across teams, parallel architectural approaches, repeated debugging patterns. Output duplication report with consolidation recommendations and suggested team connections..."
   website:
     include: true
     path: /prompts/surface-duplicated-effort

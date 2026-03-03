@@ -47,8 +47,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Achieve documentation completeness** that helps any team member understand and contribute to the codebase. README files should explain purpose, setup, and usage clearly without assuming prior knowledge. Code comments must explain why decisions were made, not just what the code does—the code itself shows what. API documentation needs to stay current as interfaces evolve. Decision rationale belongs in memory bank entries so future maintainers understand the context behind choices.
+    preview: |
+      "...create comprehensive README with setup and troubleshooting. Write comments that document WHY, not WHAT. Capture decision rationale in memory bank..."
   website:
     include: true
     path: /prompts/achieve-documentation-completeness

@@ -42,8 +42,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 3
+    description: |
+      Design rough approaches for gaps before implementation
+    preview: |
+      "Create implementation sketches for each gap in {{system_name}} to guide design decisions before coding. Sketch a rough approach for each gap identified during knowledge gathering..."
   website:
     include: true
     path: /prompts/implementation-sketch

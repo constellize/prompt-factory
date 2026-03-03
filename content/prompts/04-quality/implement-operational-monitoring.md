@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Enable operational health monitoring** that tracks runtime behavior over time. Memory usage and garbage collection metrics reveal memory leaks and allocation patterns that could cause future problems. Thread pool status and queue lengths indicate whether your system has capacity for current load. Request throughput and error rates provide immediate feedback on system health. Custom business metrics relevant to your specific function—such as queue depths, processing rates, or cache hit ratios—give insight into application-specific health.
+    preview: |
+      "...tracks runtime behavior over time. Operational monitoring goes beyond startup validation—it tracks how your system behaves DURING operation..."
   website:
     include: true
     path: /prompts/implement-operational-monitoring

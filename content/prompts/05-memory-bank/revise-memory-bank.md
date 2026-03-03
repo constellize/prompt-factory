@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Revise memory bank when circumstances change** to maintain accuracy as understanding evolves. Update entries when constraints shift, annotate decisions with new information, mark validated or invalidated assumptions, and preserve original reasoning with dates.
+    preview: |
+      "...revise with evolution tracking, preserving original reasoning, adding annotations showing what changed and when..."
   website:
     include: true
     path: /prompts/revise-memory-bank

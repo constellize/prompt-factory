@@ -50,8 +50,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 3
+    description: |
+      Map trusted components and integration points
+    preview: |
+      "Create a constellation map for {{system_name}} by identifying trusted components ("stars") and mapping their integration points. Treat reliable, proven components like stars in your constellation—solid points you can build around. A library you trust. A stable internal service. A tested prompt or API pattern. Instead of reinventing these, catalogue what you can trust and build upon...."
   website:
     include: true
     path: /prompts/constellation-map

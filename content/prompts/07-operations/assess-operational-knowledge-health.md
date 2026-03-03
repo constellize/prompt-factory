@@ -61,8 +61,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 7
+    description: |
+      **Assess operational memory bank health through systematic evaluation** evaluating runbook currency (commands still valid? access procedures current? system state matches?), checking cross-reference integrity between operational and development knowledge, identifying knowledge gaps from recent incidents (missing runbooks, undocumented failure modes), assessing incident response effectiveness, measuring time-to-resolution trends, recommending prioritized knowledge updates.
+    preview: |
+      "...Assessment Domains: 1.Runbook Currency [Commands Access System Dependencies] Rating: Current Minor updates Major updates Obsolete / 2.Cross-Reference Integrity [Bidirectional completeness] / 3.Knowledge Gaps [P0 Critical P1 High P2 Medium] / 4.Incident Response Effectiveness / 5.Resolution Time Trends..."
   website:
     include: true
     path: /prompts/assess-operational-knowledge-health

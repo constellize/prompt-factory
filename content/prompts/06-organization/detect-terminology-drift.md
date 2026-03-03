@@ -49,8 +49,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 6
+    description: |
+      **Identify terminology inconsistencies across team memory banks** where different teams use different words for the same concepts. Map equivalent terms and suggest standardization or explicit cross-references.
+    preview: |
+      "...compare memory banks across teams extracting key terms and definitions. Flag cases where: same term has different meanings, different terms describe same concept, acronyms are defined inconsistently. Output terminology mapping with reconciliation suggestions..."
   website:
     include: true
     path: /prompts/detect-terminology-drift

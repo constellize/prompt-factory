@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 3
+    description: |
+      Create detailed implementation plan before writing code
+    preview: |
+      "Create a detailed implementation plan for \"{{gap_to_implement}}\" in {{system_name}} that is shaped by constellation context, not generic patterns. When filling gaps, AI-assisted development works best with a detailed plan that bridges design and code..."
   website:
     include: true
     path: /prompts/code-generation-plan

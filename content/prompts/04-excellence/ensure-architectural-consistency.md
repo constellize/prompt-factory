@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Ensure architectural consistency** by following established patterns documented in your memory bank. Code should use consistent naming conventions across the constellation, making it easy to navigate between components. Standard error handling and logging patterns reduce surprises and make debugging predictable. Authentication and authorization approaches should match existing implementations, avoiding unnecessary variation that increases cognitive load.
+    preview: |
+      "...review established patterns from memory-bank/systemPatterns.md. Apply naming conventions consistently. Implement standard error handling and logging patterns..."
   website:
     include: true
     path: /prompts/ensure-architectural-consistency

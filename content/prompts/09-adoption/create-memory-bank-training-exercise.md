@@ -53,8 +53,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 9
+    description: |
+      **Design hands-on exercises using real project context** by structuring learning through planning, prompting, and implementation phases—building practical skills and confidence through success.
+    preview: |
+      "...Exercise: Implement payment retry. Phase 1: Read memory bank, plan (what patterns?). Phase 2: Create prompt with context. Phase 3: Implement with AI. Phase 4: Reflect, contribute back. Team learned memory bank while building real feature..."
   website:
     include: true
     path: /prompts/create-memory-bank-training-exercise

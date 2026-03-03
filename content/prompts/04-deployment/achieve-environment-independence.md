@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Achieve environment independence** so deployment processes work identically across dev, staging, and production. The same container image and deployment scripts should work everywhere, eliminating environment-specific variations. Service discovery must function in all target environments, finding dependencies regardless of infrastructure. Database migrations need to execute reliably without manual intervention and be rollback-safe. All required dependencies must be available and accessible in target environments.
+    preview: |
+      "...use identical deployment process with same container image across all environments. Create reliable database migrations that are versioned, idempotent, and include rollback scripts..."
   website:
     include: true
     path: /prompts/achieve-environment-independence

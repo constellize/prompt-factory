@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Retire outdated documentation gracefully** while preserving historical context. Archive obsolete entries with explanations of what changed, cross-reference deprecated approaches with current solutions, and document lessons learned from abandoned approaches.
+    preview: |
+      "...create retirement notice documenting what this was, why retired, what replaced it, and lessons learned..."
   website:
     include: true
     path: /prompts/retire-memory-bank

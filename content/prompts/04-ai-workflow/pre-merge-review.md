@@ -48,8 +48,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Pre-merge review** ensures code quality before joining the main branch. Integration tests verify that new code works correctly with existing system components, catching issues that unit tests miss. Performance tests detect significant regressions that could impact user experience or system capacity. Contract tests confirm that API boundaries remain stable and existing consumers won't break. Documentation must reflect any changes—if the code changed behavior, the docs should say so.
+    preview: |
+      "...run integration tests with real dependencies. Execute performance tests. Validate API contracts ensuring backward compatibility..."
   website:
     include: true
     path: /prompts/pre-merge-review

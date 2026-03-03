@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Validate AI-generated changes** rigorously before integration to ensure correctness, alignment, and safety. Perform line-by-line comparison for refactoring changes, comparing original and AI-modified code section by section to verify all original logic has been preserved or explicitly replaced, checking for silently omitted code that AI removed without documentation. Execute memory bank cross-validation ensuring AI changes align with documented architectural decisions, verifying modifications don't violate system constraints and that AI understands the business context behind the code. Conduct integration testing requirements by testing all AI-modified code in realistic system environments, verifying performance characteristics haven't degraded and security boundaries remain intact. Apply context reinforcement checks to verify AI was provided with complete memory bank context, confirming AI understood system constraints and followed established patterns.
+    preview: |
+      "...perform line-by-line comparison checking for preserved logic and silently omitted code. Execute memory bank cross-validation ensuring architectural alignment..."
   website:
     include: true
     path: /prompts/validate-ai-changes

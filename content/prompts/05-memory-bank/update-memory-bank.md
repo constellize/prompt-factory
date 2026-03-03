@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Update memory bank documentation** to capture decisions, patterns, and learnings from current work. Document decisions with rationale, capture technical patterns with code examples, track progress with specific details, and record learnings with actionable insights.
+    preview: |
+      "...capture patterns with concrete examples. Track completions with dates and locations. Record insights with actionable takeaways..."
   website:
     include: true
     path: /prompts/update-memory-bank

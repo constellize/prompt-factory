@@ -48,8 +48,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Pre-commit review** prevents quality issues from entering the shared repository. Static analysis tools catch code style violations and potential bugs before they reach other developers. Unit tests must pass with appropriate coverage, ensuring that individual components behave correctly in isolation. Security scans identify high-severity vulnerabilities that could compromise the system. Dependency checks verify that no known vulnerable libraries are being introduced into the codebase.
+    preview: |
+      "...configure static analysis checks. Enforce unit test requirements. Run security scans and validate dependency safety..."
   website:
     include: true
     path: /prompts/pre-commit-review

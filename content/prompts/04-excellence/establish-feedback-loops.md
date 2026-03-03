@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Establish feedback loops** to surface issues quickly and guide continuous improvement. Automated feedback from CI/CD pipeline results and monitoring alerts provides instant visibility into system health. Team feedback through code reviews, retrospectives, and pair programming strengthens collective knowledge and catches issues early. User feedback via bug reports, feature requests, and usage analytics reveals how the system performs in real usage. System feedback from performance data, error logs, and health check results exposes operational patterns and potential problems.
+    preview: |
+      "...configure automated feedback from CI/CD pipelines and monitoring alerts. Establish team feedback through code reviews and retrospectives. Collect user and system feedback..."
   website:
     include: true
     path: /prompts/establish-feedback-loops

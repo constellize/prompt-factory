@@ -42,8 +42,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 3
+    description: |
+      Enforce scope discipline and prevent opportunistic features
+    preview: |
+      "Lock the scope of {{system_name}} after constellation mapping and gap analysis to prevent feature creep and maintain implementation discipline. A common trap when building from reusable parts is overextending: adding features just because the system is halfway there..."
   website:
     include: true
     path: /prompts/lock-constellation

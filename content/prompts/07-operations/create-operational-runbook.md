@@ -58,8 +58,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 7
+    description: |
+      **Create operational runbook providing step-by-step troubleshooting procedures** with systematic investigation paths, decision trees guiding next steps, prerequisite checks before taking action, rollback procedures for corrective actions, and clear success criteria enabling effective incident response under pressure.
+    preview: |
+      "...Decision Point: If symptoms NOT confirmed → False alarm, If symptoms confirmed → Continue to Step 2 / Resolution Procedure: [Action Command Expected result Verification Rollback] / Success Criteria [Metrics returned to baseline No new errors Sustained for duration]..."
   website:
     include: true
     path: /prompts/create-operational-runbook

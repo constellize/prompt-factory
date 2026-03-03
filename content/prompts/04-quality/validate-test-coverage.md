@@ -1,7 +1,7 @@
 ---
 # === Identity ===
 id: validate-test-coverage
-name: Validate test coverage meets thresholds: 80% branch, 100% critical logic and error paths
+name: "Validate test coverage meets thresholds: 80% branch, 100% critical logic and error paths"
 version: v1
 
 # === Classification ===
@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Achieve meaningful coverage** that goes beyond simple line-counting metrics. Target minimum 80% branch coverage rather than line coverage, since branch coverage reveals untested decision paths that line coverage misses. Critical business logic deserves 100% coverage—these are the algorithms and validations that your users depend on. Every error path should be tested explicitly, because error handling code that has never executed is error handling code that probably doesn't work.
+    preview: |
+      "...minimum thresholds: 80% branch coverage overall, 100% coverage of critical business logic, 100% of error paths..."
   website:
     include: true
     path: /prompts/validate-test-coverage

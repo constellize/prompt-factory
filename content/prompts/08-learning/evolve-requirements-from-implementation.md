@@ -52,8 +52,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 8
+    description: |
+      **Document how requirements evolved through implementation** by capturing original assumptions, implementation discoveries, evolved understanding—preserving requirement history and reasoning so future projects benefit from past learning.
+    preview: |
+      "...Original: Sync payments, immediate response. Discovery: Limited to 1000 tx/sec, Q2 needs 5000+. Evolved: Async with <200ms confirmation, scales 10x. Lesson: Gather requirements in context of projected scale..."
   website:
     include: true
     path: /prompts/evolve-requirements-from-implementation

@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 9
+    description: |
+      **Diagnose and resolve adoption obstacles systematically** by identifying root causes (not symptoms), matching to proven solution patterns, creating action plans adapted to team context—removing friction and enabling successful adoption.
+    preview: |
+      "...Obstacle: Memory bank updates lapsed. Root cause: Updates feel like separate homework. Solution: Add to code review checklist. Result: Updates happen naturally during review, freshness 60%→95%..."
   website:
     include: true
     path: /prompts/diagnose-adoption-obstacles

@@ -56,8 +56,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 8
+    description: |
+      **Capture how you grew through challenges** by documenting problem encountered, investigation process, skills developed, and lessons learned—transforming personal problem-solving into expertise that accelerates team capability when shared.
+    preview: |
+      "...Challenge: Payment latency spike. Didn't know: Why Stripe calls serialized. Learned: Circuit breaker pattern, load testing. Skills: Empirical threshold tuning. Would share: Load testing approach, tuning guide. Growth: 2/5 → 4/5 confidence in scaling..."
   website:
     include: true
     path: /prompts/document-personal-learning-journey

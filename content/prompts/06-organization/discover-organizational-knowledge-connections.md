@@ -50,8 +50,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 6
+    description: |
+      **Discover knowledge connections and gaps across organizational memory banks** to build meta-constellation showing how team knowledge interconnects at scale. Scan memory banks across repositories identifying knowledge islands, terminology drift, duplicated effort, and systemic risks. Detect integration conflicts before they reach production by comparing documentation across teams.
+    preview: |
+      "... Scan memory banks extracting topics, teams, dependencies. Detect patterns finding conceptual overlaps, terminology drift, duplicated effort, knowledge islands. Analyze systemic risks for conflicting assumptions, integration gaps, cascade impacts..."
   website:
     include: true
     path: /prompts/discover-organizational-knowledge-connections

@@ -47,8 +47,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Ensure team comprehension** so any team member can work effectively in the codebase. Code structure should be self-evident, with clear organization that makes finding things intuitive. Complex business logic needs thorough explanation since it embeds domain knowledge that may not be obvious. Setup and development workflows must be documented so new team members can contribute quickly. Testing approaches should be clear and repeatable, not tribal knowledge that only seniors understand.
+    preview: |
+      "...organize code structure clearly. Explain complex business logic documenting domain concepts. Document development workflows with step-by-step setup..."
   website:
     include: true
     path: /prompts/ensure-team-comprehension

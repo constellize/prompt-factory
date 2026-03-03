@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Create contract tests** that protect the boundaries between components. API contracts should be explicitly tested and maintained across versions so that consumers can rely on consistent behavior. Breaking changes should be detected automatically by your test suite, not discovered in production. Backward compatibility deserves dedicated attention—even when adding new features, existing functionality must continue to work for all current consumers.
+    preview: |
+      "...ensure API contracts are maintained across versions and breaking changes are detected automatically..."
   website:
     include: true
     path: /prompts/write-contract-tests

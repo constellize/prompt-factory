@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Implement integration tests** that verify your component works correctly with its dependencies. Database interactions need validation to ensure queries execute properly and transactions maintain data integrity. External API calls require testing to confirm request formatting and response handling work as expected. Service-to-service communication patterns should be verified to catch protocol mismatches or serialization issues early. Don't forget configuration loading and validation tests—misconfiguration is one of the most common production failure modes.
+    preview: |
+      "...validate integration with constellation stars using real dependencies. Integration tests verify your component works correctly with external systems—databases, APIs, services..."
   website:
     include: true
     path: /prompts/write-integration-tests

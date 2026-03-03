@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Build container reliability** that ensures Docker images build cleanly and containers start predictably. Images should build without errors or warnings that might hide problems. Containers need to start successfully with minimal resource requirements, avoiding resource exhaustion. Health checks must pass within acceptable timeframes so orchestrators know when services are ready. Graceful shutdown handling enables clean restarts without dropped connections or data loss.
+    preview: |
+      "...create clean Dockerfile using official base images and multi-stage builds. Implement graceful shutdown handling SIGTERM signals..."
   website:
     include: true
     path: /prompts/build-reliable-containers

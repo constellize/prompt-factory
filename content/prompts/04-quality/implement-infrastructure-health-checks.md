@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Implement infrastructure health checks** that verify your system's foundational dependencies are functioning correctly. Database connectivity should be tested with response time measurements to detect degradation before it becomes failure. Cache connectivity for systems like Redis needs performance metrics that reveal latency issues. External API reachability requires timeout detection to distinguish between slow responses and complete outages. File system access and disk space monitoring catch storage issues before they cause cascade failures.
+    preview: |
+      "...verify your system's foundational dependencies are functioning correctly. A system that can't report its own health is a system waiting to fail silently..."
   website:
     include: true
     path: /prompts/implement-infrastructure-health-checks

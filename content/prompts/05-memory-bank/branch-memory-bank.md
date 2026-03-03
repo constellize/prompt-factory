@@ -51,8 +51,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Branch memory bank to explore alternatives** while preserving current production knowledge. Create construction zone entries for alternative approaches, document hypotheses with success criteria, and link experimental knowledge to production knowledge being challenged.
+    preview: |
+      "...create hypothesis document with current approach, proposed alternative, success criteria. Conduct systematic investigation..."
   website:
     include: true
     path: /prompts/branch-memory-bank

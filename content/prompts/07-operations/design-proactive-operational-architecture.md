@@ -59,8 +59,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 7
+    description: |
+      **Design proactive operational architecture during development** by planning health checks, failure modes, observability, graceful degradation, and deployment procedures before first production deployment. Build resilience into system design rather than discovering operational requirements through incidents.
+    preview: |
+      "...DEPENDENCY FAILURE MODE: Database unreachable → Fail fast, return 503 / Cache unreachable → Degrade gracefully, bypass cache, continue processing (slower but functional) / Rationale: Cache is performance optimization not critical path, payments must succeed even if slower..."
   website:
     include: true
     path: /prompts/design-proactive-operational-architecture

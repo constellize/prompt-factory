@@ -50,8 +50,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 5
+    description: |
+      **Establish memory bank documentation** to maintain living project knowledge across context resets. Create six core files: project brief for objectives, product context for user needs, system patterns for architecture, technical context for tools, active context for current focus, and progress tracking for history.
+    preview: |
+      "...create memory bank as single source of truth with six core documentation files serving distinct purposes..."
   website:
     include: true
     path: /prompts/establish-memory-bank

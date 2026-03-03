@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Design actionable health reporting** that enables operators to respond effectively. Status indicators should be clear and meaningful: UP, DOWN, or DEGRADED, not just HTTP status codes. Error messages must include specific troubleshooting hints that guide operators toward resolution. Performance metrics should include acceptable thresholds so operators know when values are concerning. Dependencies should be mapped individually with their own status, so a single downstream failure doesn't obscure the health of other components.
+    preview: |
+      "...health reports MUST be actionable—operators need to understand WHAT failed, WHY it matters, and HOW to fix it..."
   website:
     include: true
     path: /prompts/implement-actionable-health-reporting

@@ -46,8 +46,11 @@ variables:
 # === Output Targets ===
 outputs:
   book:
-    include: true
-    format: callout
+    chapter: 4
+    description: |
+      **Externalize configuration** to eliminate environment-specific values from code. Hardcoded values like database URLs or API keys prevent portability across environments. All configurations should load from external sources—environment variables, configuration servers, or mounted volumes. Provide sensible defaults for non-critical configurations to reduce required setup. Validate configuration at startup with clear error messages that tell operators exactly what's missing or invalid.
+    preview: |
+      "...externalize critical configuration loading from environment variables. Validate at startup checking required variables exist and format is correct..."
   website:
     include: true
     path: /prompts/externalize-configuration
