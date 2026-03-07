@@ -1,6 +1,6 @@
 {
   "name": "prompt-factory",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Source of truth for Constellize prompts and personas - generates book, website, and Claude Code marketplace outputs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
