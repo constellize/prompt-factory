@@ -9,7 +9,8 @@
 set -e
 
 VERSION=$1
-CONSTELLIZE_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+CONSTELLIZE_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Repositories to tag
 REPOS=(
