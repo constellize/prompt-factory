@@ -39,7 +39,7 @@ outputs:
     include: true
     aggregate: false
   marketplace:
-    plugin: constellize-deployment
+    plugin: constellize:deliver
 ---
 
 ---

@@ -40,7 +40,7 @@ outputs:
     include: true
     aggregate: true
   marketplace:
-    plugin: constellize-development
+    plugin: constellize:craft
 ---
 
 # MEGA_PROMPT - Software Engineers

@@ -37,7 +37,7 @@ outputs:
     include: true
     aggregate: true
   marketplace:
-    plugin: constellize-architecture
+    plugin: constellize:design
 ---
 
 # MEGA_PROMPT - Data Specialists

@@ -41,7 +41,7 @@ outputs:
     include: true
     aggregate: false
   marketplace:
-    plugin: constellize-quality
+    plugin: constellize:craft
 ---
 
 # Bob - Data Science QA Engineer

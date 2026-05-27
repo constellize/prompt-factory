@@ -40,7 +40,7 @@ outputs:
     include: true
     aggregate: false
   marketplace:
-    plugin: constellize-planning
+    plugin: constellize:design
 ---
 
 # Adversarial Test Architect - Requirements Analyst

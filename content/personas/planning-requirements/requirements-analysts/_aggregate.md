@@ -40,7 +40,7 @@ outputs:
     include: true
     aggregate: true
   marketplace:
-    plugin: constellize-planning
+    plugin: constellize:design
 ---
 
 # MEGA_PROMPT - Requirements Analysts

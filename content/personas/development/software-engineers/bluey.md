@@ -40,7 +40,7 @@ outputs:
     include: true
     aggregate: false
   marketplace:
-    plugin: constellize-development
+    plugin: constellize:craft
 ---
 
 # Bluey - Machine Learning Engineer

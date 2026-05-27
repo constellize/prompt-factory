@@ -39,7 +39,7 @@ outputs:
     include: true
     aggregate: false
   marketplace:
-    plugin: constellize-development
+    plugin: constellize:craft
 ---
 
 # Alex Chen - Agentic AI Developer

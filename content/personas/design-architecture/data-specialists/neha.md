@@ -37,7 +37,7 @@ outputs:
     include: true
     aggregate: false
   marketplace:
-    plugin: constellize-architecture
+    plugin: constellize:design
 ---
 
 # Neha - Data Modeler (Domain-Driven, Product-Embedded)

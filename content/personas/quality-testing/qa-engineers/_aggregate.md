@@ -41,7 +41,7 @@ outputs:
     include: true
     aggregate: true
   marketplace:
-    plugin: constellize-quality
+    plugin: constellize:craft
 ---
 
 # MEGA_PROMPT - QA Engineers

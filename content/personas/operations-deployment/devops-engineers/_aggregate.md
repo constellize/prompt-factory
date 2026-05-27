@@ -40,7 +40,7 @@ outputs:
     include: true
     aggregate: true
   marketplace:
-    plugin: constellize-deployment
+    plugin: constellize:deliver
 ---
 
 # MEGA_PROMPT - DevOps Engineers

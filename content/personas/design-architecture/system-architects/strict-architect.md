@@ -42,7 +42,7 @@ outputs:
     include: true
     aggregate: false
   marketplace:
-    plugin: constellize-architecture
+    plugin: constellize:design
 ---
 
 # Strict System Architect

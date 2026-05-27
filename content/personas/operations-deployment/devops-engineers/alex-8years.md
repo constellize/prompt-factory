@@ -40,7 +40,7 @@ outputs:
     include: true
     aggregate: false
   marketplace:
-    plugin: constellize-deployment
+    plugin: constellize:deliver
 ---
 
 # Alex - DevOps Engineer (8 Years Experience)

@@ -42,7 +42,7 @@ outputs:
     include: true
     aggregate: false
   marketplace:
-    plugin: constellize-planning
+    plugin: constellize:design
 ---
 
 # Lenny - Product Manager

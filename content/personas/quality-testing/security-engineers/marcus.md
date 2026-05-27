@@ -39,7 +39,7 @@ outputs:
     include: true
     aggregate: false
   marketplace:
-    plugin: constellize-quality
+    plugin: constellize:craft
 ---
 
 # Marcus - Senior Code Reviewer
