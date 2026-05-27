@@ -66,7 +66,7 @@ outputs:
     include: true
     path: /prompts/onboard-team-to-memory-banks
   marketplace:
-    plugin: constellize-adoption
+    plugin: constellize:grow
 
 # === Related ===
 related:

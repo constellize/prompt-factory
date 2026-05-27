@@ -60,7 +60,7 @@ outputs:
     include: true
     path: /prompts/rebuild-core-knowledge
   marketplace:
-    plugin: constellize-memory-bank
+    plugin: constellize:memory
 
 # === Related ===
 related:

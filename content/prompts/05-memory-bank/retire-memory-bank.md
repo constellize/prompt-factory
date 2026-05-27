@@ -60,7 +60,7 @@ outputs:
     include: true
     path: /prompts/retire-memory-bank
   marketplace:
-    plugin: constellize-memory-bank
+    plugin: constellize:memory
 
 # === Related ===
 related:

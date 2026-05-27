@@ -55,7 +55,7 @@ outputs:
     include: true
     path: /prompts/write-contract-tests
   marketplace:
-    plugin: constellize-quality
+    plugin: constellize:craft
 
 # === Related ===
 related:

@@ -67,7 +67,7 @@ outputs:
     include: true
     path: /prompts/create-operational-runbook
   marketplace:
-    plugin: constellize-operations
+    plugin: constellize:deliver
 
 # === Related ===
 related:

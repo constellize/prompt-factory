@@ -55,7 +55,7 @@ outputs:
     include: true
     path: /prompts/gap-analysis
   marketplace:
-    plugin: constellize-architecture
+    plugin: constellize:design
 
 # === Related ===
 related:

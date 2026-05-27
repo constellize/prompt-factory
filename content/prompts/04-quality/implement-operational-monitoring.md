@@ -55,7 +55,7 @@ outputs:
     include: true
     path: /prompts/implement-operational-monitoring
   marketplace:
-    plugin: constellize-quality
+    plugin: constellize:craft
 
 # === Related ===
 related:

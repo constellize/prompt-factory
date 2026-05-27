@@ -56,7 +56,7 @@ outputs:
     include: true
     path: /prompts/ensure-team-comprehension
   marketplace:
-    plugin: constellize-excellence
+    plugin: constellize:craft
 
 # === Related ===
 related:

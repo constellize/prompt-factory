@@ -59,7 +59,7 @@ outputs:
     include: true
     path: /prompts/track-quality-metrics
   marketplace:
-    plugin: constellize-excellence
+    plugin: constellize:craft
 
 # === Related ===
 related:

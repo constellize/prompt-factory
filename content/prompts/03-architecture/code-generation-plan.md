@@ -55,7 +55,7 @@ outputs:
     include: true
     path: /prompts/code-generation-plan
   marketplace:
-    plugin: constellize-architecture
+    plugin: constellize:design
 
 # === Related ===
 related:

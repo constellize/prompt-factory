@@ -62,7 +62,7 @@ outputs:
     include: true
     path: /prompts/guide-first-week-adoption
   marketplace:
-    plugin: constellize-adoption
+    plugin: constellize:grow
 
 # === Related ===
 related:

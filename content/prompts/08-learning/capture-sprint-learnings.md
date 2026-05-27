@@ -66,7 +66,7 @@ outputs:
     include: true
     path: /prompts/capture-sprint-learnings
   marketplace:
-    plugin: constellize-learning
+    plugin: constellize:grow
 
 # === Related ===
 related:

@@ -55,7 +55,7 @@ outputs:
     include: true
     path: /prompts/implement-rollback-capability
   marketplace:
-    plugin: constellize-deployment
+    plugin: constellize:deliver
 
 # === Related ===
 related:

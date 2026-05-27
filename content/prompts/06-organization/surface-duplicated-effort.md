@@ -59,7 +59,7 @@ outputs:
     include: true
     path: /prompts/surface-duplicated-effort
   marketplace:
-    plugin: constellize-organization
+    plugin: constellize:grow
 
 # === Related ===
 related:

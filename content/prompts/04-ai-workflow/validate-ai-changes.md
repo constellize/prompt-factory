@@ -60,7 +60,7 @@ outputs:
     include: true
     path: /prompts/validate-ai-changes
   marketplace:
-    plugin: constellize-ai-workflow
+    plugin: constellize:craft
 
 # === Related ===
 related:

@@ -58,7 +58,7 @@ outputs:
     include: true
     path: /prompts/detect-terminology-drift
   marketplace:
-    plugin: constellize-organization
+    plugin: constellize:grow
 
 # === Related ===
 related:

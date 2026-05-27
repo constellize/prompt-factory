@@ -70,7 +70,7 @@ outputs:
     include: true
     path: /prompts/assess-operational-knowledge-health
   marketplace:
-    plugin: constellize-operations
+    plugin: constellize:deliver
 
 # === Related ===
 related:

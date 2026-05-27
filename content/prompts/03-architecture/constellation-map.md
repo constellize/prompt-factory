@@ -59,7 +59,7 @@ outputs:
     include: true
     path: /prompts/constellation-map
   marketplace:
-    plugin: constellize-architecture
+    plugin: constellize:design
 
 # === Related ===
 related:

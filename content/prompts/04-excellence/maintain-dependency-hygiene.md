@@ -56,7 +56,7 @@ outputs:
     include: true
     path: /prompts/maintain-dependency-hygiene
   marketplace:
-    plugin: constellize-excellence
+    plugin: constellize:craft
 
 # === Related ===
 related:

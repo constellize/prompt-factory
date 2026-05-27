@@ -68,7 +68,7 @@ outputs:
     include: true
     path: /prompts/design-proactive-operational-architecture
   marketplace:
-    plugin: constellize-operations
+    plugin: constellize:deliver
 
 # === Related ===
 related:

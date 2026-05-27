@@ -60,7 +60,7 @@ outputs:
     include: true
     path: /prompts/establish-feedback-loops
   marketplace:
-    plugin: constellize-excellence
+    plugin: constellize:craft
 
 # === Related ===
 related:

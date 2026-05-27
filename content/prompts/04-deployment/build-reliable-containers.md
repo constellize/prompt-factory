@@ -55,7 +55,7 @@ outputs:
     include: true
     path: /prompts/build-reliable-containers
   marketplace:
-    plugin: constellize-deployment
+    plugin: constellize:deliver
 
 # === Related ===
 related:

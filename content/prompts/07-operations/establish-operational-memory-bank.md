@@ -68,7 +68,7 @@ outputs:
     include: true
     path: /prompts/establish-operational-memory-bank
   marketplace:
-    plugin: constellize-operations
+    plugin: constellize:deliver
 
 # === Related ===
 related:

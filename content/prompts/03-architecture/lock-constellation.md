@@ -51,7 +51,7 @@ outputs:
     include: true
     path: /prompts/lock-constellation
   marketplace:
-    plugin: constellize-architecture
+    plugin: constellize:design
 
 # === Related ===
 related:

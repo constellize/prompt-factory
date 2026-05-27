@@ -60,7 +60,7 @@ outputs:
     include: true
     path: /prompts/foster-continuous-learning
   marketplace:
-    plugin: constellize-excellence
+    plugin: constellize:craft
 
 # === Related ===
 related:

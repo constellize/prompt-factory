@@ -48,7 +48,7 @@ outputs:
     include: true
     path: /prompts/ch1-system-prompt-for-requirements-engineering-analysi
   marketplace:
-    plugin: constellize-planning
+    plugin: constellize:design
 
 # === Related ===
 related:

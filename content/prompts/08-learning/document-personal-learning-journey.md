@@ -65,7 +65,7 @@ outputs:
     include: true
     path: /prompts/document-personal-learning-journey
   marketplace:
-    plugin: constellize-learning
+    plugin: constellize:grow
 
 # === Related ===
 related:

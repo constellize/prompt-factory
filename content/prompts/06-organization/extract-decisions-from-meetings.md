@@ -59,7 +59,7 @@ outputs:
     include: true
     path: /prompts/extract-decisions-from-meetings
   marketplace:
-    plugin: constellize-organization
+    plugin: constellize:grow
 
 # === Related ===
 related:

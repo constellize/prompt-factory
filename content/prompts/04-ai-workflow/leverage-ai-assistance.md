@@ -60,7 +60,7 @@ outputs:
     include: true
     path: /prompts/leverage-ai-assistance
   marketplace:
-    plugin: constellize-ai-workflow
+    plugin: constellize:craft
 
 # === Related ===
 related:

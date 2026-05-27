@@ -58,7 +58,7 @@ outputs:
     include: true
     path: /prompts/pre-deployment-review
   marketplace:
-    plugin: constellize-ai-workflow
+    plugin: constellize:craft
 
 # === Related ===
 related:

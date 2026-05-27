@@ -70,7 +70,7 @@ outputs:
     include: true
     path: /prompts/query-operational-knowledge-during-incidents
   marketplace:
-    plugin: constellize-operations
+    plugin: constellize:deliver
 
 # === Related ===
 related:

@@ -52,7 +52,7 @@ outputs:
     include: true
     path: /prompts/raci-matrix
   marketplace:
-    plugin: constellize-planning
+    plugin: constellize:design
 
 # === Related ===
 related:

@@ -55,7 +55,7 @@ outputs:
     include: true
     path: /prompts/achieve-environment-independence
   marketplace:
-    plugin: constellize-deployment
+    plugin: constellize:deliver
 
 # === Related ===
 related:

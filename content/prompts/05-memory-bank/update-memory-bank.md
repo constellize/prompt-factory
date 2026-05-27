@@ -60,7 +60,7 @@ outputs:
     include: true
     path: /prompts/update-memory-bank
   marketplace:
-    plugin: constellize-memory-bank
+    plugin: constellize:memory
 
 # === Related ===
 related:

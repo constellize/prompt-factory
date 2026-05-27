@@ -50,7 +50,7 @@ outputs:
     include: true
     path: /prompts/vision-statement
   marketplace:
-    plugin: constellize-planning
+    plugin: constellize:design
 
 # === Related ===
 related:

@@ -51,7 +51,7 @@ outputs:
     include: true
     path: /prompts/implementation-sketch
   marketplace:
-    plugin: constellize-architecture
+    plugin: constellize:design
 
 # === Related ===
 related:

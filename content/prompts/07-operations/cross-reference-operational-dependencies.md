@@ -68,7 +68,7 @@ outputs:
     include: true
     path: /prompts/cross-reference-operational-dependencies
   marketplace:
-    plugin: constellize-operations
+    plugin: constellize:deliver
 
 # === Related ===
 related:

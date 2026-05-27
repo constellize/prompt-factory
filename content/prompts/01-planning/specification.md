@@ -43,7 +43,7 @@ outputs:
     include: true
     path: /prompts/specification
   marketplace:
-    plugin: constellize-planning
+    plugin: constellize:design
 
 # === Related ===
 related:

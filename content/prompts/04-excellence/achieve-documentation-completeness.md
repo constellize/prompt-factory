@@ -56,7 +56,7 @@ outputs:
     include: true
     path: /prompts/achieve-documentation-completeness
   marketplace:
-    plugin: constellize-excellence
+    plugin: constellize:craft
 
 # === Related ===
 related:

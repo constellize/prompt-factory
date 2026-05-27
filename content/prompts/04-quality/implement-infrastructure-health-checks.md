@@ -55,7 +55,7 @@ outputs:
     include: true
     path: /prompts/implement-infrastructure-health-checks
   marketplace:
-    plugin: constellize-quality
+    plugin: constellize:craft
 
 # === Related ===
 related:

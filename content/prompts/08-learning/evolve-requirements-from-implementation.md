@@ -61,7 +61,7 @@ outputs:
     include: true
     path: /prompts/evolve-requirements-from-implementation
   marketplace:
-    plugin: constellize-learning
+    plugin: constellize:grow
 
 # === Related ===
 related:

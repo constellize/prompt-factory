@@ -55,7 +55,7 @@ outputs:
     include: true
     path: /prompts/ensure-architectural-consistency
   marketplace:
-    plugin: constellize-excellence
+    plugin: constellize:craft
 
 # === Related ===
 related:

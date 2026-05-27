@@ -60,7 +60,7 @@ outputs:
     include: true
     path: /prompts/recover-from-staleness-drift
   marketplace:
-    plugin: constellize-memory-bank
+    plugin: constellize:memory
 
 # === Related ===
 related:

@@ -48,7 +48,7 @@ outputs:
     include: true
     path: /prompts/business-problem
   marketplace:
-    plugin: constellize-planning
+    plugin: constellize:design
 
 # === Related ===
 related:

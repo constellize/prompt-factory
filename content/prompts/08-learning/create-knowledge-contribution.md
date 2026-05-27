@@ -65,7 +65,7 @@ outputs:
     include: true
     path: /prompts/create-knowledge-contribution
   marketplace:
-    plugin: constellize-learning
+    plugin: constellize:grow
 
 # === Related ===
 related:

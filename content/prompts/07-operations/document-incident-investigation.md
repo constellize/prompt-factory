@@ -70,7 +70,7 @@ outputs:
     include: true
     path: /prompts/document-incident-investigation
   marketplace:
-    plugin: constellize-operations
+    plugin: constellize:deliver
 
 # === Related ===
 related:

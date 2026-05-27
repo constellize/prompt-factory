@@ -63,7 +63,7 @@ outputs:
     include: true
     path: /prompts/document-architectural-evolution
   marketplace:
-    plugin: constellize-learning
+    plugin: constellize:grow
 
 # === Related ===
 related:

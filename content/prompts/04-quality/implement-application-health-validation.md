@@ -54,7 +54,7 @@ outputs:
     include: true
     path: /prompts/implement-application-health-validation
   marketplace:
-    plugin: constellize-quality
+    plugin: constellize:craft
 
 # === Related ===
 related:

@@ -61,7 +61,7 @@ outputs:
     include: true
     path: /prompts/grow-memory-bank-organically
   marketplace:
-    plugin: constellize-adoption
+    plugin: constellize:grow
 
 # === Related ===
 related:

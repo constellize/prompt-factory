@@ -60,7 +60,7 @@ outputs:
     include: true
     path: /prompts/diagnose-adoption-obstacles
   marketplace:
-    plugin: constellize-adoption
+    plugin: constellize:grow
 
 # === Related ===
 related:

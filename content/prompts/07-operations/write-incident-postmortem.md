@@ -70,7 +70,7 @@ outputs:
     include: true
     path: /prompts/write-incident-postmortem
   marketplace:
-    plugin: constellize-operations
+    plugin: constellize:deliver
 
 # === Related ===
 related:

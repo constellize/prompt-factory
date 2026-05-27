@@ -55,7 +55,7 @@ outputs:
     include: true
     path: /prompts/implement-actionable-health-reporting
   marketplace:
-    plugin: constellize-quality
+    plugin: constellize:craft
 
 # === Related ===
 related:

@@ -66,7 +66,7 @@ outputs:
     include: true
     path: /prompts/conduct-knowledge-retrospective
   marketplace:
-    plugin: constellize-learning
+    plugin: constellize:grow
 
 # === Related ===
 related:
