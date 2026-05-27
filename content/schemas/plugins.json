@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Constellize marketplace plugin definitions",
   "marketplace": {
-    "name": "constellize-marketplace",
+    "name": "constellize-plugins-official",
     "owner": {
       "name": "Steve Atkinson",
       "url": "https://constellize.com"

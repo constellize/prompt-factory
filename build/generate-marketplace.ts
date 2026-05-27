@@ -224,7 +224,7 @@ function generatePluginJson(plugin: PluginDefinition): object {
  */
 function generateMarketplaceJson(plugins: PluginDefinition[]): object {
   return {
-    name: 'marketplace',
+    name: 'constellize-plugins-official',
     owner: {
       name: 'Constellize'
     },
