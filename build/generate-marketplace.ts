@@ -27,17 +27,91 @@ import { Prompt, Persona, PluginDefinition, PluginsConfig } from './lib/types';
 const MARKETPLACE_DIR = '../marketplace';
 
 /**
+ * Derive a short skill directory name from a prompt ID.
+ * Strips common verb prefixes that are redundant with the plugin context.
+ */
+function deriveShortSkillName(promptId: string, pluginId: string): string {
+  // Check special cases first (complex IDs that need manual mapping)
+  const specialCases: Record<string, string> = {
+    'recover-from-staleness-drift': 'recover-staleness',
+    'recover-from-noise-accumulation': 'recover-noise',
+    'recover-from-abandonment': 'recover-abandonment',
+    'ch1-system-prompt-for-requirements-engineering-analysi': 'requirements-analysis',
+    'establish-stewardship-practices': 'establish-stewardship',
+    'pre-commit-review': 'pre-commit',
+    'pre-merge-review': 'pre-merge',
+    'pre-deployment-review': 'pre-deployment',
+    'externalize-configuration': 'externalize-config',
+    'query-operational-knowledge-during-incidents': 'incident-query',
+    'cross-reference-operational-dependencies': 'cross-reference',
+    'discover-organizational-knowledge-connections': 'knowledge-connections',
+    'document-personal-learning-journey': 'personal-learning',
+    'evolve-requirements-from-implementation': 'evolve-requirements',
+    'create-memory-bank-training-exercise': 'training-exercise',
+    'guide-first-week-adoption': 'first-week',
+    'onboard-team-to-memory-banks': 'onboard-team',
+    'grow-memory-bank-organically': 'grow-organically',
+    'assess-system-health-over-time': 'health-assessment',
+    'assess-operational-knowledge-health': 'knowledge-health',
+    'design-proactive-operational-architecture': 'proactive-architecture',
+    'establish-operational-memory-bank': 'operational-memory-bank',
+  };
+
+  if (specialCases[promptId]) {
+    return specialCases[promptId];
+  }
+
+  // Extract the domain from plugin ID (e.g., "constellize:memory" -> "memory")
+  const domain = pluginId.split(':').pop() || '';
+
+  // Strip domain-specific suffixes
+  const domainSuffixes: Record<string, string[]> = {
+    memory: ['-memory-bank'],
+    deliver: ['-operational', '-operation'],
+  };
+
+  let name = promptId;
+  for (const suffix of domainSuffixes[domain] || []) {
+    if (name.endsWith(suffix)) {
+      name = name.slice(0, -suffix.length);
+      break;
+    }
+  }
+
+  // Strip common verb prefixes that add no information
+  const verbPrefixes = [
+    'write-', 'implement-', 'validate-', 'achieve-', 'ensure-',
+    'maintain-', 'establish-', 'foster-', 'track-', 'leverage-',
+    'build-', 'create-', 'document-', 'capture-', 'conduct-',
+    'discover-', 'detect-', 'surface-', 'design-', 'assess-',
+    'query-', 'diagnose-', 'guide-', 'onboard-', 'grow-',
+    'evolve-', 'cross-reference-'
+  ];
+
+  for (const prefix of verbPrefixes) {
+    if (name.startsWith(prefix) && name.length > prefix.length + 1) {
+      name = name.slice(prefix.length);
+      break;
+    }
+  }
+
+  return name;
+}
+
+/**
  * Generate SKILL.md content from a prompt
  */
-function generateSkillMd(prompt: Prompt): string {
+function generateSkillMd(prompt: Prompt, pluginId: string): string {
   const fm = prompt.frontmatter;
   const skill = fm.skill;
 
   // Build YAML frontmatter for SKILL.md
+  const shortName = deriveShortSkillName(fm.id, pluginId);
   const frontmatter = [
     '---',
-    `name: ${fm.id}`,
-    `description: ${(skill?.description || fm.name || '').replace(/\n/g, ' ').trim()}`
+    `name: ${pluginId}:${shortName}`,
+    `description: ${(skill?.description || fm.name || '').replace(/\n/g, ' ').trim()}`,
+    `prompt-id: ${fm.id}`
   ];
 
   if (skill?.['argument-hint']) {
@@ -95,7 +169,8 @@ function generateAgentMd(persona: Persona): string {
   const frontmatter = [
     '---',
     `name: ${agentName}`,
-    `description: ${String(description).replace(/\n/g, ' ').trim()}`
+    `description: ${String(description).replace(/\n/g, ' ').trim()}`,
+    `persona-id: ${fm.id}`
   ];
 
   if (agent?.tools && agent.tools.length > 0) {
@@ -133,22 +208,14 @@ function generateAgentMd(persona: Persona): string {
 /**
  * Generate plugin.json for a plugin
  */
-function generatePluginJson(plugin: PluginDefinition, promptCount: number, agentCount: number): object {
+function generatePluginJson(plugin: PluginDefinition): object {
   return {
     name: plugin.id,
     version: '1.0.0',
     description: plugin.description,
     author: {
-      name: 'Constellize',
-      url: 'https://constellize.com'
-    },
-    keywords: [
-      'constellize',
-      plugin.id.replace('constellize-', ''),
-      ...(plugin.chapter ? [`chapter-${plugin.chapter}`] : [])
-    ],
-    skills: './skills/',
-    agents: './agents/'
+      name: 'Constellize'
+    }
   };
 }
 
@@ -159,10 +226,9 @@ function generateMarketplaceJson(plugins: PluginDefinition[]): object {
   return {
     name: 'marketplace',
     owner: {
-      name: 'Constellize',
-      url: 'https://constellize.com'
+      name: 'Constellize'
     },
-    description: 'Official Constellize methodology plugins for Claude Code - prompts become skills, personas become agents',
+    description: 'Official Constellize methodology plugins for Claude Code',
     plugins: plugins.map(p => ({
       name: p.id,
       source: `./plugins/${p.id}`,
@@ -198,10 +264,11 @@ function generatePlugin(
 
   // Generate skills
   for (const prompt of pluginPrompts) {
-    const skillDir = path.join(skillsDir, prompt.frontmatter.id);
+    const shortName = deriveShortSkillName(prompt.frontmatter.id, plugin.id);
+    const skillDir = path.join(skillsDir, shortName);
     fs.mkdirSync(skillDir, { recursive: true });
 
-    const skillMd = generateSkillMd(prompt);
+    const skillMd = generateSkillMd(prompt, plugin.id);
     fs.writeFileSync(path.join(skillDir, 'SKILL.md'), skillMd);
   }
 
@@ -213,7 +280,7 @@ function generatePlugin(
   }
 
   // Generate plugin.json
-  const pluginJson = generatePluginJson(plugin, pluginPrompts.length, aggregatePersonas.length);
+  const pluginJson = generatePluginJson(plugin);
   fs.writeFileSync(
     path.join(pluginDir, '.claude-plugin', 'plugin.json'),
     JSON.stringify(pluginJson, null, 2)
@@ -283,8 +350,8 @@ Official Constellize methodology plugins for Claude Code.
 ## Overview
 
 This marketplace provides the complete Constellize methodology as Claude Code plugins:
-- **${totalSkills} Skills** - Prompts become slash commands (\`/establish-memory-bank\`)
-- **${totalAgents} Agents** - Personas become expert consultants (\`@system-architect\`)
+- **${totalSkills} Skills** across ${plugins.length} plugins
+- **${totalAgents} Agents** for expert-in-role consultation
 
 ## Installation
 
@@ -297,49 +364,19 @@ Add this marketplace to Claude Code:
 Then install individual plugins:
 
 \`\`\`bash
-/plugin install constellize-memory-bank
-/plugin install constellize-architecture
+/plugin install constellize:memory
+/plugin install constellize:craft
 \`\`\`
 
 ## Available Plugins
 
-| Plugin | Description | Skills | Agents |
-|--------|-------------|--------|--------|
-${plugins.map(p => `| ${p.id} | ${p.description} | ✓ | ✓ |`).join('\n')}
-
-## Usage
-
-### Skills (Prompts)
-
-Skills are invoked with slash commands:
-
-\`\`\`
-/establish-memory-bank "My Project"
-/constellation-map
-/write-unit-tests
-\`\`\`
-
-### Agents (Personas)
-
-Agents are invoked with @ mentions:
-
-\`\`\`
-@system-architect review this architecture
-@qa-engineer what test cases am I missing?
-@devops-engineer how should I deploy this?
-\`\`\`
-
-### Combined Usage
-
-Combine skills with agents for expert-guided execution:
-
-\`\`\`
-@system-architect /constellation-map
-\`\`\`
+| Plugin | Description |
+|--------|-------------|
+${plugins.map(p => `| \`${p.id}\` | ${p.description} |`).join('\n')}
 
 ## Source
 
-This marketplace is generated from [prompt-factory](https://github.com/constellize/prompt-factory), which serves as the single source of truth for all Constellize prompts and personas.
+Generated from [prompt-factory](https://github.com/constellize/prompt-factory).
 
 ## License
 
