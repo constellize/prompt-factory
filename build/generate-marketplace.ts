@@ -24,7 +24,7 @@ import {
 } from './lib/parser';
 import { Prompt, Persona, PluginDefinition, PluginsConfig } from './lib/types';
 
-const MARKETPLACE_DIR = '../marketplace';
+const DEFAULT_MARKETPLACE_DIR = '../marketplace';
 
 /**
  * Derive a short skill directory name from a prompt ID.
@@ -244,9 +244,10 @@ function generatePlugin(
   plugin: PluginDefinition,
   prompts: Prompt[],
   personas: Persona[],
-  allPlugins: PluginDefinition[]
+  allPlugins: PluginDefinition[],
+  outputDir: string
 ): { skillCount: number; agentCount: number } {
-  const pluginDir = path.join(MARKETPLACE_DIR, 'plugins', plugin.id);
+  const pluginDir = path.join(outputDir, 'plugins', plugin.id);
   const skillsDir = path.join(pluginDir, 'skills');
   const agentsDir = path.join(pluginDir, 'agents');
 
@@ -295,11 +296,11 @@ function generatePlugin(
 /**
  * Main execution
  */
-function main() {
+export function generate(outputDir: string): void {
   console.log('Generating Claude Code marketplace output...\n');
 
   // Create marketplace directory
-  fs.mkdirSync(MARKETPLACE_DIR, { recursive: true });
+  fs.mkdirSync(outputDir, { recursive: true });
 
   // Load content and config
   const prompts = loadPrompts('content');
@@ -315,7 +316,7 @@ function main() {
 
   // Generate each plugin
   for (const plugin of config.plugins) {
-    const { skillCount, agentCount } = generatePlugin(plugin, prompts, personas, config.plugins);
+    const { skillCount, agentCount } = generatePlugin(plugin, prompts, personas, config.plugins, outputDir);
     console.log(`✓ ${plugin.id}: ${skillCount} skills, ${agentCount} agents`);
     totalSkills += skillCount;
     totalAgents += agentCount;
@@ -323,16 +324,16 @@ function main() {
 
   // Generate marketplace.json at root
   const marketplaceJson = generateMarketplaceJson(config.plugins);
-  fs.mkdirSync(path.join(MARKETPLACE_DIR, '.claude-plugin'), { recursive: true });
+  fs.mkdirSync(path.join(outputDir, '.claude-plugin'), { recursive: true });
   fs.writeFileSync(
-    path.join(MARKETPLACE_DIR, '.claude-plugin', 'marketplace.json'),
+    path.join(outputDir, '.claude-plugin', 'marketplace.json'),
     JSON.stringify(marketplaceJson, null, 2)
   );
   console.log(`\n✓ marketplace.json`);
 
   // Generate README
   const readme = generateReadme(config.plugins, totalSkills, totalAgents);
-  fs.writeFileSync(path.join(MARKETPLACE_DIR, 'README.md'), readme);
+  fs.writeFileSync(path.join(outputDir, 'README.md'), readme);
   console.log(`✓ README.md`);
 
   console.log('\n--- Complete ---');
@@ -384,4 +385,6 @@ MIT
 `;
 }
 
-main();
+if (require.main === module) {
+  generate(DEFAULT_MARKETPLACE_DIR);
+}

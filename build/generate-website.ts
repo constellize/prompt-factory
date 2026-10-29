@@ -15,9 +15,7 @@ import * as path from 'path';
 import { loadPrompts, loadPersonas, getAggregatePersonas } from './lib/parser';
 import { Prompt, Persona } from './lib/types';
 
-const WEBSITE_DIR = '../website';
-const PROMPTS_OUTPUT = path.join(WEBSITE_DIR, 'public/prompts');
-const PERSONAS_OUTPUT = path.join(WEBSITE_DIR, 'public/personas');
+const DEFAULT_WEBSITE_DIR = '../website';
 
 /**
  * Extract just the prompt content (removing frontmatter sections for website)
@@ -31,9 +29,9 @@ function extractPromptContent(prompt: Prompt): string {
 /**
  * Generate website prompt output
  */
-function generatePromptOutput(prompt: Prompt): void {
+function generatePromptOutput(prompt: Prompt, websiteDir: string): void {
   const id = prompt.frontmatter.id;
-  const outputDir = path.join(PROMPTS_OUTPUT, id);
+  const outputDir = path.join(websiteDir, 'public/prompts', id);
 
   // Skip if not marked for website output
   if (prompt.frontmatter.outputs?.website?.include === false) {
@@ -92,7 +90,7 @@ function subcategoryToFolder(subcategory: string): string {
 /**
  * Generate website persona output
  */
-function generatePersonaOutput(persona: Persona): void {
+function generatePersonaOutput(persona: Persona, websiteDir: string): void {
   const category = categoryToFolder(persona.frontmatter.category);
   const subcategory = subcategoryToFolder(persona.frontmatter.subcategory);
 
@@ -101,7 +99,7 @@ function generatePersonaOutput(persona: Persona): void {
     return;
   }
 
-  const outputDir = path.join(PERSONAS_OUTPUT, category, subcategory);
+  const outputDir = path.join(websiteDir, 'public/personas', category, subcategory);
   fs.mkdirSync(outputDir, { recursive: true });
 
   // Determine filename
@@ -175,12 +173,12 @@ export const getAllPersonaSubcategories = (): string[] => {
 /**
  * Main execution
  */
-function main() {
+export function generate(websiteDir: string): void {
   console.log('Generating website output...\n');
 
   // Check if website exists
-  if (!fs.existsSync(WEBSITE_DIR)) {
-    console.error(`website not found at: ${WEBSITE_DIR}`);
+  if (!fs.existsSync(websiteDir)) {
+    console.error(`website not found at: ${websiteDir}`);
     process.exit(1);
   }
 
@@ -196,13 +194,13 @@ function main() {
   // Generate prompt outputs
   console.log('--- Prompts ---');
   for (const prompt of prompts) {
-    generatePromptOutput(prompt);
+    generatePromptOutput(prompt, websiteDir);
   }
 
   // Generate persona outputs (aggregates only)
   console.log('\n--- Personas (Aggregates Only) ---');
   for (const persona of aggregatePersonas) {
-    generatePersonaOutput(persona);
+    generatePersonaOutput(persona, websiteDir);
   }
 
   // Generate metadata files
@@ -210,14 +208,14 @@ function main() {
 
   // Prompts metadata (JSON for now, could be TypeScript)
   const promptsMetadata = generatePromptsMetadata(prompts);
-  const promptsMetadataPath = path.join(WEBSITE_DIR, 'src/data/prompts/generated-metadata.json');
+  const promptsMetadataPath = path.join(websiteDir, 'src/data/prompts/generated-metadata.json');
   fs.mkdirSync(path.dirname(promptsMetadataPath), { recursive: true });
   fs.writeFileSync(promptsMetadataPath, JSON.stringify(promptsMetadata, null, 2));
   console.log(`✓ Prompts metadata: ${promptsMetadataPath}`);
 
   // Personas metadata (TypeScript)
   const personasMetadataContent = generatePersonasMetadata(personas);
-  const personasMetadataPath = path.join(WEBSITE_DIR, 'src/data/personas/generated-metadata.ts');
+  const personasMetadataPath = path.join(websiteDir, 'src/data/personas/generated-metadata.ts');
   fs.mkdirSync(path.dirname(personasMetadataPath), { recursive: true });
   fs.writeFileSync(personasMetadataPath, personasMetadataContent);
   console.log(`✓ Personas metadata: ${personasMetadataPath}`);
@@ -226,4 +224,6 @@ function main() {
   console.log(`Generated ${prompts.length} prompts and ${aggregatePersonas.length} aggregate personas for website`);
 }
 
-main();
+if (require.main === module) {
+  generate(DEFAULT_WEBSITE_DIR);
+}
