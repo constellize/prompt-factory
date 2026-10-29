@@ -22,6 +22,7 @@ import {
   getPersonasForPlugin,
   getAggregatePersonas
 } from './lib/parser';
+import { rewriteLlmPaths } from './lib/paths';
 import { Prompt, Persona, PluginDefinition, PluginsConfig } from './lib/types';
 
 const DEFAULT_MARKETPLACE_DIR = '../marketplace';
@@ -109,21 +110,19 @@ function generateSkillMd(prompt: Prompt, pluginId: string): string {
   const shortName = deriveShortSkillName(fm.id, pluginId);
   const frontmatter = [
     '---',
-    `name: ${pluginId}:${shortName}`,
+    `name: ${shortName}`,
     `description: ${(skill?.description || fm.name || '').replace(/\n/g, ' ').trim()}`,
-    `prompt-id: ${fm.id}`
+    `allowed-tools: ${(skill?.['allowed-tools'] || []).join(', ')}`,
+    'metadata:',
+    `  prompt-id: ${fm.id}`
   ];
 
   if (skill?.['argument-hint']) {
-    frontmatter.push(`argument-hint: "${skill['argument-hint']}"`);
+    frontmatter.push(`  argument-hint: "${skill['argument-hint']}"`);
   }
 
-  if (skill?.['allowed-tools'] && skill['allowed-tools'].length > 0) {
-    frontmatter.push(`allowed-tools: ${skill['allowed-tools'].join(', ')}`);
-  }
-
-  if (skill?.model && skill.model !== 'inherit') {
-    frontmatter.push(`model: ${skill.model}`);
+  if (skill?.model) {
+    frontmatter.push(`  model: ${skill.model}`);
   }
 
   if (skill?.context === 'fork') {
@@ -150,7 +149,7 @@ function generateSkillMd(prompt: Prompt, pluginId: string): string {
     }
   }
 
-  return frontmatter.join('\n') + '\n\n' + content;
+  return frontmatter.join('\n') + '\n\n' + rewriteLlmPaths(content);
 }
 
 /**
@@ -205,35 +204,22 @@ function generateAgentMd(persona: Persona): string {
   return frontmatter.join('\n') + '\n\n' + persona.content;
 }
 
+/** constellize:memory -> constellize-memory */
+function hyphenatePluginId(id: string): string {
+  return id.replace(/:/g, '-');
+}
+
 /**
  * Generate plugin.json for a plugin
  */
 function generatePluginJson(plugin: PluginDefinition): object {
   return {
-    name: plugin.id,
-    version: '1.0.0',
+    name: hyphenatePluginId(plugin.id),
+    version: plugin.version,
     description: plugin.description,
     author: {
       name: 'Constellize'
     }
-  };
-}
-
-/**
- * Generate marketplace.json for the marketplace root
- */
-function generateMarketplaceJson(plugins: PluginDefinition[]): object {
-  return {
-    name: 'constellize-plugins-official',
-    owner: {
-      name: 'Constellize'
-    },
-    description: 'Official Constellize methodology plugins for Claude Code',
-    plugins: plugins.map(p => ({
-      name: p.id,
-      source: `./plugins/${p.id}`,
-      description: p.description
-    }))
   };
 }
 
@@ -247,7 +233,7 @@ function generatePlugin(
   allPlugins: PluginDefinition[],
   outputDir: string
 ): { skillCount: number; agentCount: number } {
-  const pluginDir = path.join(outputDir, 'plugins', plugin.id);
+  const pluginDir = path.join(outputDir, 'plugins', hyphenatePluginId(plugin.id));
   const skillsDir = path.join(pluginDir, 'skills');
   const agentsDir = path.join(pluginDir, 'agents');
 
@@ -322,67 +308,8 @@ export function generate(outputDir: string): void {
     totalAgents += agentCount;
   }
 
-  // Generate marketplace.json at root
-  const marketplaceJson = generateMarketplaceJson(config.plugins);
-  fs.mkdirSync(path.join(outputDir, '.claude-plugin'), { recursive: true });
-  fs.writeFileSync(
-    path.join(outputDir, '.claude-plugin', 'marketplace.json'),
-    JSON.stringify(marketplaceJson, null, 2)
-  );
-  console.log(`\n✓ marketplace.json`);
-
-  // Generate README
-  const readme = generateReadme(config.plugins, totalSkills, totalAgents);
-  fs.writeFileSync(path.join(outputDir, 'README.md'), readme);
-  console.log(`✓ README.md`);
-
   console.log('\n--- Complete ---');
   console.log(`Generated ${config.plugins.length} plugins with ${totalSkills} skills and ${totalAgents} agents`);
-}
-
-/**
- * Generate README for the marketplace
- */
-function generateReadme(plugins: PluginDefinition[], totalSkills: number, totalAgents: number): string {
-  return `# Constellize Marketplace
-
-Official Constellize methodology plugins for Claude Code.
-
-## Overview
-
-This marketplace provides the complete Constellize methodology as Claude Code plugins:
-- **${totalSkills} Skills** across ${plugins.length} plugins
-- **${totalAgents} Agents** for expert-in-role consultation
-
-## Installation
-
-Add this marketplace to Claude Code:
-
-\`\`\`bash
-/plugin marketplace add constellize/marketplace
-\`\`\`
-
-Then install individual plugins:
-
-\`\`\`bash
-/plugin install constellize:memory
-/plugin install constellize:craft
-\`\`\`
-
-## Available Plugins
-
-| Plugin | Description |
-|--------|-------------|
-${plugins.map(p => `| \`${p.id}\` | ${p.description} |`).join('\n')}
-
-## Source
-
-Generated from [prompt-factory](https://github.com/constellize/prompt-factory).
-
-## License
-
-MIT
-`;
 }
 
 if (require.main === module) {

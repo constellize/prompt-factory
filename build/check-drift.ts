@@ -127,6 +127,13 @@ function main(): number {
       console.error(`Generator wrote no files for ${target}; refusing to report "no drift" on an empty set.`);
       return 2;
     }
+    if (target === 'marketplace') {
+      // The generator must never own the catalog, the README or the hand-written harness plugin.
+      const forbidden = /^(\.claude-plugin\/marketplace\.json|README\.md|plugins\/constellize-harness\/.*)$/;
+      for (const rel of generated.filter(r => forbidden.test(r.split(path.sep).join('/')))) {
+        problems.push(`FORBIDDEN ${rel} (marketplace generator must not write this)`);
+      }
+    }
     for (const rel of generated) {
       const downstream = path.join(against, rel);
       if (!fs.existsSync(downstream)) {
