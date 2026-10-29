@@ -4,7 +4,7 @@
  * Generate website output from unified content
  *
  * Outputs:
- * - ../website/public/prompts/<id>/prompt.txt
+ * - ../website/public/prompts/<version>/<id>/prompt.txt
  * - ../website/public/personas/<category>/<subcategory>/<name>.md
  */
 
@@ -14,6 +14,10 @@ import { loadPrompts, loadPersonas, getAggregatePersonas } from './lib/parser';
 import { Prompt, Persona } from './lib/types';
 
 const DEFAULT_WEBSITE_DIR = '../website';
+
+// Prompt text is stored per version so a fix on one line and a rewrite on another cannot
+// collide at the same URL. The book links to /prompts/v1/<id>, so v1 must keep resolving.
+const DEFAULT_PROMPT_VERSION = 'v1';
 
 /**
  * Extract just the prompt content (removing frontmatter sections for website)
@@ -27,9 +31,9 @@ function extractPromptContent(prompt: Prompt): string {
 /**
  * Generate website prompt output
  */
-function generatePromptOutput(prompt: Prompt, websiteDir: string): void {
+function generatePromptOutput(prompt: Prompt, websiteDir: string, version: string): void {
   const id = prompt.frontmatter.id;
-  const outputDir = path.join(websiteDir, 'public/prompts', id);
+  const outputDir = path.join(websiteDir, 'public/prompts', version, id);
 
   // Skip if not marked for website output
   if (prompt.frontmatter.outputs?.website?.include === false) {
@@ -43,7 +47,7 @@ function generatePromptOutput(prompt: Prompt, websiteDir: string): void {
   const promptContent = extractPromptContent(prompt);
   fs.writeFileSync(path.join(outputDir, 'prompt.txt'), promptContent);
 
-  console.log(`✓ Prompt: ${id}`);
+  console.log(`✓ Prompt: ${version}/${id}`);
 }
 
 /**
@@ -102,7 +106,7 @@ function generatePersonaOutput(persona: Persona, websiteDir: string): void {
 /**
  * Main execution
  */
-export function generate(websiteDir: string): void {
+export function generate(websiteDir: string, version: string = DEFAULT_PROMPT_VERSION): void {
   console.log('Generating website output...\n');
 
   // Check if website exists
@@ -123,7 +127,7 @@ export function generate(websiteDir: string): void {
   // Generate prompt outputs
   console.log('--- Prompts ---');
   for (const prompt of prompts) {
-    generatePromptOutput(prompt, websiteDir);
+    generatePromptOutput(prompt, websiteDir, version);
   }
 
   // Generate persona outputs (aggregates only)
