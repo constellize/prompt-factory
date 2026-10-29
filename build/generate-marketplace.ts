@@ -3,13 +3,16 @@
 /**
  * Generate Claude Code marketplace output from unified content
  *
- * Outputs to: ../marketplace/
- * Structure:
+ * Structure (directory is the plugin id with ':' replaced by '-'):
  *   plugins/
- *     <plugin-id>/
+ *     <hyphenated-plugin-id>/
  *       .claude-plugin/plugin.json
- *       skills/<skill-id>/SKILL.md
- *       agents/<agent-id>.md
+ *       skills/<short-name>/SKILL.md
+ *       agents/<subcategory>.md
+ *
+ * Deliberately NOT generated: .claude-plugin/marketplace.json, README.md and
+ * plugins/constellize-harness/. They are hand-written in the marketplace repo;
+ * writing them here would drop the harness from the catalog.
  */
 
 import * as fs from 'fs';
@@ -112,7 +115,7 @@ function generateSkillMd(prompt: Prompt, pluginId: string): string {
     '---',
     `name: ${shortName}`,
     `description: ${(skill?.description || fm.name || '').replace(/\n/g, ' ').trim()}`,
-    `allowed-tools: ${(skill?.['allowed-tools'] || []).join(', ')}`,
+    ...(skill?.['allowed-tools']?.length ? [`allowed-tools: ${skill['allowed-tools'].join(', ')}`] : []),
     'metadata:',
     `  prompt-id: ${fm.id}`
   ];
@@ -121,7 +124,7 @@ function generateSkillMd(prompt: Prompt, pluginId: string): string {
     frontmatter.push(`  argument-hint: "${skill['argument-hint']}"`);
   }
 
-  if (skill?.model) {
+  if (skill?.model && skill.model !== 'inherit') {
     frontmatter.push(`  model: ${skill.model}`);
   }
 
