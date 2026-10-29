@@ -8,7 +8,11 @@
  *   npm run check:drift -- --target <marketplace|website> --against <path> [--scratch <path>]
  *
  * Exit 0: every generated file matches. Exit 1: drift (per-file list). Exit 2: usage or refusal.
- * Files in --against that the generator does not produce are ignored.
+ * Files in --against that the generator does not produce are ignored, with one exception:
+ * for --target marketplace, a file under plugins/<generated-plugin>/{skills,agents,.claude-plugin}/
+ * that the generator did not emit is EXTRA drift (a hand-written second source of truth).
+ * Generated plugin ids come from the generator's own output, so hand-written plugins
+ * (constellize-harness) and everything outside plugins/ stay ignored.
  * The website generator must not write under src/ (reported as FORBIDDEN).
  * The scratch directory must live inside os.tmpdir(); anything else is refused so
  * the generators can never write into a real checkout.
@@ -150,6 +154,24 @@ function main(): number {
         !fs.readFileSync(path.join(scratch, rel)).equals(fs.readFileSync(downstream))
       ) {
         problems.push(`CONTENT  ${rel}`);
+      }
+    }
+    if (target === 'marketplace') {
+      const posix = (r: string) => r.split(path.sep).join('/');
+      const generatedSet = new Set(generated.map(posix));
+      const pluginIds = new Set(
+        generated.map(posix).filter(r => r.startsWith('plugins/')).map(r => r.split('/')[1])
+      );
+      for (const id of [...pluginIds].sort()) {
+        for (const sub of ['skills', 'agents', '.claude-plugin']) {
+          const dir = path.join(against, 'plugins', id, sub);
+          if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) continue;
+          for (const rel of walk(dir, against).map(posix)) {
+            if (!generatedSet.has(rel)) {
+              problems.push(`EXTRA    ${rel} (not produced by the generator; inside generated plugin ${id})`);
+            }
+          }
+        }
       }
     }
     keepScratch = problems.length > 0;
