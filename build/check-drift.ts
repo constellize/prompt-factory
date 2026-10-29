@@ -9,6 +9,7 @@
  *
  * Exit 0: every generated file matches. Exit 1: drift (per-file list). Exit 2: usage or refusal.
  * Files in --against that the generator does not produce are ignored.
+ * The website generator must not write under src/ (reported as FORBIDDEN).
  * The scratch directory must live inside os.tmpdir(); anything else is refused so
  * the generators can never write into a real checkout.
  */
@@ -132,6 +133,12 @@ function main(): number {
       const forbidden = /^(\.claude-plugin\/marketplace\.json|README\.md|plugins\/constellize-harness\/.*)$/;
       for (const rel of generated.filter(r => forbidden.test(r.split(path.sep).join('/')))) {
         problems.push(`FORBIDDEN ${rel} (marketplace generator must not write this)`);
+      }
+    }
+    if (target === 'website') {
+      // Nothing under src/ is generated: the website owns its hand-written data modules.
+      for (const rel of generated.filter(r => r.split(path.sep).join('/').startsWith('src/'))) {
+        problems.push(`FORBIDDEN ${rel} (website generator must not write under src/)`);
       }
     }
     for (const rel of generated) {
