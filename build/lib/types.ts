@@ -118,6 +118,7 @@ export interface Persona {
 
 export interface PluginDefinition {
   id: string;
+  version: string;
   name: string;
   description: string;
   chapter?: number;

@@ -12,6 +12,7 @@
   "plugins": [
     {
       "id": "constellize:memory",
+      "version": "1.0.0",
       "name": "Constellize Memory",
       "description": "Knowledge persistence across context resets",
       "skills": {
@@ -35,6 +36,7 @@
     },
     {
       "id": "constellize:design",
+      "version": "1.0.0",
       "name": "Constellize Design",
       "description": "Planning and architecture for software projects",
       "skills": {
@@ -63,6 +65,7 @@
     },
     {
       "id": "constellize:craft",
+      "version": "1.0.0",
       "name": "Constellize Craft",
       "description": "Code quality, testing, and continuous excellence",
       "skills": {
@@ -101,6 +104,7 @@
     },
     {
       "id": "constellize:deliver",
+      "version": "1.0.0",
       "name": "Constellize Deliver",
       "description": "Deployment, operations, and incident management",
       "skills": {
@@ -128,6 +132,7 @@
     },
     {
       "id": "constellize:grow",
+      "version": "1.0.0",
       "name": "Constellize Grow",
       "description": "Team learning, system evolution, and adoption",
       "skills": {
