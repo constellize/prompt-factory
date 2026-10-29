@@ -108,28 +108,43 @@ function main(): number {
 
   // Generators are chatty; keep this tool's output to the drift report.
   const log = console.log;
-  console.log = () => {};
-  try {
-    const gen = target === 'marketplace'
-      ? require('./generate-marketplace')
-      : require('./generate-website');
-    gen.generate(scratch);
-  } finally {
-    console.log = log;
-  }
-
-  const generated = walk(scratch);
   const problems: string[] = [];
-  for (const rel of generated) {
-    const downstream = path.join(against, rel);
-    if (!fs.existsSync(downstream)) {
-      problems.push(`MISSING  ${rel}`);
-    } else if (!fs.readFileSync(path.join(scratch, rel)).equals(fs.readFileSync(downstream))) {
-      problems.push(`CONTENT  ${rel}`);
+  let generated: string[] = [];
+  let keepScratch = false;
+  try {
+    console.log = () => {};
+    try {
+      const gen = target === 'marketplace'
+        ? require('./generate-marketplace')
+        : require('./generate-website');
+      gen.generate(scratch);
+    } finally {
+      console.log = log;
     }
-  }
 
-  fs.rmSync(scratch, { recursive: true, force: true });
+    generated = walk(scratch);
+    if (generated.length === 0) {
+      console.error(`Generator wrote no files for ${target}; refusing to report "no drift" on an empty set.`);
+      return 2;
+    }
+    for (const rel of generated) {
+      const downstream = path.join(against, rel);
+      if (!fs.existsSync(downstream)) {
+        problems.push(`MISSING  ${rel}`);
+      } else if (
+        !fs.statSync(downstream).isFile() ||
+        !fs.readFileSync(path.join(scratch, rel)).equals(fs.readFileSync(downstream))
+      ) {
+        problems.push(`CONTENT  ${rel}`);
+      }
+    }
+    keepScratch = problems.length > 0;
+  } catch (e) {
+    console.error(`check-drift failed: ${(e as Error).stack || e}`);
+    return 2;
+  } finally {
+    if (!keepScratch) fs.rmSync(scratch, { recursive: true, force: true });
+  }
 
   if (problems.length === 0) {
     console.log(`No drift: ${generated.length} generated ${target} files match ${against}`);
@@ -137,6 +152,7 @@ function main(): number {
   }
   console.log(`DRIFT: ${problems.length} of ${generated.length} generated ${target} files differ from ${against}`);
   problems.forEach(p => console.log(`  ${p}`));
+  console.log(`Generated output kept at: ${scratch}`);
   return 1;
 }
 
