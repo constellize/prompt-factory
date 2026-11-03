@@ -153,6 +153,84 @@ export function loadPersonas(contentDir: string = 'content'): Persona[] {
   return personas;
 }
 
+const SEMVER = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
+
+const isNonEmptyString = (value: unknown): value is string =>
+  typeof value === 'string' && value.trim().length > 0;
+
+/**
+ * Validate a parsed plugins.json before the generators consume it.
+ *
+ * This exists because every field below reaches generated output that nothing else checks.
+ * A plugin entry missing `version` is the dangerous one: the generator would emit a
+ * plugin.json with no version key, the marketplace's version-bump check would compare
+ * `undefined` against the previous value and see a difference, CI would pass, and the
+ * release would reach no reader -- Claude Code only re-installs a plugin when its version
+ * changes. `claude plugin validate` does not catch it either. Fail at the source instead.
+ */
+export function validatePluginsConfig(config: PluginsConfig, configPath: string): void {
+  const errors: string[] = [];
+
+  const marketplace = config?.marketplace;
+  if (!marketplace || typeof marketplace !== 'object') {
+    errors.push('"marketplace" is missing or not an object');
+  } else {
+    if (!isNonEmptyString(marketplace.name)) {
+      errors.push('marketplace.name must be a non-empty string');
+    }
+    if (!isNonEmptyString(marketplace.description)) {
+      errors.push('marketplace.description must be a non-empty string');
+    }
+    if (!marketplace.owner || !isNonEmptyString(marketplace.owner.name)) {
+      errors.push('marketplace.owner.name must be a non-empty string');
+    }
+  }
+
+  if (!Array.isArray(config?.plugins)) {
+    errors.push('"plugins" must be an array');
+  } else if (config.plugins.length === 0) {
+    errors.push('"plugins" is empty, so the generator would produce no plugins at all');
+  } else {
+    const seen = new Set<string>();
+    config.plugins.forEach((plugin, index) => {
+      const where = isNonEmptyString(plugin?.id)
+        ? `plugins[${index}] ("${plugin.id}")`
+        : `plugins[${index}]`;
+
+      for (const field of ['id', 'name', 'description'] as const) {
+        if (!isNonEmptyString(plugin?.[field])) {
+          errors.push(`${where}: "${field}" must be a non-empty string`);
+        }
+      }
+
+      if (!isNonEmptyString(plugin?.version)) {
+        errors.push(
+          `${where}: "version" must be a non-empty string -- without it the generated ` +
+            'plugin.json has no version key and the release reaches no reader'
+        );
+      } else if (!SEMVER.test(plugin.version)) {
+        errors.push(
+          `${where}: "version" is "${plugin.version}", which is not semver ` +
+            '(MAJOR.MINOR.PATCH); Claude Code compares versions to decide whether to update'
+        );
+      }
+
+      if (isNonEmptyString(plugin?.id)) {
+        if (seen.has(plugin.id)) {
+          errors.push(`${where}: duplicate id, which would generate the same plugin twice`);
+        }
+        seen.add(plugin.id);
+      }
+    });
+  }
+
+  if (errors.length > 0) {
+    throw new Error(
+      `Invalid ${configPath}:\n${errors.map(e => `  - ${e}`).join('\n')}`
+    );
+  }
+}
+
 /**
  * Load plugins configuration from content/schemas/plugins.json
  */
@@ -164,7 +242,18 @@ export function loadPluginsConfig(contentDir: string = 'content'): PluginsConfig
   }
 
   const content = fs.readFileSync(configPath, 'utf-8');
-  return JSON.parse(content) as PluginsConfig;
+
+  let parsed: PluginsConfig;
+  try {
+    parsed = JSON.parse(content) as PluginsConfig;
+  } catch (error) {
+    throw new Error(
+      `Plugins config is not valid JSON: ${configPath}\n  ${(error as Error).message}`
+    );
+  }
+
+  validatePluginsConfig(parsed, configPath);
+  return parsed;
 }
 
 /**

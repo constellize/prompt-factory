@@ -9,8 +9,8 @@ jobs:
   determinism:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           # Verified locally on 26.8.2 only; nothing has run in Actions yet. This pin floats
           # to the latest 26.x. Re-verify before moving to an LTS.
