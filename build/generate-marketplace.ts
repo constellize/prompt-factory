@@ -21,6 +21,10 @@
  * README.md is copied byte-for-byte from content/literal/marketplace-root/. It carries
  * main's install command; the v1 branch keeps its own hand-written README.
  *
+ * docs/constellize-skills-infographic.html is copied byte-for-byte from
+ * content/literal/marketplace-docs/. It is also the source the reference-card builder
+ * (scripts/build-reference-card.mjs) renders from.
+ *
  * .github/ (the drift workflow and the version-bump script) is copied byte-for-byte from
  * content/literal/marketplace-github/, mode included: the script must stay executable.
  * GitHub reads a workflow from the pushed branch, so this generates main's copy only.

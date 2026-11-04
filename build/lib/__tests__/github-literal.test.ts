@@ -30,4 +30,11 @@ describe('generated .github', () => {
     const script = path.join(outDir, '.github', 'scripts', 'check-version-bump.sh');
     expect(fs.statSync(script).mode & 0o111).not.toBe(0);
   });
+
+  it('leaves the workflow non-executable', () => {
+    // The other half of the mode contract: copyFileSync carries the source mode either way,
+    // so this fails if drift.yml ever acquires an executable bit in the literal source.
+    const workflow = path.join(outDir, '.github', 'workflows', 'drift.yml');
+    expect(fs.statSync(workflow).mode & 0o111).toBe(0);
+  });
 });
