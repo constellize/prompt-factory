@@ -12,4 +12,9 @@ if (!ok) {
   process.exit(1);
 }
 
+// Known: Node 22.18-23.x may print an ExperimentalWarning to stderr when it strips
+// types. It is harmless (the assessor's JSON goes to stdout). It is deliberately not
+// suppressed: filtering it would mean replacing Node's own warning listener, which
+// degrades every other warning and risks hiding unrelated ones.
+
 await import('./assess.ts');

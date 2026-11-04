@@ -36,6 +36,9 @@ import { Prompt, Persona, PluginDefinition, PluginsConfig } from './lib/types';
 
 const DEFAULT_MARKETPLACE_DIR = '../marketplace';
 
+/** The one content directory: the validator, the loaders and the literal copy all use it. */
+const CONTENT_DIR = 'content';
+
 /**
  * Derive a short skill directory name from a prompt ID.
  * Strips common verb prefixes that are redundant with the plugin context.
@@ -270,6 +273,12 @@ export function copyLiteralTree(sourceDir: string, destDir: string): string[] {
         fs.mkdirSync(path.dirname(path.join(destDir, rel)), { recursive: true });
         fs.copyFileSync(path.join(sourceDir, rel), path.join(destDir, rel));
         written.push(rel.split(path.sep).join('/'));
+      } else {
+        const kind = entry.isSymbolicLink() ? 'a symbolic link' : 'not a regular file or directory';
+        throw new Error(
+          `Cannot copy literal entry ${path.join(sourceDir, rel)}: it is ${kind}; ` +
+            'literal trees may contain only regular files and directories'
+        );
       }
     }
   };
@@ -281,12 +290,13 @@ export function copyLiteralTree(sourceDir: string, destDir: string): string[] {
 /**
  * Generate a single plugin's output
  */
-function generatePlugin(
+export function generatePlugin(
   plugin: PluginDefinition,
   prompts: Prompt[],
   personas: Persona[],
   allPlugins: PluginDefinition[],
-  outputDir: string
+  outputDir: string,
+  contentDir: string = CONTENT_DIR
 ): { skillCount: number; agentCount: number } {
   const pluginDir = path.join(outputDir, 'plugins', hyphenatePluginId(plugin.id));
   const skillsDir = path.join(pluginDir, 'skills');
@@ -295,7 +305,6 @@ function generatePlugin(
   // Create directories
   fs.mkdirSync(path.join(pluginDir, '.claude-plugin'), { recursive: true });
   fs.mkdirSync(skillsDir, { recursive: true });
-  fs.mkdirSync(agentsDir, { recursive: true });
 
   // Get prompts and personas for this plugin
   const pluginPrompts = getPromptsForPlugin(prompts, plugin.id, allPlugins);
@@ -314,7 +323,10 @@ function generatePlugin(
     fs.writeFileSync(path.join(skillDir, 'SKILL.md'), skillMd);
   }
 
-  // Generate agents
+  // Generate agents. The directory exists only if there is something to put in it.
+  if (aggregatePersonas.length > 0) {
+    fs.mkdirSync(agentsDir, { recursive: true });
+  }
   for (const persona of aggregatePersonas) {
     const agentId = persona.frontmatter.subcategory;
     const agentMd = generateAgentMd(persona);
@@ -323,7 +335,7 @@ function generatePlugin(
 
   // Copy literal source last so nothing above can overwrite it
   if (plugin.literal) {
-    copyLiteralTree(path.join('content', 'literal', plugin.literal.source), pluginDir);
+    copyLiteralTree(path.join(contentDir, 'literal', plugin.literal.source), pluginDir);
   }
 
   // Generate plugin.json
@@ -349,9 +361,9 @@ export function generate(outputDir: string): void {
   fs.mkdirSync(outputDir, { recursive: true });
 
   // Load content and config
-  const prompts = loadPrompts('content');
-  const personas = loadPersonas('content');
-  const config = loadPluginsConfig('content');
+  const prompts = loadPrompts(CONTENT_DIR);
+  const personas = loadPersonas(CONTENT_DIR);
+  const config = loadPluginsConfig(CONTENT_DIR);
 
   console.log(`Loaded ${prompts.length} prompts and ${personas.length} personas`);
   console.log(`Found ${config.plugins.length} plugin definitions\n`);
@@ -362,7 +374,7 @@ export function generate(outputDir: string): void {
 
   // Generate each plugin
   for (const plugin of config.plugins) {
-    const { skillCount, agentCount } = generatePlugin(plugin, prompts, personas, config.plugins, outputDir);
+    const { skillCount, agentCount } = generatePlugin(plugin, prompts, personas, config.plugins, outputDir, CONTENT_DIR);
     console.log(`✓ ${plugin.id}: ${skillCount} skills, ${agentCount} agents`);
     totalSkills += skillCount;
     totalAgents += agentCount;

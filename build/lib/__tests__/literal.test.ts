@@ -90,10 +90,30 @@ describe('copyLiteralTree', () => {
   });
 });
 
+describe('copyLiteralTree edge cases', () => {
+  it('returns [] for an empty source directory instead of throwing', () => {
+    const src = path.join(tmp, 'src');
+    fs.mkdirSync(src);
+    expect(copyLiteralTree(src, path.join(tmp, 'dest'))).toEqual([]);
+  });
+
+  it('throws naming the path and kind when the tree contains a symlink', () => {
+    const src = path.join(tmp, 'src');
+    fs.mkdirSync(path.join(src, 'scripts'), { recursive: true });
+    fs.writeFileSync(path.join(src, 'real.md'), 'real');
+    fs.symlinkSync(path.join(src, 'real.md'), path.join(src, 'scripts', 'link.md'));
+
+    expect(() => copyLiteralTree(src, path.join(tmp, 'dest'))).toThrow(
+      /scripts[\\/]link\.md: it is a symbolic link; literal trees may contain only regular files and directories/
+    );
+  });
+});
+
 describe('validatePluginsConfig', () => {
   function configWith(plugin: object): PluginsConfig {
     return {
       marketplace: { name: 'm', description: 'd', owner: { name: 'o' } },
+      renames: {},
       plugins: [{ id: 'x:y', version: '1.0.0', name: 'Y', description: 'd', ...plugin }],
     } as PluginsConfig;
   }
@@ -152,5 +172,47 @@ describe('validatePluginsConfig', () => {
     }
     expect(message).toMatch(/"version" must be a non-empty string/);
     expect(message).toMatch(/does not exist/);
+  });
+
+  function validate(config: object): string {
+    try {
+      validatePluginsConfig(config as PluginsConfig, 'plugins.json', tmp);
+    } catch (e) {
+      return (e as Error).message;
+    }
+    return '';
+  }
+
+  function withoutRenames(): object {
+    const { renames: _renames, ...rest } = configWith({ skills: {} });
+    return rest;
+  }
+
+  it('rejects a config with no renames key', () => {
+    expect(validate(withoutRenames())).toMatch(/"renames" must be an object mapping old plugin names to new names or null/);
+  });
+
+  it('rejects a renames that is not a plain object', () => {
+    for (const bad of [['a'], 'x', null, 42]) {
+      expect(validate({ ...configWith({ skills: {} }), renames: bad })).toMatch(/"renames" must be an object/);
+    }
+  });
+
+  it('rejects a renames value that is neither a non-empty string nor null', () => {
+    for (const bad of [42, '', undefined, {}]) {
+      expect(validate({ ...configWith({ skills: {} }), renames: { old: bad } })).toMatch(
+        /renames\["old"\] must be a non-empty string or null/
+      );
+    }
+  });
+
+  it('accepts string and null renames values', () => {
+    expect(validate({ ...configWith({ skills: {} }), renames: { a: 'b', c: null } })).toBe('');
+  });
+
+  it('reports a bad renames value together with another error', () => {
+    const message = validate({ ...configWith({ version: '', skills: {} }), renames: { old: 42 } });
+    expect(message).toMatch(/"version" must be a non-empty string/);
+    expect(message).toMatch(/renames\["old"\] must be a non-empty string or null/);
   });
 });

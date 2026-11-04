@@ -190,6 +190,17 @@ export function validatePluginsConfig(
     }
   }
 
+  const renames: unknown = config?.renames;
+  if (!renames || typeof renames !== 'object' || Array.isArray(renames)) {
+    errors.push('"renames" must be an object mapping old plugin names to new names or null');
+  } else {
+    for (const [oldName, newName] of Object.entries(renames)) {
+      if (newName !== null && !isNonEmptyString(newName)) {
+        errors.push(`renames["${oldName}"] must be a non-empty string or null`);
+      }
+    }
+  }
+
   if (!Array.isArray(config?.plugins)) {
     errors.push('"plugins" must be an array');
   } else if (config.plugins.length === 0) {
