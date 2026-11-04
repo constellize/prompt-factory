@@ -133,8 +133,8 @@ function main(): number {
       return 2;
     }
     if (target === 'marketplace') {
-      // The generator must never own the catalog, the README or the hand-written harness plugin.
-      const forbidden = /^(\.claude-plugin\/marketplace\.json|README\.md)$/;
+      // The generator must never own the README.
+      const forbidden = /^README\.md$/;
       for (const rel of generated.filter(r => forbidden.test(r.split(path.sep).join('/')))) {
         problems.push(`FORBIDDEN ${rel} (marketplace generator must not write this)`);
       }

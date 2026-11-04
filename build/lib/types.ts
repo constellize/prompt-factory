@@ -148,6 +148,8 @@ export interface MarketplaceConfig {
 export interface PluginsConfig {
   marketplace: MarketplaceConfig;
   plugins: PluginDefinition[];
+  /** Old plugin name -> current plugin name, or null if the plugin was retired. */
+  renames: Record<string, string | null>;
 }
 
 // === Output Types ===

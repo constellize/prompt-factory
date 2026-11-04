@@ -15,8 +15,10 @@
  * constellize-harness plugin is built this way: it has no prompt-id frontmatter, so
  * the content model cannot reproduce it.
  *
- * Deliberately NOT generated: .claude-plugin/marketplace.json and README.md. They are
- * hand-written in the marketplace repo.
+ * .claude-plugin/marketplace.json (the catalog) is generated from the `marketplace`,
+ * `plugins` and `renames` blocks of plugins.json.
+ *
+ * Deliberately NOT generated: README.md. It is hand-written in the marketplace repo.
  */
 
 import * as fs from 'fs';
@@ -217,6 +219,26 @@ function hyphenatePluginId(id: string): string {
 }
 
 /**
+ * Build the contents of .claude-plugin/marketplace.json, trailing newline included.
+ * Pure: the same config always yields the same string. Catalog entries carry no
+ * version (the per-plugin plugin.json does), and `$schema` is never copied through.
+ */
+export function generateMarketplaceJson(config: PluginsConfig): string {
+  const catalog = {
+    name: config.marketplace.name,
+    owner: config.marketplace.owner,
+    description: config.marketplace.description,
+    plugins: config.plugins.map(plugin => ({
+      name: hyphenatePluginId(plugin.id),
+      source: './plugins/' + hyphenatePluginId(plugin.id),
+      description: plugin.description
+    })),
+    renames: config.renames
+  };
+  return JSON.stringify(catalog, null, 2) + '\n';
+}
+
+/**
  * Generate plugin.json for a plugin
  */
 function generatePluginJson(plugin: PluginDefinition): object {
@@ -345,6 +367,13 @@ export function generate(outputDir: string): void {
     totalSkills += skillCount;
     totalAgents += agentCount;
   }
+
+  fs.mkdirSync(path.join(outputDir, '.claude-plugin'), { recursive: true });
+  fs.writeFileSync(
+    path.join(outputDir, '.claude-plugin', 'marketplace.json'),
+    generateMarketplaceJson(config)
+  );
+  console.log('✓ .claude-plugin/marketplace.json');
 
   console.log('\n--- Complete ---');
   console.log(`Generated ${config.plugins.length} plugins with ${totalSkills} skills and ${totalAgents} agents`);
