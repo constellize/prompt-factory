@@ -50,7 +50,7 @@ function parseMarkdownWithFrontmatter(filePath: string): { frontmatter: Record<s
 /**
  * Load all prompts from content/prompts/
  */
-export function loadPrompts(contentDir: string = 'content'): Prompt[] {
+export function loadPrompts(contentDir: string): Prompt[] {
   const promptsDir = path.join(contentDir, 'prompts');
   const prompts: Prompt[] = [];
 
@@ -103,7 +103,7 @@ export function loadPrompts(contentDir: string = 'content'): Prompt[] {
 /**
  * Load all personas from content/personas/
  */
-export function loadPersonas(contentDir: string = 'content'): Persona[] {
+export function loadPersonas(contentDir: string): Persona[] {
   const personasDir = path.join(contentDir, 'personas');
   const personas: Persona[] = [];
 
@@ -171,7 +171,7 @@ const isNonEmptyString = (value: unknown): value is string =>
 export function validatePluginsConfig(
   config: PluginsConfig,
   configPath: string,
-  contentDir: string = 'content'
+  contentDir: string
 ): void {
   const errors: string[] = [];
 
@@ -275,7 +275,7 @@ export function validatePluginsConfig(
 /**
  * Load plugins configuration from content/schemas/plugins.json
  */
-export function loadPluginsConfig(contentDir: string = 'content'): PluginsConfig {
+export function loadPluginsConfig(contentDir: string): PluginsConfig {
   const configPath = path.join(contentDir, 'schemas', 'plugins.json');
 
   if (!fs.existsSync(configPath)) {
