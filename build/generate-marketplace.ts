@@ -388,8 +388,9 @@ export function generate(outputDir: string): void {
   );
   console.log('✓ .claude-plugin/marketplace.json');
 
-  copyLiteralTree(path.join(CONTENT_DIR, 'literal', 'marketplace-root'), outputDir);
-  console.log('✓ README.md');
+  for (const file of copyLiteralTree(path.join(CONTENT_DIR, 'literal', 'marketplace-root'), outputDir)) {
+    console.log(`✓ ${file}`);
+  }
 
   console.log('\n--- Complete ---');
   console.log(`Generated ${config.plugins.length} plugins with ${totalSkills} skills and ${totalAgents} agents`);
