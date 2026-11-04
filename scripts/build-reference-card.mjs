@@ -10,7 +10,7 @@
  * They differ only in the install command printed in the footer.
  *
  * Why this is a script and not "open it in a browser and print":
- *   - The card declares `@page { size: 816px 1156px }`. Chrome's `--print-to-pdf` flag and the
+ *   - The card declares `@page { size: 816px 1230px }`. Chrome's `--print-to-pdf` flag and the
  *     browser print dialog both ignore that and use the default paper size, so a hand print
  *     came out US Letter and spilled onto a second page. The card shipped that way.
  *     `Page.printToPDF` with `preferCSSPageSize: true` honours it and gives exactly one page.
@@ -341,10 +341,11 @@ async function main() {
             'more than one means the CSS page size was not honoured.'
         );
       }
-      // The card's CSS page is 816x1156 CSS px. A PDF MediaBox is in points (1/72in) and CSS
-      // px are 1/96in, so the expected box is those sizes x 0.75 -- 612 x 867pt. Checking it
-      // catches a print that silently fell back to the default paper size, which is how the
-      // card previously shipped as two US Letter pages.
+      // The card's CSS page is 816x1230 CSS px (CARD_CSS_PX, matching the @page rule in the
+      // source HTML). A PDF MediaBox is in points (1/72in) and CSS px are 1/96in, so the
+      // expected box is those sizes x 0.75 -- 612 x 922.5pt, compared with 1pt of slack
+      // because Chrome rounds. Checking it catches a print that silently fell back to the
+      // default paper size, which is how the card previously shipped as two US Letter pages.
       const box = pdfMediaBox(pdf);
       const expected = [CARD_CSS_PX.width * 0.75, CARD_CSS_PX.height * 0.75];
       if (!box || Math.abs(box[2] - expected[0]) > 1 || Math.abs(box[3] - expected[1]) > 1) {
