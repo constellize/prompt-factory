@@ -42,6 +42,17 @@ describe('EXTRA drift', () => {
     expect(problems[0]).toMatch(/^EXTRA {4}\.github\/workflows\/extra\.yml /);
   });
 
+  it('flags a hand-added file under the root .claude-plugin/', () => {
+    const generated = ['.claude-plugin/marketplace.json'];
+    generated.forEach(put);
+    put('.claude-plugin/hand-written.json');
+
+    const problems = findExtraFiles(against, generated);
+
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toMatch(/^EXTRA {4}\.claude-plugin\/hand-written\.json /);
+  });
+
   it('does not flag docs/specs/, docs/plans/ or GENERATED_FROM', () => {
     const generated = ['README.md', 'docs/constellize-skills-infographic.html'];
     generated.forEach(put);
