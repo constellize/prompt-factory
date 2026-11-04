@@ -296,7 +296,7 @@ export function generatePlugin(
   personas: Persona[],
   allPlugins: PluginDefinition[],
   outputDir: string,
-  contentDir: string = CONTENT_DIR
+  contentDir: string
 ): { skillCount: number; agentCount: number } {
   const pluginDir = path.join(outputDir, 'plugins', hyphenatePluginId(plugin.id));
   const skillsDir = path.join(pluginDir, 'skills');

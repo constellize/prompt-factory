@@ -53,11 +53,16 @@ function writeLiteral(source: string, files: Record<string, string>): void {
 describe('generatePlugin', () => {
   it('lets a literal file overwrite a generated skill at the same output path', () => {
     const plugin = pluginWith({ skills: { include: ['my-skill'] }, literal: { source: 'tree' } });
-    writeLiteral('tree', { 'skills/my-skill/SKILL.md': 'LITERAL WINS\n' });
-
-    generatePlugin(plugin, [prompt], [], [plugin], outDir, contentDir);
-
     const skill = path.join(outDir, 'plugins', 'x-y', 'skills', 'my-skill', 'SKILL.md');
+
+    // Without the literal tree the generator emits the skill at this path.
+    const generatedOnly = pluginWith({ skills: { include: ['my-skill'] } });
+    generatePlugin(generatedOnly, [prompt], [], [generatedOnly], outDir, contentDir);
+    expect(fs.readFileSync(skill, 'utf-8')).toContain('GENERATED BODY');
+
+    // With it, the literal content replaces the generated skill.
+    writeLiteral('tree', { 'skills/my-skill/SKILL.md': 'LITERAL WINS\n' });
+    generatePlugin(plugin, [prompt], [], [plugin], outDir, contentDir);
     expect(fs.readFileSync(skill, 'utf-8')).toBe('LITERAL WINS\n');
   });
 

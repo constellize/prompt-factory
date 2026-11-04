@@ -184,8 +184,9 @@ describe('validatePluginsConfig', () => {
   }
 
   function withoutRenames(): object {
-    const { renames: _renames, ...rest } = configWith({ skills: {} });
-    return rest;
+    const config: Partial<PluginsConfig> = configWith({ skills: {} });
+    delete config.renames;
+    return config;
   }
 
   it('rejects a config with no renames key', () => {
