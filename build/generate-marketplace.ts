@@ -266,8 +266,12 @@ function generatePluginJson(plugin: PluginDefinition): object {
 
 /**
  * Copy every file under sourceDir into destDir, preserving relative paths.
- * Copies bytes (and mode) with copyFileSync, never through a string, so trailing
- * bytes and CRLF survive. Returns the relative paths written, sorted.
+ * Copies with copyFileSync, never through a string: the destination is byte-identical
+ * and carries the source's mode, which the generated check-version-bump.sh relies on.
+ * (A readFileSync(p, 'utf-8') round trip would corrupt bytes that are not valid UTF-8
+ * and drop the mode. It does not, as once claimed here, normalise a trailing newline
+ * or CRLF -- that was tested by mutation.)
+ * Returns the relative paths written, sorted.
  */
 export function copyLiteralTree(sourceDir: string, destDir: string): string[] {
   const written: string[] = [];
