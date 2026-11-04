@@ -1,0 +1,85 @@
+name: drift
+
+on:
+  push:
+    branches: [main, v1]
+  pull_request:
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repo
+        uses: actions/checkout@v5
+        with:
+          path: marketplace
+          fetch-depth: 0
+
+      # Invariant: GENERATED_FROM is the prompt-factory commit whose generators produced
+      # this repo's generated files. It is NOT meant to track prompt-factory's tip; later
+      # prompt-factory commits that do not change output leave it valid. Do not "fix" it
+      # by chasing the tip. Update it only together with regenerated output.
+      - name: Read the recorded prompt-factory commit
+        id: source
+        run: echo "sha=$(tr -d '[:space:]' < marketplace/GENERATED_FROM)" >> "$GITHUB_OUTPUT"
+
+      - name: Check out prompt-factory at that exact commit
+        uses: actions/checkout@v5
+        with:
+          repository: constellize/prompt-factory
+          ref: ${{ steps.source.outputs.sha }}
+          path: prompt-factory
+
+      - uses: actions/setup-node@v5
+        with:
+          # Verified locally on 26.8.2 only; nothing has run in Actions yet. This pin floats
+          # to the latest 26.x. Re-verify before moving to an LTS.
+          node-version: 26
+          cache: npm
+          cache-dependency-path: prompt-factory/package-lock.json
+
+      - name: Install prompt-factory
+        working-directory: prompt-factory
+        run: npm ci
+
+      - name: Generated files match the recorded commit
+        working-directory: prompt-factory
+        run: npm run check:drift -- --target marketplace --against "$GITHUB_WORKSPACE/marketplace"
+
+      # marketplace.json is hand-written, so nothing generates it from the plugin tree.
+      # `claude plugin validate` passes when a plugin directory is missing from plugins[]
+      # and when an entry names a directory that does not exist, so assert both here.
+      - name: Catalog matches the plugin directories
+        if: ${{ !cancelled() }}
+        working-directory: marketplace
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          const catalog = JSON.parse(fs.readFileSync('.claude-plugin/marketplace.json', 'utf8'));
+          const entries = catalog.plugins.map(p => p.name);
+          const dirs = fs.readdirSync('plugins', { withFileTypes: true })
+            .filter(d => d.isDirectory() && fs.existsSync(path.join('plugins', d.name, '.claude-plugin', 'plugin.json')))
+            .map(d => d.name);
+          const errors = [];
+          for (const d of dirs) if (!entries.includes(d)) errors.push(`plugins/${d}/ has a plugin.json but no plugins[] entry named "${d}" in marketplace.json`);
+          for (const e of entries) if (!dirs.includes(e)) errors.push(`marketplace.json plugins[] entry "${e}" has no plugins/${e}/.claude-plugin/plugin.json`);
+          for (const p of catalog.plugins) {
+            if (typeof p.source !== 'string' || !fs.existsSync(p.source) || !fs.statSync(p.source).isDirectory()) {
+              errors.push(`marketplace.json plugins[] entry "${p.name}" has source "${p.source}", which is not an existing directory`);
+            }
+          }
+          if (errors.length) {
+            errors.forEach(e => console.log(`::error::${e}`));
+            process.exit(1);
+          }
+          console.log(`Catalog OK: ${entries.length} plugins match ${dirs.length} plugin directories`);
+          EOF
+
+      - name: Skill changes bump the plugin version
+        if: ${{ !cancelled() }}
+        working-directory: marketplace
+        env:
+          ALLOW_UNKNOWN_BASE: ${{ github.event_name == 'push' && '1' || '' }}
+          BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+        run: .github/scripts/check-version-bump.sh "$BASE"
