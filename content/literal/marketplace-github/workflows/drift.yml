@@ -18,7 +18,12 @@ jobs:
       # Invariant: GENERATED_FROM is the prompt-factory commit whose generators produced
       # this repo's generated files. It is NOT meant to track prompt-factory's tip; later
       # prompt-factory commits that do not change output leave it valid. Do not "fix" it
-      # by chasing the tip. Update it only together with regenerated output.
+      # by chasing the tip.
+      #
+      # Two reasons to bump it, both deliberate: output was regenerated, or a stricter
+      # check-drift.ts should start gating this repo. The steps below run the guard from
+      # the commit named here, so a guard improvement reaches this repo's CI only when
+      # that commit moves -- it never arrives on its own.
       - name: Read the recorded prompt-factory commit
         id: source
         run: echo "sha=$(tr -d '[:space:]' < marketplace/GENERATED_FROM)" >> "$GITHUB_OUTPUT"
