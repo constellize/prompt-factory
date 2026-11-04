@@ -8,9 +8,10 @@
  *   npm run check:drift -- --target <marketplace|website> --against <path> [--scratch <path>]
  *
  * Exit 0: every generated file matches. Exit 1: drift (per-file list). Exit 2: usage or refusal.
- * Files in --against that the generator does not produce are ignored, with one exception:
- * for --target marketplace, a file inside a GENERATED_OWNED path that the generator did not
- * emit is EXTRA drift (a hand-written second source of truth).
+ * Files in --against that the generator does not produce are ignored, with two exceptions for
+ * --target marketplace: a file inside a GENERATED_OWNED path that the generator did not emit
+ * is EXTRA drift (a hand-written second source of truth), and a top-level entry that is
+ * neither generated nor in ROOT_ALLOWED is UNOWNED drift (a path nobody declared either way).
  * The website generator must not write under src/ (reported as FORBIDDEN).
  * The scratch directory must live inside os.tmpdir(); anything else is refused so
  * the generators can never write into a real checkout.
@@ -115,6 +116,37 @@ export function findExtraFiles(against: string, generated: string[]): string[] {
   return problems;
 }
 
+/**
+ * Entries that may sit at the marketplace root without being generated.
+ * `GENERATED_FROM` is the one hand-written committed file there. `.git` is the checkout itself
+ * and `.DS_Store` is macOS noise; neither is committed content, and flagging them would make
+ * local runs fail spuriously. Everything else at the root belongs to the generator.
+ */
+export const ROOT_ALLOWED = ['GENERATED_FROM', '.git', '.DS_Store'];
+
+/**
+ * UNOWNED drift: a top-level entry in `against` that is neither generated nor allowed.
+ * GENERATED_OWNED only watches paths someone already listed, so a new root file -- a LICENSE
+ * or CONTRIBUTING.md -- would become a second source of truth with nothing flagging it. This
+ * closes that gap by making the root deny-by-default. Pure over (against, generated).
+ */
+export function findUnownedRootEntries(against: string, generated: string[]): string[] {
+  const topOf = (r: string) => r.split(path.sep).join('/').split('/')[0];
+  const allowed = new Set([
+    ...ROOT_ALLOWED,
+    ...GENERATED_OWNED.map(topOf),
+    ...generated.map(topOf),
+  ]);
+  return fs
+    .readdirSync(against)
+    .sort()
+    .filter(entry => !allowed.has(entry))
+    .map(
+      entry =>
+        `UNOWNED  ${entry} (unexpected marketplace root entry; generate it, or add it to ROOT_ALLOWED if it must stay hand-written)`
+    );
+}
+
 function main(): number {
   let args: Record<string, string>;
   try {
@@ -182,6 +214,7 @@ function main(): number {
     }
     if (target === 'marketplace') {
       problems.push(...findExtraFiles(against, generated));
+      problems.push(...findUnownedRootEntries(against, generated));
     }
     keepScratch = problems.length > 0;
   } catch (e) {
@@ -195,7 +228,10 @@ function main(): number {
     console.log(`No drift: ${generated.length} generated ${target} files match ${against}`);
     return 0;
   }
-  console.log(`DRIFT: ${problems.length} of ${generated.length} generated ${target} files differ from ${against}`);
+  const n = problems.length;
+  // Not "N of M generated files differ": EXTRA and UNOWNED problems name paths that are not
+  // generated files at all, so that phrasing was false for them.
+  console.log(`DRIFT: ${n} ${n === 1 ? 'problem' : 'problems'} against ${against} (${generated.length} generated ${target} files checked)`);
   problems.forEach(p => console.log(`  ${p}`));
   console.log(`Generated output kept at: ${scratch}`);
   return 1;
