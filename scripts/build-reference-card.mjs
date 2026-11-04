@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Build the Constellize reference card PDFs from docs/constellize-skills-infographic.html.
+ * Build the Constellize reference card PDFs from the factory's own copy of the infographic
+ * (content/literal/marketplace-docs/); the marketplace's docs/ copy is generated from it.
  *
  * There are two cards because there are two marketplace lines:
  *   v1 -- the line the book's readers install, pinned to the `v1` branch
