@@ -46,7 +46,8 @@ jobs:
         working-directory: prompt-factory
         run: npm run check:drift -- --target marketplace --against "$GITHUB_WORKSPACE/marketplace"
 
-      # marketplace.json is hand-written, so nothing generates it from the plugin tree.
+      # On main marketplace.json is generated from plugins.json, and on v1 it is hand-written,
+      # so in neither case does anything derive it from the plugin directories themselves.
       # `claude plugin validate` passes when a plugin directory is missing from plugins[]
       # and when an entry names a directory that does not exist, so assert both here.
       - name: Catalog matches the plugin directories

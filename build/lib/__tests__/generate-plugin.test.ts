@@ -94,6 +94,27 @@ describe('generatePlugin', () => {
     expect(fs.existsSync(path.join(outDir, 'plugins', 'x-y', 'agents'))).toBe(false);
   });
 
+  it('lets plugins.json win over a literal .claude-plugin/plugin.json', () => {
+    const plugin = pluginWith({ version: '1.2.3', literal: { source: 'tree' } });
+    writeLiteral('tree', { '.claude-plugin/plugin.json': '{"name":"x-y","version":"9.9.9"}' });
+
+    generatePlugin(plugin, [], [], [plugin], outDir, contentDir);
+
+    const written = JSON.parse(
+      fs.readFileSync(path.join(outDir, 'plugins', 'x-y', '.claude-plugin', 'plugin.json'), 'utf-8')
+    );
+    expect(written.version).toBe('1.2.3');
+  });
+
+  it('creates no skills directory for a plugin with no prompts', () => {
+    const plugin = pluginWith({ literal: { source: 'tree' } });
+    writeLiteral('tree', { 'scripts/run.mjs': 'run' });
+
+    generatePlugin(plugin, [], [], [plugin], outDir, contentDir);
+
+    expect(fs.existsSync(path.join(outDir, 'plugins', 'x-y', 'skills'))).toBe(false);
+  });
+
   it('still creates agents/ and skills/ for a plugin that has them', () => {
     const plugin = pluginWith({ skills: { include: ['my-skill'] }, agents: { subcategories: ['qa-engineers'] } });
 

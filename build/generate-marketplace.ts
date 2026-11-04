@@ -311,9 +311,8 @@ export function generatePlugin(
   const skillsDir = path.join(pluginDir, 'skills');
   const agentsDir = path.join(pluginDir, 'agents');
 
-  // Create directories
+  // Create the directory plugin.json goes in
   fs.mkdirSync(path.join(pluginDir, '.claude-plugin'), { recursive: true });
-  fs.mkdirSync(skillsDir, { recursive: true });
 
   // Get prompts and personas for this plugin
   const pluginPrompts = getPromptsForPlugin(prompts, plugin.id, allPlugins);
@@ -322,7 +321,10 @@ export function generatePlugin(
   // For agents, we only want aggregates (one per subcategory)
   const aggregatePersonas = getAggregatePersonas(pluginPersonas);
 
-  // Generate skills
+  // Generate skills. The directory exists only if there is something to put in it.
+  if (pluginPrompts.length > 0) {
+    fs.mkdirSync(skillsDir, { recursive: true });
+  }
   for (const prompt of pluginPrompts) {
     const shortName = deriveShortSkillName(prompt.frontmatter.id, plugin.id);
     const skillDir = path.join(skillsDir, shortName);
@@ -342,7 +344,9 @@ export function generatePlugin(
     fs.writeFileSync(path.join(agentsDir, `${agentId}.md`), agentMd);
   }
 
-  // Copy literal source last so nothing above can overwrite it
+  // Literal source is copied after the generated skills and agents, so it overrides them.
+  // plugin.json is written after that, so it overrides literal source: the version comes
+  // from plugins.json, never from a literal file.
   if (plugin.literal) {
     copyLiteralTree(path.join(contentDir, 'literal', plugin.literal.source), pluginDir);
   }
