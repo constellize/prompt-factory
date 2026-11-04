@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  @page { size: 816px 1230px; margin: 0; }
+
+  html, body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0f0f1a !important;
+    color: #e2e8f0;
+    width: 816px;
+    height: 1230px;
+    padding: 22px 26px;
+    overflow: hidden;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .header h1 {
+    font-size: 30px;
+    font-weight: 900;
+    color: #a78bfa;
+    letter-spacing: -1px;
+  }
+
+  .header .subtitle {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+
+  .header .stats {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 8px;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat .number {
+    font-size: 24px;
+    font-weight: 900;
+    color: #f1f5f9;
+  }
+
+  .stat .label {
+    font-size: 10px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Entry point callout */
+  .entry-point {
+    background: rgba(139,92,246,0.1);
+    border: 1px solid rgba(139,92,246,0.3);
+    border-radius: 10px;
+    padding: 8px 16px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .entry-point code {
+    font-size: 14px;
+    font-weight: 700;
+    color: #a78bfa;
+    background: rgba(139,92,246,0.15);
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+
+  .entry-point .arrow {
+    color: #64748b;
+    margin: 0 6px;
+  }
+
+  .entry-point .flow {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+
+  /* Plugin grid */
+  .plugins {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  .plugin {
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    padding: 10px;
+    border-left: 4px solid;
+    position: relative;
+  }
+
+  .plugin.harness { border-color: #8b5cf6; grid-column: 1 / -1; }
+  .plugin.memory { border-color: #ec4899; }
+  .plugin.design { border-color: #6366f1; }
+  .plugin.craft { border-color: #10b981; grid-column: 1 / -1; }
+  .plugin.deliver { border-color: #f59e0b; }
+  .plugin.grow { border-color: #84cc16; }
+
+  .plugin-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .plugin-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .plugin.harness .plugin-icon { background: #8b5cf6; }
+  .plugin.memory .plugin-icon { background: #ec4899; }
+  .plugin.design .plugin-icon { background: #6366f1; }
+  .plugin.craft .plugin-icon { background: #10b981; }
+  .plugin.deliver .plugin-icon { background: #f59e0b; }
+  .plugin.grow .plugin-icon { background: #84cc16; }
+
+  .plugin-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f1f5f9;
+  }
+
+  .plugin-count {
+    font-size: 10px;
+    color: #64748b;
+    margin-left: auto;
+    background: rgba(255,255,255,0.06);
+    padding: 2px 6px;
+    border-radius: 10px;
+  }
+
+  .plugin-desc {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .skill {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.06);
+    color: #cbd5e1;
+    white-space: nowrap;
+  }
+
+  .plugin.harness .skill { background: rgba(139,92,246,0.12); color: #c4b5fd; }
+  .plugin.memory .skill { background: rgba(236,72,153,0.12); color: #f9a8d4; }
+  .plugin.design .skill { background: rgba(99,102,241,0.12); color: #a5b4fc; }
+  .plugin.craft .skill { background: rgba(16,185,129,0.12); color: #6ee7b7; }
+  .plugin.deliver .skill { background: rgba(245,158,11,0.12); color: #fcd34d; }
+  .plugin.grow .skill { background: rgba(132,204,22,0.12); color: #bef264; }
+
+  .skill.primary {
+    font-weight: 700;
+    border: 1px solid rgba(139,92,246,0.3);
+  }
+
+  /* Agents section */
+  .agents-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
+    padding-top: 5px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .agents-label {
+    font-size: 8px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 2px;
+  }
+
+  .agent {
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+    color: #94a3b8;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* Flow diagram */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .flow-step {
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-weight: 600;
+  }
+
+  .flow-arrow {
+    color: #475569;
+    font-size: 12px;
+  }
+
+  /* Craft sub-sections */
+  .craft-sections {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .craft-section-label {
+    font-size: 8px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 3px;
+    font-weight: 600;
+  }
+
+  .craft-section {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 10px;
+    color: #475569;
+  }
+
+  .footer a {
+    color: #8b5cf6;
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Constellize Skill Ecosystem</h1>
+  <div class="subtitle">AI-orchestrated software development methodology for Claude Code</div>
+  <div class="stats">
+    <div class="stat"><div class="number">6</div><div class="label">Plugins</div></div>
+    <div class="stat"><div class="number">74</div><div class="label">Skills</div></div>
+    <div class="stat"><div class="number">14</div><div class="label">Agents</div></div>
+    <div class="stat"><div class="number">5</div><div class="label">SDLC Phases</div></div>
+  </div>
+</div>
+
+<div class="entry-point">
+  <code>/constellize-harness:orchestrate</code>
+  <div class="flow">Assess your project <span class="arrow">&rarr;</span> Propose a plan <span class="arrow">&rarr;</span> Execute skills in sequence</div>
+</div>
+
+<div class="plugins">
+
+  <!-- HARNESS -->
+  <div class="plugin harness">
+    <div class="plugin-header">
+      <div class="plugin-icon">H</div>
+      <div class="plugin-name">Harness</div>
+      <div class="plugin-count">5 skills</div>
+    </div>
+    <div class="plugin-desc">The entry point. Assesses project state across 7 dimensions, determines where you are in the SDLC, and orchestrates the right skills.</div>
+    <div class="skills-grid">
+      <div class="skill primary">orchestrate</div>
+      <div class="skill">assess</div>
+      <div class="skill">plan</div>
+      <div class="skill">execute</div>
+      <div class="skill">init</div>
+    </div>
+    <div class="flow-row">
+      <div class="flow-step" style="background:rgba(139,92,246,0.2);color:#c4b5fd;">assess</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:rgba(139,92,246,0.2);color:#c4b5fd;">plan</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:rgba(139,92,246,0.2);color:#c4b5fd;">execute</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:rgba(236,72,153,0.15);color:#f9a8d4;">Memory</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:rgba(99,102,241,0.15);color:#a5b4fc;">Design</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:rgba(16,185,129,0.15);color:#6ee7b7;">Craft</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:rgba(245,158,11,0.15);color:#fcd34d;">Deliver</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="background:rgba(132,204,22,0.15);color:#bef264;">Grow</div>
+    </div>
+  </div>
+
+  <!-- MEMORY -->
+  <div class="plugin memory">
+    <div class="plugin-header">
+      <div class="plugin-icon">M</div>
+      <div class="plugin-name">Memory</div>
+      <div class="plugin-count">11 skills</div>
+    </div>
+    <div class="plugin-desc">Knowledge that survives context resets</div>
+    <div class="skills-grid">
+      <div class="skill">establish</div>
+      <div class="skill">update</div>
+      <div class="skill">revise</div>
+      <div class="skill">branch</div>
+      <div class="skill">retire</div>
+      <div class="skill">recover-staleness</div>
+      <div class="skill">recover-noise</div>
+      <div class="skill">recover-abandonment</div>
+      <div class="skill">rebuild-core-knowledge</div>
+      <div class="skill">triage-salvageable-knowledge</div>
+      <div class="skill">establish-stewardship</div>
+    </div>
+    <div class="agents-row">
+      <span class="agents-label">Agents</span>
+      <span class="agent">@knowledge-stewards</span>
+    </div>
+  </div>
+
+  <!-- DESIGN -->
+  <div class="plugin design">
+    <div class="plugin-header">
+      <div class="plugin-icon">D</div>
+      <div class="plugin-name">Design</div>
+      <div class="plugin-count">10 skills</div>
+    </div>
+    <div class="plugin-desc">From vision to implementation plan</div>
+    <div class="skills-grid">
+      <div class="skill">business-problem</div>
+      <div class="skill">vision-statement</div>
+      <div class="skill">ecosystem-map</div>
+      <div class="skill">raci-matrix</div>
+      <div class="skill">specification</div>
+      <div class="skill">constellation-map</div>
+      <div class="skill">gap-analysis</div>
+      <div class="skill">lock-constellation</div>
+      <div class="skill">implementation-sketch</div>
+      <div class="skill">code-generation-plan</div>
+    </div>
+    <div class="agents-row">
+      <span class="agents-label">Agents</span>
+      <span class="agent">@product-managers</span>
+      <span class="agent">@requirements-analysts</span>
+      <span class="agent">@system-architects</span>
+      <span class="agent">@data-specialists</span>
+      <span class="agent">@ux-ui-designers</span>
+    </div>
+  </div>
+
+  <!-- CRAFT -->
+  <div class="plugin craft">
+    <div class="plugin-header">
+      <div class="plugin-icon">C</div>
+      <div class="plugin-name">Craft</div>
+      <div class="plugin-count">20 skills</div>
+    </div>
+    <div class="plugin-desc">Code quality, testing, health checks, and continuous excellence</div>
+    <div class="craft-sections">
+      <div class="craft-section">
+        <div class="craft-section-label">Testing</div>
+        <div class="skill">unit-tests</div>
+        <div class="skill">integration-tests</div>
+        <div class="skill">contract-tests</div>
+        <div class="skill">test-coverage</div>
+      </div>
+      <div class="craft-section">
+        <div class="craft-section-label">Health</div>
+        <div class="skill">infrastructure-health-checks</div>
+        <div class="skill">application-health-validation</div>
+        <div class="skill">operational-monitoring</div>
+        <div class="skill">actionable-health-reporting</div>
+      </div>
+      <div class="craft-section">
+        <div class="craft-section-label">Quality</div>
+        <div class="skill">architectural-consistency</div>
+        <div class="skill">documentation-completeness</div>
+        <div class="skill">team-comprehension</div>
+        <div class="skill">dependency-hygiene</div>
+        <div class="skill">quality-metrics</div>
+      </div>
+      <div class="craft-section">
+        <div class="craft-section-label">Gates &amp; AI</div>
+        <div class="skill">pre-commit</div>
+        <div class="skill">pre-merge</div>
+        <div class="skill">pre-deployment</div>
+        <div class="skill">ai-assistance</div>
+        <div class="skill">ai-changes</div>
+        <div class="skill">feedback-loops</div>
+        <div class="skill">continuous-learning</div>
+      </div>
+    </div>
+    <div class="agents-row">
+      <span class="agents-label">Agents</span>
+      <span class="agent">@software-engineers</span>
+      <span class="agent">@qa-engineers</span>
+      <span class="agent">@security-engineers</span>
+      <span class="agent">@performance-engineers</span>
+      <span class="agent">@specialized-engineers</span>
+    </div>
+  </div>
+
+  <!-- DELIVER -->
+  <div class="plugin deliver">
+    <div class="plugin-header">
+      <div class="plugin-icon">Dv</div>
+      <div class="plugin-name">Deliver</div>
+      <div class="plugin-count">12 skills</div>
+    </div>
+    <div class="plugin-desc">Deployment, ops, and incidents &middot; <span style="color:#64748b">@devops-engineers @release-engineers</span></div>
+    <div class="skills-grid">
+      <div class="skill">environment-independence</div>
+      <div class="skill">reliable-containers</div>
+      <div class="skill">externalize-config</div>
+      <div class="skill">rollback-capability</div>
+      <div class="skill">proactive-architecture</div>
+      <div class="skill">operational-runbook</div>
+      <div class="skill">operational-memory-bank</div>
+      <div class="skill">cross-reference</div>
+      <div class="skill">knowledge-health</div>
+      <div class="skill">incident-investigation</div>
+      <div class="skill">incident-query</div>
+      <div class="skill">incident-postmortem</div>
+    </div>
+  </div>
+
+  <!-- GROW -->
+  <div class="plugin grow">
+    <div class="plugin-header">
+      <div class="plugin-icon">G</div>
+      <div class="plugin-name">Grow</div>
+      <div class="plugin-count">16 skills</div>
+    </div>
+    <div class="plugin-desc">Learning, evolution, and adoption &middot; <span style="color:#64748b">@adoption-coaches</span></div>
+    <div class="skills-grid">
+      <div class="skill">first-week</div>
+      <div class="skill">onboard-team</div>
+      <div class="skill">training-exercise</div>
+      <div class="skill">adoption-obstacles</div>
+      <div class="skill">grow-organically</div>
+      <div class="skill">sprint-learnings</div>
+      <div class="skill">knowledge-retrospective</div>
+      <div class="skill">knowledge-contribution</div>
+      <div class="skill">knowledge-connections</div>
+      <div class="skill">personal-learning</div>
+      <div class="skill">evolve-requirements</div>
+      <div class="skill">health-assessment</div>
+      <div class="skill">architectural-evolution</div>
+      <div class="skill">terminology-drift</div>
+      <div class="skill">duplicated-effort</div>
+      <div class="skill">extract-decisions-from-meetings</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  constellize.com &middot; /plugin marketplace add constellize/constellize-plugins-official &middot; MIT License
+</div>
+
+</body>
+</html>

@@ -20,6 +20,7 @@
     "generate:website": "npx ts-node build/generate-website.ts",
     "generate:marketplace": "npx ts-node build/generate-marketplace.ts",
     "check:drift": "npx ts-node build/check-drift.ts",
+    "build:card": "node scripts/build-reference-card.mjs",
     "generate:all": "npm run generate:website && npm run generate:marketplace && npm run generate:book",
     "validate:book": "npx ts-node build/validate-book-refs.ts",
     "validate:chain": "npx ts-node build/validate-full-chain.ts",

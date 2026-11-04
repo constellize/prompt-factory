@@ -392,6 +392,10 @@ export function generate(outputDir: string): void {
     console.log(`✓ ${file}`);
   }
 
+  for (const file of copyLiteralTree(path.join(CONTENT_DIR, 'literal', 'marketplace-docs'), path.join(outputDir, 'docs'))) {
+    console.log(`✓ docs/${file}`);
+  }
+
   console.log('\n--- Complete ---');
   console.log(`Generated ${config.plugins.length} plugins with ${totalSkills} skills and ${totalAgents} agents`);
 }
