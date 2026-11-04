@@ -11,8 +11,8 @@
  * Files in --against that the generator does not produce are ignored, with one exception:
  * for --target marketplace, a file under plugins/<generated-plugin>/{skills,agents,.claude-plugin}/
  * that the generator did not emit is EXTRA drift (a hand-written second source of truth).
- * Generated plugin ids come from the generator's own output, so hand-written plugins
- * (constellize-harness) and everything outside plugins/ stay ignored.
+ * Generated plugin ids come from the generator's own output, so everything outside
+ * plugins/<generated-plugin>/ stays ignored.
  * The website generator must not write under src/ (reported as FORBIDDEN).
  * The scratch directory must live inside os.tmpdir(); anything else is refused so
  * the generators can never write into a real checkout.
@@ -131,13 +131,6 @@ function main(): number {
     if (generated.length === 0) {
       console.error(`Generator wrote no files for ${target}; refusing to report "no drift" on an empty set.`);
       return 2;
-    }
-    if (target === 'marketplace') {
-      // The generator must never own the README.
-      const forbidden = /^README\.md$/;
-      for (const rel of generated.filter(r => forbidden.test(r.split(path.sep).join('/')))) {
-        problems.push(`FORBIDDEN ${rel} (marketplace generator must not write this)`);
-      }
     }
     if (target === 'website') {
       // Nothing under src/ is generated: the website owns its hand-written data modules.

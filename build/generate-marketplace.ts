@@ -18,7 +18,8 @@
  * .claude-plugin/marketplace.json (the catalog) is generated from the `marketplace`,
  * `plugins` and `renames` blocks of plugins.json.
  *
- * Deliberately NOT generated: README.md. It is hand-written in the marketplace repo.
+ * README.md is copied byte-for-byte from content/literal/marketplace-root/. It carries
+ * main's install command; the v1 branch keeps its own hand-written README.
  */
 
 import * as fs from 'fs';
@@ -386,6 +387,9 @@ export function generate(outputDir: string): void {
     generateMarketplaceJson(config)
   );
   console.log('✓ .claude-plugin/marketplace.json');
+
+  copyLiteralTree(path.join(CONTENT_DIR, 'literal', 'marketplace-root'), outputDir);
+  console.log('✓ README.md');
 
   console.log('\n--- Complete ---');
   console.log(`Generated ${config.plugins.length} plugins with ${totalSkills} skills and ${totalAgents} agents`);
