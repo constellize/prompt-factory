@@ -168,7 +168,11 @@ const isNonEmptyString = (value: unknown): value is string =>
  * release would reach no reader -- Claude Code only re-installs a plugin when its version
  * changes. `claude plugin validate` does not catch it either. Fail at the source instead.
  */
-export function validatePluginsConfig(config: PluginsConfig, configPath: string): void {
+export function validatePluginsConfig(
+  config: PluginsConfig,
+  configPath: string,
+  contentDir: string = 'content'
+): void {
   const errors: string[] = [];
 
   const marketplace = config?.marketplace;
@@ -215,6 +219,32 @@ export function validatePluginsConfig(config: PluginsConfig, configPath: string)
         );
       }
 
+      if (plugin?.literal !== undefined) {
+        const source = plugin.literal?.source;
+        if (!isNonEmptyString(source)) {
+          errors.push(`${where}: "literal.source" must be a non-empty string naming a directory under ${contentDir}/literal/`);
+        } else {
+          const literalRoot = path.resolve(contentDir, 'literal');
+          const sourceDir = path.resolve(literalRoot, source);
+          if (path.dirname(sourceDir) !== literalRoot) {
+            errors.push(
+              `${where}: "literal.source" "${source}" must be a single directory name directly under ${contentDir}/literal/`
+            );
+          } else if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
+            errors.push(
+              `${where}: "literal.source" "${source}" does not exist: expected a directory at ${path.join(contentDir, 'literal', source)}`
+            );
+          }
+        }
+      }
+
+      if (!plugin?.skills && !plugin?.agents && !plugin?.literal) {
+        errors.push(
+          `${where}: must define at least one of "skills", "agents" or "literal", ` +
+            'otherwise the generated plugin is empty'
+        );
+      }
+
       if (isNonEmptyString(plugin?.id)) {
         if (seen.has(plugin.id)) {
           errors.push(`${where}: duplicate id, which would generate the same plugin twice`);
@@ -252,7 +282,7 @@ export function loadPluginsConfig(contentDir: string = 'content'): PluginsConfig
     );
   }
 
-  validatePluginsConfig(parsed, configPath);
+  validatePluginsConfig(parsed, configPath, contentDir);
   return parsed;
 }
 

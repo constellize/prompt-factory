@@ -130,6 +130,10 @@ export interface PluginDefinition {
     subcategories?: string[];
     custom?: string[];
   };
+  /** Files copied verbatim from content/literal/<source>/ into the plugin directory. */
+  literal?: {
+    source: string;
+  };
 }
 
 export interface MarketplaceConfig {

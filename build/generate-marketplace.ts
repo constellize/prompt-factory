@@ -10,9 +10,13 @@
  *       skills/<short-name>/SKILL.md
  *       agents/<subcategory>.md
  *
- * Deliberately NOT generated: .claude-plugin/marketplace.json, README.md and
- * plugins/constellize-harness/. They are hand-written in the marketplace repo;
- * writing them here would drop the harness from the catalog.
+ * A plugin may also carry `literal: { source }` in plugins.json. Its files are copied
+ * byte-for-byte from content/literal/<source>/ into the plugin directory. The
+ * constellize-harness plugin is built this way: it has no prompt-id frontmatter, so
+ * the content model cannot reproduce it.
+ *
+ * Deliberately NOT generated: .claude-plugin/marketplace.json and README.md. They are
+ * hand-written in the marketplace repo.
  */
 
 import * as fs from 'fs';
@@ -227,6 +231,32 @@ function generatePluginJson(plugin: PluginDefinition): object {
 }
 
 /**
+ * Copy every file under sourceDir into destDir, preserving relative paths.
+ * Copies bytes (and mode) with copyFileSync, never through a string, so trailing
+ * bytes and CRLF survive. Returns the relative paths written, sorted.
+ */
+export function copyLiteralTree(sourceDir: string, destDir: string): string[] {
+  const written: string[] = [];
+
+  const walk = (relDir: string): void => {
+    const entries = fs.readdirSync(path.join(sourceDir, relDir), { withFileTypes: true });
+    for (const entry of entries) {
+      const rel = path.join(relDir, entry.name);
+      if (entry.isDirectory()) {
+        walk(rel);
+      } else if (entry.isFile()) {
+        fs.mkdirSync(path.dirname(path.join(destDir, rel)), { recursive: true });
+        fs.copyFileSync(path.join(sourceDir, rel), path.join(destDir, rel));
+        written.push(rel.split(path.sep).join('/'));
+      }
+    }
+  };
+
+  walk('');
+  return written.sort();
+}
+
+/**
  * Generate a single plugin's output
  */
 function generatePlugin(
@@ -267,6 +297,11 @@ function generatePlugin(
     const agentId = persona.frontmatter.subcategory;
     const agentMd = generateAgentMd(persona);
     fs.writeFileSync(path.join(agentsDir, `${agentId}.md`), agentMd);
+  }
+
+  // Copy literal source last so nothing above can overwrite it
+  if (plugin.literal) {
+    copyLiteralTree(path.join('content', 'literal', plugin.literal.source), pluginDir);
   }
 
   // Generate plugin.json

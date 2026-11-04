@@ -9,6 +9,7 @@ dist/
 
 # Ignore compiled JS but keep build scripts (TypeScript)
 *.js
+!jest.config.js
 !build/**/*.ts
 *.js.map
 *.d.ts
