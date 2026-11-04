@@ -9,8 +9,8 @@
  *
  * Exit 0: every generated file matches. Exit 1: drift (per-file list). Exit 2: usage or refusal.
  * Files in --against that the generator does not produce are ignored, with one exception:
- * for --target marketplace, a file under plugins/<generated-plugin>/{skills,agents,.claude-plugin}/
- * that the generator did not emit is EXTRA drift (a hand-written second source of truth).
+ * for --target marketplace, a file inside a GENERATED_OWNED path that the generator did not
+ * emit is EXTRA drift (a hand-written second source of truth).
  * The website generator must not write under src/ (reported as FORBIDDEN).
  * The scratch directory must live inside os.tmpdir(); anything else is refused so
  * the generators can never write into a real checkout.
@@ -82,6 +82,39 @@ function walk(dir: string, base: string = dir): string[] {
   return files.sort();
 }
 
+/**
+ * Paths the marketplace generator owns completely, so one place shows the boundary.
+ * Directory entries are walked recursively; the two file entries are compared directly.
+ */
+export const GENERATED_OWNED = [
+  'plugins',
+  '.claude-plugin',
+  '.github',
+  'docs/constellize-skills-infographic.html',
+  'README.md',
+];
+
+/**
+ * EXTRA drift: files under `against` inside GENERATED_OWNED that the generator did not produce.
+ * Pure over (against, generated): `generated` holds paths relative to the output root.
+ */
+export function findExtraFiles(against: string, generated: string[]): string[] {
+  const posix = (r: string) => r.split(path.sep).join('/');
+  const generatedSet = new Set(generated.map(posix));
+  const problems: string[] = [];
+  for (const owned of GENERATED_OWNED) {
+    const full = path.join(against, owned);
+    if (!fs.existsSync(full)) continue;
+    const found = fs.statSync(full).isDirectory() ? walk(full, against).map(posix) : [owned];
+    for (const rel of found) {
+      if (!generatedSet.has(rel)) {
+        problems.push(`EXTRA    ${rel} (hand-written file in a generator-owned path; a second source of truth)`);
+      }
+    }
+  }
+  return problems;
+}
+
 function main(): number {
   let args: Record<string, string>;
   try {
@@ -148,22 +181,7 @@ function main(): number {
       }
     }
     if (target === 'marketplace') {
-      const posix = (r: string) => r.split(path.sep).join('/');
-      const generatedSet = new Set(generated.map(posix));
-      const pluginIds = new Set(
-        generated.map(posix).filter(r => r.startsWith('plugins/')).map(r => r.split('/')[1])
-      );
-      for (const id of [...pluginIds].sort()) {
-        for (const sub of ['skills', 'agents', '.claude-plugin']) {
-          const dir = path.join(against, 'plugins', id, sub);
-          if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) continue;
-          for (const rel of walk(dir, against).map(posix)) {
-            if (!generatedSet.has(rel)) {
-              problems.push(`EXTRA    ${rel} (not produced by the generator; inside generated plugin ${id})`);
-            }
-          }
-        }
-      }
+      problems.push(...findExtraFiles(against, generated));
     }
     keepScratch = problems.length > 0;
   } catch (e) {
@@ -183,4 +201,6 @@ function main(): number {
   return 1;
 }
 
-process.exitCode = main();
+if (require.main === module) {
+  process.exitCode = main();
+}
