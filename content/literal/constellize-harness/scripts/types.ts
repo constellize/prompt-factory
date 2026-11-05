@@ -22,6 +22,7 @@ export interface FeatureEntry {
   status: FeatureStatus;
   evidence: "complete" | "incomplete" | "malformed" | "absent";
   missingGates: number[]; // gates marked required with no verdict; [] otherwise
+  failedGates: number[]; // gates marked required whose verdict is present but not PASS; [] otherwise
 }
 
 export interface FeaturesState {

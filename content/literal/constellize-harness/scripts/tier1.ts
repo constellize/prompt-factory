@@ -187,6 +187,7 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
           status: "unknown",
           evidence: "absent",
           missingGates: [],
+          failedGates: [],
         });
         continue;
       }
@@ -204,6 +205,7 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
           status: "unknown",
           evidence: "absent",
           missingGates: [],
+          failedGates: [],
         });
         continue;
       }
@@ -233,6 +235,7 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
       // Evidence: the gate-results block, if it is there and parses.
       let evidence: FeatureEntry["evidence"] = "absent";
       const missingGates: number[] = [];
+      const failedGates: number[] = [];
       const block = text.match(GATE_RESULTS_BLOCK);
       if (block) {
         let parsed: unknown;
@@ -274,9 +277,14 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
           for (const gate of [...required].sort((a, b) => a - b)) {
             const verdict = verdicts.get(gate);
             // A required gate recorded as SKIPPED carries no verdict for a gate
-            // that had to run, so it counts as missing.
+            // that had to run, so it counts as missing, not as failed.
             if (typeof verdict !== "string" || verdict === "" || verdict === "SKIPPED") {
               missingGates.push(gate);
+            } else if (verdict !== "PASS") {
+              // The verdict is present but is not a pass. FAIL is the vocabulary's
+              // other value; anything unrecognised cannot substantiate a status
+              // either, so it is read as not a pass rather than ignored.
+              failedGates.push(gate);
             }
           }
 
@@ -294,7 +302,10 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
             }
           }
 
-          evidence = missingGates.length === 0 && !loosened ? "complete" : "incomplete";
+          evidence =
+            missingGates.length === 0 && failedGates.length === 0 && !loosened
+              ? "complete"
+              : "incomplete";
         }
       }
 
@@ -305,7 +316,7 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
           ? "VERIFIED (unsubstantiated)"
           : (declared as FeatureStatus);
 
-      featureDetails.push({ name, status, evidence, missingGates });
+      featureDetails.push({ name, status, evidence, missingGates, failedGates });
     }
   }
 

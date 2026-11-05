@@ -94,6 +94,7 @@ it('reports a VERIFIED artifact with a complete block as VERIFIED, evidence comp
     status: 'VERIFIED',
     evidence: 'complete',
     missingGates: [],
+    failedGates: [],
   });
 });
 
@@ -144,7 +145,68 @@ it('treats a required gate recorded as SKIPPED as carrying no verdict', () => {
   ].join('\n');
   const entry = named(project({ 'rate-limiting.md': artifact('VERIFIED', gates) }), 'rate-limiting');
   expect(entry.missingGates).toEqual([4]);
+  expect(entry.failedGates).toEqual([]); // SKIPPED is an absent verdict, not a failing one
   expect(entry.status).toBe('VERIFIED (unsubstantiated)');
+});
+
+it('reports a required gate recorded FAIL in failedGates, not in missingGates', () => {
+  const gates = [
+    '{',
+    '  "schema": 1,',
+    `  ${DEFAULT_THRESHOLD},`,
+    '  "gates": [',
+    '    { "gate": 1, "name": "Test integrity", "required": true, "verdict": "FAIL",',
+    '      "measured": "18% branch", "threshold": "80/100/100/100" },',
+    `    ${pass(2)}, ${pass(4)}]`,
+    '}',
+  ].join('\n');
+  const entry = named(project({ 'rate-limiting.md': artifact('VERIFIED', gates) }), 'rate-limiting');
+  expect(entry.failedGates).toEqual([1]);
+  expect(entry.missingGates).toEqual([]); // the verdict is present, so it is not missing
+  expect(entry.evidence).toBe('incomplete');
+  expect(entry.status).toBe('VERIFIED (unsubstantiated)');
+});
+
+it('treats an unrecognised verdict on a required gate as not a pass', () => {
+  const gates = [
+    '{',
+    '  "schema": 1,',
+    `  ${DEFAULT_THRESHOLD},`,
+    '  "gates": [',
+    '    { "gate": 1, "name": "Test integrity", "required": true, "verdict": "PARTIAL" },',
+    `    ${pass(2)}, ${pass(4)}]`,
+    '}',
+  ].join('\n');
+  const entry = named(project({ 'rate-limiting.md': artifact('VERIFIED', gates) }), 'rate-limiting');
+  expect(entry.failedGates).toEqual([1]);
+  expect(entry.missingGates).toEqual([]);
+  expect(entry.evidence).toBe('incomplete');
+  expect(entry.status).toBe('VERIFIED (unsubstantiated)');
+});
+
+it('does not report a gate that was not required as failed', () => {
+  const gates = [
+    '{',
+    '  "schema": 1,',
+    `  ${DEFAULT_THRESHOLD},`,
+    '  "surface": { "operational": true, "deployment": false },',
+    `  "gates": [${pass(1)}, ${pass(2)}, ${pass(4)},`,
+    '    { "gate": 3, "name": "Deployment readiness", "required": false, "verdict": "FAIL" }]',
+    '}',
+  ].join('\n');
+  const entry = named(project({ 'rate-limiting.md': artifact('VERIFIED', gates) }), 'rate-limiting');
+  expect(entry.failedGates).toEqual([]);
+  expect(entry.missingGates).toEqual([]);
+  expect(entry.evidence).toBe('complete');
+  expect(entry.status).toBe('VERIFIED');
+});
+
+it('reads an all-PASS block as complete, with both gate lists empty', () => {
+  const entry = named(project({ 'rate-limiting.md': artifact('VERIFIED', COMPLETE_GATES) }), 'rate-limiting');
+  expect(entry.missingGates).toEqual([]);
+  expect(entry.failedGates).toEqual([]);
+  expect(entry.evidence).toBe('complete');
+  expect(entry.status).toBe('VERIFIED');
 });
 
 it('reports a VERIFIED artifact with no gate-results block as "VERIFIED (unsubstantiated)", evidence absent', () => {
@@ -152,6 +214,7 @@ it('reports a VERIFIED artifact with no gate-results block as "VERIFIED (unsubst
   expect(entry.status).toBe('VERIFIED (unsubstantiated)');
   expect(entry.evidence).toBe('absent');
   expect(entry.missingGates).toEqual([]);
+  expect(entry.failedGates).toEqual([]);
 });
 
 // Review Focus 2
@@ -166,6 +229,7 @@ it('reports malformed JSON as "VERIFIED (unsubstantiated)", evidence malformed, 
     expect(named(root, name).status).toBe('VERIFIED (unsubstantiated)');
     expect(named(root, name).evidence).toBe('malformed');
     expect(named(root, name).missingGates).toEqual([]);
+    expect(named(root, name).failedGates).toEqual([]);
   }
   // and the rest of the project is still assessed
   expect(named(root, 'healthy').status).toBe('VERIFIED');
@@ -227,7 +291,7 @@ it('reports a non-feature .md (a README with no status) as unknown rather than c
     'README.md': '# Features\n\nScratch notes about what lives in this directory.\n',
   });
   expect(features(root).features).toEqual([
-    { name: 'README', status: 'unknown', evidence: 'absent', missingGates: [] },
+    { name: 'README', status: 'unknown', evidence: 'absent', missingGates: [], failedGates: [] },
   ]);
   expect(features(root).count).toBe(1);
 });
@@ -241,6 +305,7 @@ it('still reports a pre-2.0 directory entry, so an existing project does not los
     status: 'unknown',
     evidence: 'absent',
     missingGates: [],
+    failedGates: [],
   });
 });
 
