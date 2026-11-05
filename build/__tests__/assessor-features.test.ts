@@ -45,6 +45,9 @@ const FENCE = '```';
 const DEFAULT_THRESHOLD =
   '"threshold": { "source": "default", "branch": 80, "criticalLogic": 100, "errorPaths": 100, "integrationPoints": 100 }';
 
+const DEFAULT_SURFACE =
+  '"surface": { "operational": true, "deployment": false, "reason": "no deployment artifact changed" }';
+
 const pass = (gate: number) =>
   `{ "gate": ${gate}, "required": true, "verdict": "PASS", "measured": "87% branch, 100% critical, 100% error paths", "at": "2026-11-05T09:06:00Z" }`;
 
@@ -108,6 +111,7 @@ it('reports a VERIFIED artifact missing a required gate as "VERIFIED (unsubstant
     '{',
     '  "schema": 1,',
     `  ${DEFAULT_THRESHOLD},`,
+    `  ${DEFAULT_SURFACE},`,
     `  "gates": [${pass(1)}]`,
     '}',
   ].join('\n');
@@ -144,6 +148,7 @@ it('treats a required gate recorded as SKIPPED as carrying no verdict', () => {
     '{',
     '  "schema": 1,',
     `  ${DEFAULT_THRESHOLD},`,
+    `  ${DEFAULT_SURFACE},`,
     `  "gates": [${pass(1)}, ${pass(2)},`,
     '    { "gate": 4, "name": "Maintainability in context", "required": true, "verdict": "SKIPPED" }]',
     '}',
@@ -159,6 +164,7 @@ it('reports a required gate recorded FAIL in failedGates, not in missingGates', 
     '{',
     '  "schema": 1,',
     `  ${DEFAULT_THRESHOLD},`,
+    `  ${DEFAULT_SURFACE},`,
     '  "gates": [',
     '    { "gate": 1, "name": "Test integrity", "required": true, "verdict": "FAIL",',
     '      "measured": "18% branch", "threshold": "80/100/100/100" },',
@@ -177,6 +183,7 @@ it('treats an unrecognised verdict on a required gate as not a pass', () => {
     '{',
     '  "schema": 1,',
     `  ${DEFAULT_THRESHOLD},`,
+    `  ${DEFAULT_SURFACE},`,
     '  "gates": [',
     '    { "gate": 1, "name": "Test integrity", "required": true, "verdict": "PARTIAL" },',
     `    ${pass(2)}, ${pass(4)}]`,
@@ -194,7 +201,7 @@ it('does not report a gate that was not required as failed', () => {
     '{',
     '  "schema": 1,',
     `  ${DEFAULT_THRESHOLD},`,
-    '  "surface": { "operational": true, "deployment": false },',
+    `  ${DEFAULT_SURFACE},`,
     `  "gates": [${pass(1)}, ${pass(2)}, ${pass(4)},`,
     '    { "gate": 3, "name": "Deployment readiness", "required": false, "verdict": "FAIL" }]',
     '}',
@@ -539,4 +546,93 @@ it('reports a VERIFIED artifact that only quotes the template example as unsubst
   const entry = named(project({ 'quoted.md': body }), 'quoted');
   expect(entry.evidence).toBe('absent');
   expect(entry.status).toBe('VERIFIED (unsubstantiated)');
+});
+
+// ---------------------------------------------------------------------------
+// assessGateResults — the schema's mandatory shape
+// ---------------------------------------------------------------------------
+
+describe('a block that does not record the schema has not substantiated anything', () => {
+  /** A record whose gates all pass, so only the member under test decides the verdict. */
+  const allPassWith = (members: string[], gates = `${pass(1)}, ${pass(2)}, ${pass(4)}`) =>
+    `# Feature: example\n\n` +
+    gateResultsSection(['{', ...members.map((m) => `  ${m},`), `  "gates": [${gates}]`, '}'].join('\n'));
+
+  it('reads the fully recorded block as complete, so the tightenings are not blanket refusals', () => {
+    expect(assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD, DEFAULT_SURFACE]))).toEqual({
+      evidence: 'complete',
+      missingGates: [],
+      failedGates: [],
+    });
+  });
+
+  it('refuses a block with no threshold at all', () => {
+    expect(assessGateResults(allPassWith(['"schema": 1', DEFAULT_SURFACE])).evidence).toBe('incomplete');
+  });
+
+  it('refuses a threshold that records no numbers', () => {
+    expect(
+      assessGateResults(allPassWith(['"schema": 1', '"threshold": { "source": "default" }', DEFAULT_SURFACE]))
+        .evidence,
+    ).toBe('incomplete');
+  });
+
+  it('refuses a threshold whose numbers are not numbers', () => {
+    const threshold =
+      '"threshold": { "source": "default", "branch": "80", "criticalLogic": 100, "errorPaths": 100, "integrationPoints": 100 }';
+    expect(assessGateResults(allPassWith(['"schema": 1', threshold, DEFAULT_SURFACE])).evidence).toBe(
+      'incomplete',
+    );
+  });
+
+  it('refuses a threshold that omits one of the four dimensions', () => {
+    const threshold = '"threshold": { "source": "default", "branch": 80, "errorPaths": 100, "integrationPoints": 100 }';
+    expect(assessGateResults(allPassWith(['"schema": 1', threshold, DEFAULT_SURFACE])).evidence).toBe(
+      'incomplete',
+    );
+  });
+
+  it('refuses a block with no surface determination, since gate 3 follows it', () => {
+    expect(assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD])).evidence).toBe('incomplete');
+  });
+
+  it('refuses a surface that does not say whether there is a deployment surface', () => {
+    const surface = '"surface": { "operational": true, "reason": "adds a cache dependency" }';
+    expect(assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD, surface])).evidence).toBe(
+      'incomplete',
+    );
+  });
+
+  it('refuses a surface whose deployment is not a boolean', () => {
+    const surface = '"surface": { "operational": true, "deployment": "no" }';
+    expect(assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD, surface])).evidence).toBe(
+      'incomplete',
+    );
+  });
+
+  it('reports a schema it does not know as malformed', () => {
+    expect(assessGateResults(allPassWith(['"schema": 2', DEFAULT_THRESHOLD, DEFAULT_SURFACE])).evidence).toBe(
+      'malformed',
+    );
+  });
+
+  it('reports a repeated gate number as malformed, so a second entry cannot launder a FAIL', () => {
+    const gates =
+      '{ "gate": 1, "required": true, "verdict": "FAIL" }, { "gate": 1, "verdict": "PASS" }, ' +
+      `${pass(2)}, ${pass(4)}`;
+    expect(
+      assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD, DEFAULT_SURFACE], gates)).evidence,
+    ).toBe('malformed');
+  });
+
+  it('ignores a gate entry whose number is not a positive integer', () => {
+    const gates =
+      `${pass(1)}, ${pass(2)}, ${pass(4)}, ` +
+      '{ "gate": 1.5, "required": true, "verdict": "FAIL" }, ' +
+      '{ "gate": -1, "required": true, "verdict": "FAIL" }, ' +
+      '{ "gate": 0, "required": true, "verdict": "FAIL" }';
+    expect(
+      assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD, DEFAULT_SURFACE], gates)),
+    ).toEqual({ evidence: 'complete', missingGates: [], failedGates: [] });
+  });
 });

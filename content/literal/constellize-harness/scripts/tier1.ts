@@ -90,6 +90,9 @@ const FENCE_LINE = /^ {0,3}(`{3,}|~{3,})([^\n]*)$/;
 const GATE_RESULTS_HEADING = /^##[ \t]+Gate Results[ \t]*$/;
 const SECTION_HEADING = /^##[ \t]/;
 
+// The only gate-results schema this assessor can read.
+const GATE_RESULTS_SCHEMA = 1;
+
 // Gates 1, 2 and 4 always have to run — gate 2 because its defensive-programming
 // member is unconditional. Gate 3 follows the recorded surface determination, and
 // any gate the block itself marks required is required too.
@@ -219,22 +222,37 @@ export function assessGateResults(
     results && Array.isArray(results["gates"]) ? (results["gates"] as unknown[]) : null;
   if (!results || !gates) return { evidence: "malformed", missingGates, failedGates };
 
-  const required = new Set<number>(ALWAYS_REQUIRED_GATES);
-  const surface = results["surface"];
-  if (
-    surface !== null &&
-    typeof surface === "object" &&
-    (surface as Record<string, unknown>)["deployment"] === true
-  ) {
-    required.add(3);
+  // A schema this assessor does not know records a shape it cannot read, so it is
+  // refused rather than read as though it were this one.
+  const schema = results["schema"];
+  if (schema !== undefined && schema !== GATE_RESULTS_SCHEMA) {
+    return { evidence: "malformed", missingGates, failedGates };
   }
+
+  // Gate 3's `required` follows the surface determination, so a block that records
+  // no determination has nothing for it to follow. `deployment` has to be stated
+  // as a boolean; silence is not "no deployment surface".
+  const surface = results["surface"];
+  const recordedSurface =
+    surface !== null && typeof surface === "object" && !Array.isArray(surface)
+      ? (surface as Record<string, unknown>)
+      : null;
+  const deployment = recordedSurface === null ? undefined : recordedSurface["deployment"];
+
+  const required = new Set<number>(ALWAYS_REQUIRED_GATES);
+  if (deployment === true) required.add(3);
 
   const verdicts = new Map<number, unknown>();
   for (const entry of gates) {
     if (entry === null || typeof entry !== "object") continue;
     const gate = entry as Record<string, unknown>;
     const gateNumber = gate["gate"];
-    if (typeof gateNumber !== "number") continue;
+    if (typeof gateNumber !== "number" || !Number.isInteger(gateNumber) || gateNumber <= 0) continue;
+    // One gate, one verdict. A record that says two things about the same gate is
+    // not a record, and no merge rule for it would be worth reasoning about.
+    if (verdicts.has(gateNumber)) {
+      return { evidence: "malformed", missingGates, failedGates };
+    }
     if (gate["required"] === true) required.add(gateNumber);
     verdicts.set(gateNumber, gate["verdict"]);
   }
@@ -253,22 +271,27 @@ export function assessGateResults(
     }
   }
 
-  // The floor applies to whatever numbers the block records, whatever it labels
-  // their source: the floor *is* the default, so an honest block records exactly
-  // the default and cannot be refused, while a loose number cannot escape by
-  // being relabelled "default".
-  let loosened = false;
+  // The block has to record all four numbers, each at or above the floor, whatever
+  // it labels their source: the floor *is* the default, so an honest block records
+  // exactly the default and cannot be refused, while a loose number cannot escape
+  // by being relabelled "default" — or by being left out.
   const threshold = results["threshold"];
-  if (threshold !== null && typeof threshold === "object") {
-    const recorded = threshold as Record<string, unknown>;
-    for (const [field, floor] of THRESHOLD_FLOOR) {
-      const value = recorded[field];
-      if (typeof value === "number" && value < floor) loosened = true;
-    }
-  }
+  const recordedThreshold =
+    threshold !== null && typeof threshold === "object" && !Array.isArray(threshold)
+      ? (threshold as Record<string, unknown>)
+      : null;
+  const thresholdHoldsFloor =
+    recordedThreshold !== null &&
+    THRESHOLD_FLOOR.every(([field, floor]) => {
+      const value = recordedThreshold[field];
+      return typeof value === "number" && value >= floor;
+    });
 
   const evidence =
-    missingGates.length === 0 && failedGates.length === 0 && !loosened
+    missingGates.length === 0 &&
+    failedGates.length === 0 &&
+    thresholdHoldsFloor &&
+    typeof deployment === "boolean"
       ? "complete"
       : "incomplete";
   return { evidence, missingGates, failedGates };
