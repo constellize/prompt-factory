@@ -368,6 +368,19 @@ Create fixtures for reusable test data:
 - Edge cases
 - Shared constants
 ```
+
+## Gate 4: Maintainability in Context Status
+
+### Requirements
+- [ ] A second engineer can explain what the change does from the code and its written record alone
+- [ ] No part of the change depends on knowledge held only by its author
+- [ ] The change uses this project's own vocabulary for the concepts it touches
+- [ ] The change's most surprising decision is recorded where a maintainer will meet it
+- [ ] Comprehensibility feedback from review was addressed, not deferred
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -400,6 +413,9 @@ ALWAYS:
 - Include examples for common tasks
 - Write for team members without context
 - Update docs when workflows change
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Any team member should understand codebase. Clear structure. Business logic documented. Development workflows explicit. Testing approaches clear.
 </instructions>

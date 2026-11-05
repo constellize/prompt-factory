@@ -295,6 +295,19 @@ Acceptance criteria:
 □ Team approval obtained
 □ Docs updated
 ```
+
+## Gate 4: Maintainability in Context Status
+
+### Requirements
+- [ ] Every dependency the change added is justified in writing
+- [ ] No added dependency duplicates a capability already present
+- [ ] Each added dependency is pinned the way this project pins dependencies
+- [ ] Each added dependency was checked for known vulnerabilities, and the check is named
+- [ ] No dependency was added for something the platform's own library already does
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -327,6 +340,9 @@ ALWAYS:
 - Consider implementing simple utilities yourself
 - Review transitive dependency count
 - Test after dependency updates
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Every dependency is justified and documented. Scan for vulnerabilities regularly. Keep patches current. Minimize footprint.
 </instructions>

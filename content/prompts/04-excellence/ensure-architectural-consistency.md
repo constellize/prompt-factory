@@ -297,6 +297,19 @@ Create checklist to validate consistency:
 - [ ] Any deviations documented with rationale
 - [ ] Team approval obtained for deviations
 - [ ] New patterns added to memory bank
+
+## Gate 4: Maintainability in Context Status
+
+### Requirements
+- [ ] The change follows the patterns recorded in the memory bank, or records a deliberate departure with its reason
+- [ ] Names and structure match the reference implementations the change was built from
+- [ ] No new convention is introduced where an existing one covers the need
+- [ ] Boundaries the project already draws are not crossed
+- [ ] Any new abstraction has more than one call site, or a recorded reason for having one
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -329,6 +342,9 @@ ALWAYS:
 - Validate consistency with checklist
 - Review other components for pattern reference
 - Ask team before introducing new patterns
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Consistency reduces cognitive load. Follow memory bank patterns. Use same names for same concepts. Standard errors, logging, auth. Document deviations.
 </instructions>

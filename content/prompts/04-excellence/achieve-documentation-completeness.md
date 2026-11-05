@@ -300,6 +300,19 @@ Consequences:
 
 References: [Links to supporting material]
 ```
+
+## Gate 4: Maintainability in Context Status
+
+### Requirements
+- [ ] The change leaves no documented behaviour describing something that no longer exists
+- [ ] Every entry point the change added is documented where this project documents entry points
+- [ ] The decisions a future reader would otherwise have to infer are written down
+- [ ] Setup or configuration the change introduced is documented with the rest of the project's setup
+- [ ] The documentation is reachable from the project's existing index, not only from the change
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -332,6 +345,9 @@ ALWAYS:
 - Document assumptions and constraints
 - Reference related decisions and components
 - Update docs when code changes (not after)
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Documentation helps team members understand and contribute. README explains setup. Comments explain WHY. API docs stay current. Decisions captured in memory bank.
 </instructions>
