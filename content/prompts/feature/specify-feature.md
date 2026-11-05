@@ -30,7 +30,7 @@ Work through the phases in order. Each phase either delegates to a named skill o
 | Phase | Delegates to | Yours |
 |-------|--------------|-------|
 | 0. Resolve the feature artifact | — | the name rules and the revision decision |
-| 1. Project and feature context | `constellize-harness:assess`, then read `llm/memory-bank/*` | the feature-scoped constellation map |
+| 1. Project and feature context | `constellize-harness:assess`, then read `llm/memory-bank/*` | — |
 | 2. What exists and what is missing | `constellize-design:gap-analysis` with the feature artifact as `output_path` | — |
 | 3. Adversarial interview | the `constellize-design:requirements-analysts` **agent**, for the questions | the interview itself |
 | 4. Sample implementation | `constellize-design:implementation-sketch` with the feature artifact as `output_path` | — |
@@ -50,12 +50,16 @@ Derive the feature name from the request and apply the name rules below. Then lo
 - Invoke `constellize-harness:assess` and read what it reports. Do not re-derive the project state yourself.
 - Read `llm/memory-bank/projectbrief.md`, `activeContext.md`, `systemPatterns.md` and `techContext.md`.
 - List `llm/features/` and read the specs already there, so this feature does not contradict or duplicate one of them.
-- Search the codebase for similar features and for the conventions, frameworks and dependencies this one would sit in.
-- Write the `## Constellation Map` section of `llm/features/<feature-name>.md` yourself: the existing components this feature can reuse, and the integration points it would touch. This is feature-scoped context, not a project-level map, and it is the sibling section Phase 2 reads. Create no project-level file, and scaffold nothing under `llm/construction/`.
+- Search the codebase for similar features and for the conventions, frameworks and dependencies this one would sit in. Note the existing components this feature could reuse and the integration points it would touch: Phase 2 hands them on inline.
+- Write nothing in this phase: create no project-level file, and scaffold nothing under `llm/construction/`.
 
 ### Phase 2: What exists and what is missing
 
-Invoke `constellize-design:gap-analysis`, passing `llm/features/<feature-name>.md` as its `output_path` so it owns the `## Gap Analysis` section of the feature artifact and writes nothing at the project level. Read the gaps it reports before you interview: a question whose answer is already in the gap analysis wastes the user's turn.
+Invoke `constellize-design:gap-analysis`, passing `llm/features/<feature-name>.md` as its `output_path` so it owns the `## Gap Analysis` section of the feature artifact and writes nothing at the project level. Pass the feature-scoped context from Phase 1 **inline**: the components this feature could reuse and the integration points it touches.
+
+The sibling `## Constellation Map` section of the artifact is absent at this stage, and that is by design — `constellize-feature:implement` creates it when it identifies the reference implementations to build against. `gap-analysis` says the section is absent and proceeds with the context you supplied inline, which is why that context has to be complete. Do not write the section yourself to fill the gap.
+
+Read the gaps it reports before you interview: a question whose answer is already in the gap analysis wastes the user's turn.
 
 ### Phase 3: Adversarial interview
 
@@ -138,7 +142,7 @@ Before writing anything, work out:
 </thinking>
 
 <output-format>
-The artifact at `llm/features/<feature-name>.md`. The `## Constellation Map`, `## Gap Analysis` and `## Implementation Sketch` sections are written in Phases 1, 2 and 4 and left as they stand; the rest is this template:
+The artifact at `llm/features/<feature-name>.md`. The `## Gap Analysis` and `## Implementation Sketch` sections are written by the delegated skills in Phases 2 and 4 and left as they stand; the rest is this template. At `**Status:** SPECIFIED` the artifact carries no `## Constellation Map` section: that one is `constellize-feature:implement`'s to add.
 
 ```markdown
 # Feature: <Feature Name>
@@ -216,6 +220,7 @@ NEVER:
 - Batch the questions, or present them as a list to work through.
 - Write `**Status:** SPECIFIED` before every review question has been put to the user and answered.
 - Write outside `llm/features/`, or overwrite an existing artifact without confirmation.
+- Write the `## Constellation Map` section. It belongs to `constellize-feature:implement`; two writers on one section is the collision the output path exists to prevent. Hand the reuse-and-integration context to `gap-analysis` inline instead.
 - Leave a `## Gate Results` section in place after revising a contract.
 
 ALWAYS:
