@@ -32,7 +32,7 @@ describe.each(Object.entries(GATES))('%s', (id, [gate, name]) => {
     expect(ins).toMatch(/FAIL the gate/);
   });
   it('has at least four requirement checkboxes in its verdict section', () => {
-    const section = body(id).split(`## Gate ${gate}: ${name} Status`)[1];
+    const section = body(id).split(`## Gate ${gate}: ${name} Status`)[1].split('**Gate Status:**')[0];
     expect((section.match(/^- \[ \] /gm) || []).length).toBeGreaterThanOrEqual(4);
   });
   it('names no language or tool in the verdict section', () => {
