@@ -102,6 +102,117 @@ const THRESHOLD_FLOOR: Array<[string, number]> = [
   ["integrationPoints", 100],
 ];
 
+/**
+ * The status a feature artifact declares: the first `**Status:**` line that is not
+ * inside a fenced code block, or null when it declares none.
+ */
+export function readDeclaredStatus(
+  text: string,
+): "SPECIFIED" | "IMPLEMENTED" | "VERIFIED" | null {
+  let openFence: string | null = null;
+  for (const line of text.replace(/\r\n/g, "\n").split("\n")) {
+    const fence = line.match(FENCE_LINE);
+    if (openFence !== null) {
+      if (fence && fence[1][0] === openFence[0] && fence[1].length >= openFence.length) {
+        openFence = null;
+      }
+      continue;
+    }
+    if (fence) {
+      openFence = fence[1];
+      continue;
+    }
+    const status = line.match(STATUS_LINE);
+    if (status) {
+      return status[1] as "SPECIFIED" | "IMPLEMENTED" | "VERIFIED";
+    }
+  }
+  return null;
+}
+
+/**
+ * The verdict a feature artifact's gate-results block carries, read from the
+ * artifact text: whether it substantiates a VERIFIED status, and which required
+ * gates have no verdict or a verdict that is not a pass.
+ */
+export function assessGateResults(
+  text: string,
+): Pick<FeatureEntry, "evidence" | "missingGates" | "failedGates"> {
+  const missingGates: number[] = [];
+  const failedGates: number[] = [];
+
+  const block = text.replace(/\r\n/g, "\n").match(GATE_RESULTS_BLOCK);
+  if (!block) return { evidence: "absent", missingGates, failedGates };
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(block[1]);
+  } catch {
+    parsed = undefined; // unparseable evidence is not evidence, and never propagates
+  }
+  const results =
+    parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : null;
+  const gates =
+    results && Array.isArray(results["gates"]) ? (results["gates"] as unknown[]) : null;
+  if (!results || !gates) return { evidence: "malformed", missingGates, failedGates };
+
+  const required = new Set<number>(ALWAYS_REQUIRED_GATES);
+  const surface = results["surface"];
+  if (
+    surface !== null &&
+    typeof surface === "object" &&
+    (surface as Record<string, unknown>)["deployment"] === true
+  ) {
+    required.add(3);
+  }
+
+  const verdicts = new Map<number, unknown>();
+  for (const entry of gates) {
+    if (entry === null || typeof entry !== "object") continue;
+    const gate = entry as Record<string, unknown>;
+    const gateNumber = gate["gate"];
+    if (typeof gateNumber !== "number") continue;
+    if (gate["required"] === true) required.add(gateNumber);
+    verdicts.set(gateNumber, gate["verdict"]);
+  }
+
+  for (const gate of [...required].sort((a, b) => a - b)) {
+    const verdict = verdicts.get(gate);
+    // A required gate recorded as SKIPPED carries no verdict for a gate that had
+    // to run, so it counts as missing, not as failed.
+    if (typeof verdict !== "string" || verdict === "" || verdict === "SKIPPED") {
+      missingGates.push(gate);
+    } else if (verdict !== "PASS") {
+      // The verdict is present but is not a pass. FAIL is the vocabulary's other
+      // value; anything unrecognised cannot substantiate a status either, so it is
+      // read as not a pass rather than ignored.
+      failedGates.push(gate);
+    }
+  }
+
+  // The floor applies to whatever numbers the block records, whatever it labels
+  // their source: the floor *is* the default, so an honest block records exactly
+  // the default and cannot be refused, while a loose number cannot escape by
+  // being relabelled "default".
+  let loosened = false;
+  const threshold = results["threshold"];
+  if (threshold !== null && typeof threshold === "object") {
+    const recorded = threshold as Record<string, unknown>;
+    for (const [field, floor] of THRESHOLD_FLOOR) {
+      const value = recorded[field];
+      if (typeof value === "number" && value < floor) loosened = true;
+    }
+  }
+
+  const evidence =
+    missingGates.length === 0 && failedGates.length === 0 && !loosened
+      ? "complete"
+      : "incomplete";
+  return { evidence, missingGates, failedGates };
+}
+
 export function assessLlmArtifacts(root: string): LlmArtifacts {
   // Memory bank
   const mbDir = join(root, "llm", "memory-bank");
@@ -198,7 +309,7 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
 
       let text: string;
       try {
-        text = readFileSync(full, "utf8").replace(/\r\n/g, "\n");
+        text = readFileSync(full, "utf8");
       } catch {
         featureDetails.push({
           name,
@@ -210,113 +321,17 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
         continue;
       }
 
-      // Status: the first status line that is not inside a fenced code block.
-      let declared: string | null = null;
-      let openFence: string | null = null;
-      for (const line of text.split("\n")) {
-        const fence = line.match(FENCE_LINE);
-        if (openFence !== null) {
-          if (fence && fence[1][0] === openFence[0] && fence[1].length >= openFence.length) {
-            openFence = null;
-          }
-          continue;
-        }
-        if (fence) {
-          openFence = fence[1];
-          continue;
-        }
-        const status = line.match(STATUS_LINE);
-        if (status) {
-          declared = status[1];
-          break;
-        }
-      }
-
-      // Evidence: the gate-results block, if it is there and parses.
-      let evidence: FeatureEntry["evidence"] = "absent";
-      const missingGates: number[] = [];
-      const failedGates: number[] = [];
-      const block = text.match(GATE_RESULTS_BLOCK);
-      if (block) {
-        let parsed: unknown;
-        try {
-          parsed = JSON.parse(block[1]);
-        } catch {
-          parsed = undefined; // unparseable evidence is not evidence, and never propagates
-        }
-        const results =
-          parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)
-            ? (parsed as Record<string, unknown>)
-            : null;
-        const gates =
-          results && Array.isArray(results["gates"]) ? (results["gates"] as unknown[]) : null;
-
-        if (!results || !gates) {
-          evidence = "malformed";
-        } else {
-          const required = new Set<number>(ALWAYS_REQUIRED_GATES);
-          const surface = results["surface"];
-          if (
-            surface !== null &&
-            typeof surface === "object" &&
-            (surface as Record<string, unknown>)["deployment"] === true
-          ) {
-            required.add(3);
-          }
-
-          const verdicts = new Map<number, unknown>();
-          for (const entry of gates) {
-            if (entry === null || typeof entry !== "object") continue;
-            const gate = entry as Record<string, unknown>;
-            const gateNumber = gate["gate"];
-            if (typeof gateNumber !== "number") continue;
-            if (gate["required"] === true) required.add(gateNumber);
-            verdicts.set(gateNumber, gate["verdict"]);
-          }
-
-          for (const gate of [...required].sort((a, b) => a - b)) {
-            const verdict = verdicts.get(gate);
-            // A required gate recorded as SKIPPED carries no verdict for a gate
-            // that had to run, so it counts as missing, not as failed.
-            if (typeof verdict !== "string" || verdict === "" || verdict === "SKIPPED") {
-              missingGates.push(gate);
-            } else if (verdict !== "PASS") {
-              // The verdict is present but is not a pass. FAIL is the vocabulary's
-              // other value; anything unrecognised cannot substantiate a status
-              // either, so it is read as not a pass rather than ignored.
-              failedGates.push(gate);
-            }
-          }
-
-          // The floor applies to whatever numbers the block records, whatever it
-          // labels their source: the floor *is* the default, so an honest block
-          // records exactly the default and cannot be refused, while a loose
-          // number cannot escape by being relabelled "default".
-          let loosened = false;
-          const threshold = results["threshold"];
-          if (threshold !== null && typeof threshold === "object") {
-            const recorded = threshold as Record<string, unknown>;
-            for (const [field, floor] of THRESHOLD_FLOOR) {
-              const value = recorded[field];
-              if (typeof value === "number" && value < floor) loosened = true;
-            }
-          }
-
-          evidence =
-            missingGates.length === 0 && failedGates.length === 0 && !loosened
-              ? "complete"
-              : "incomplete";
-        }
-      }
+      const declared = readDeclaredStatus(text);
+      const results = assessGateResults(text);
 
       const status: FeatureStatus =
         declared === null
           ? "unknown"
-          : declared === "VERIFIED" && evidence !== "complete"
+          : declared === "VERIFIED" && results.evidence !== "complete"
           ? "VERIFIED (unsubstantiated)"
-          : (declared as FeatureStatus);
+          : declared;
 
-      featureDetails.push({ name, status, evidence, missingGates, failedGates });
+      featureDetails.push({ name, status, ...results });
     }
   }
 
