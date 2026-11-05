@@ -1,4 +1,5 @@
 import { loadPrompts, loadPluginsConfig, getPromptsForPlugin } from '../lib/parser';
+import { assessGateResults } from '../../content/literal/constellize-harness/scripts/tier1';
 
 const prompts = loadPrompts('content');
 const config = loadPluginsConfig('content');
@@ -43,7 +44,7 @@ describe('defensive-programming', () => {
 // The shared table covers every constellize:feature prompt. It is built up one id per task:
 // Task C4 seeds it with specify-feature; Task C5 appends implement-feature and Task C6
 // appends verify-feature, each alongside the prompt it writes, so the suite stays green.
-const FEATURE_IDS = ['specify-feature', 'implement-feature'] as const;
+const FEATURE_IDS = ['specify-feature', 'implement-feature', 'verify-feature'] as const;
 
 // The authored instructions only: the body up to the <examples> block.
 //
@@ -96,7 +97,50 @@ const ALLOWED_TARGETS: Record<string, readonly string[]> = {
     'constellize-feature:specify',
     'constellize-feature:verify',
   ],
+  'verify-feature': [
+    // the §6.3 gate map: gate 1
+    'constellize-craft:test-coverage',
+    // gate 2 — defensive-programming unconditionally, the four operational skills on the surface
+    'constellize-craft:defensive-programming',
+    'constellize-craft:application-health-validation',
+    'constellize-craft:infrastructure-health-checks',
+    'constellize-craft:operational-monitoring',
+    'constellize-craft:actionable-health-reporting',
+    // gate 3 — conditional on the deployment surface
+    'constellize-deliver:externalize-config',
+    'constellize-deliver:environment-independence',
+    'constellize-deliver:reliable-containers',
+    'constellize-deliver:rollback-capability',
+    // gate 4
+    'constellize-craft:architectural-consistency',
+    'constellize-craft:dependency-hygiene',
+    // the memory bank records the verification, as it does the two phases before it
+    'constellize-memory:update',
+    // named only as the siblings a refusal points at, never invoked
+    'constellize-feature:specify',
+    'constellize-feature:implement',
+    // named only as the assessor that cross-checks the block it writes, never invoked
+    'constellize-harness:assess',
+  ],
 };
+
+// The §6.3 gate map's delegation targets, in gate order. The brief's stub says "11 targets";
+// the map holds twelve — 1 for gate 1, 5 for gate 2, 4 for gate 3, 2 for gate 4 — so the count
+// is asserted here rather than taken from the comment.
+const GATE_SKILLS: readonly string[] = [
+  'constellize-craft:test-coverage',
+  'constellize-craft:defensive-programming',
+  'constellize-craft:application-health-validation',
+  'constellize-craft:infrastructure-health-checks',
+  'constellize-craft:operational-monitoring',
+  'constellize-craft:actionable-health-reporting',
+  'constellize-deliver:externalize-config',
+  'constellize-deliver:environment-independence',
+  'constellize-deliver:reliable-containers',
+  'constellize-deliver:rollback-capability',
+  'constellize-craft:architectural-consistency',
+  'constellize-craft:dependency-hygiene',
+];
 
 describe.each(FEATURE_IDS)('%s', (id) => {
   it('exists and belongs to constellize:feature', () => {
@@ -384,5 +428,235 @@ describe('implement-feature', () => {
   it('tells the user in the summary that the spec gap analysis was superseded', () => {
     const b = instructions('implement-feature');
     expect(b).toMatch(/closing summary[\s\S]{0,500}## Gap Analysis/);
+  });
+});
+
+// Every positive assertion below runs against `instructions('verify-feature')`, and that matters
+// more here than anywhere else in this file: the <examples> block contains a gate-results record
+// in both a GOOD and a BAD shape, so a whole-body match for `"schema": 1`, `"verdict"`, `PASS` or
+// any of the four threshold numbers can be satisfied by the illustration of the defect alone.
+describe('verify-feature', () => {
+  it('delegates to every gate skill in the §6.3 map, and to no other', () => {
+    const b = instructions('verify-feature');
+    expect(GATE_SKILLS).toHaveLength(12);
+    for (const target of GATE_SKILLS) expect(b).toContain(target);
+    // The other half of "and to no other". `names no delegation target outside its own map`
+    // pins the set against ALLOWED_TARGETS; this pins which of those are *gates*, so a later
+    // edit cannot quietly promote a sibling or the memory bank into the gate map.
+    const named = new Set(
+      [...get('verify-feature')!.content.matchAll(/constellize-[a-z-]+:[a-z-]+/g)].map(m => m[0])
+    );
+    expect([...named].filter(t => !GATE_SKILLS.includes(t)).sort()).toEqual([
+      'constellize-feature:implement',
+      'constellize-feature:specify',
+      'constellize-harness:assess',
+      'constellize-memory:update',
+    ]);
+  });
+
+  // Decision 20: a project-scope question is not a property of one feature, and running these
+  // two per feature would return the same findings every time.
+  it('does not call the two project-scope Gate 4 skills', () => {
+    const b = get('verify-feature')!.content;
+    expect(b).not.toMatch(/constellize-craft:documentation-completeness/);
+    expect(b).not.toMatch(/constellize-craft:team-comprehension/);
+  });
+
+  // The assessor's ALWAYS_REQUIRED_GATES is [1, 2, 4]. The brief's stub for this had an empty
+  // body, which asserts nothing; the always/conditional split is asserted here from the gate
+  // map's own cells, so a prompt that made gate 1 or gate 4 conditional would fail.
+  it('runs Gates 1 and 4 and defensive-programming unconditionally', () => {
+    const b = instructions('verify-feature');
+    expect(b).toContain('Gates 1, 2 and 4 always run');
+    expect(b).toContain(
+      'gate 2 because its `constellize-craft:defensive-programming` member is unconditional'
+    );
+    expect(b).toMatch(/\| 1\. Test integrity \| always \|/);
+    expect(b).toMatch(/\| 4\. Maintainability in context \| always \|/);
+    // ... and the one gate that is conditional is conditional, so "always" is not vacuous
+    expect(b).toMatch(
+      /\| 3\. Deployment readiness \| only when the feature touches the deployment surface \|/
+    );
+  });
+
+  it('records the surface determination and its reason', () => {
+    const b = instructions('verify-feature');
+    // D3's three inputs, in order
+    expect(b).toMatch(/Technical Notes/);
+    expect(b).toMatch(/Dependencies/);
+    expect(b).toContain('**Files created:**');
+    expect(b).toContain('**Files modified:**');
+    expect(b).toMatch(/working-tree diff/);
+    // the block's members, both of which the assessor requires as booleans, plus the reason
+    expect(b).toMatch(/"surface"/);
+    expect(b).toMatch(/"deployment"/);
+    expect(b).toMatch(/"operational"/);
+    expect(b).toMatch(/"reason"/);
+    // D3's fail-safe
+    expect(b).toMatch(/when (the )?evidence is (absent|ambiguous)/i);
+    expect(b).toMatch(/both gates run/i);
+    // silence is not a determination: an absent boolean makes the evidence incomplete
+    expect(b).toMatch(/silence is not/i);
+  });
+
+  it('emits the gate-results schema the assessor parses', () => {
+    const b = instructions('verify-feature');
+    for (const key of ['"schema": 1', '"gates"', '"required"', '"verdict"', '"measured"', '"threshold"', '"source"']) {
+      expect(b).toContain(key);
+    }
+    // One gate, one verdict: a repeated gate number makes the whole block malformed.
+    expect(b).toMatch(/one gate, one verdict/i);
+    expect(b).toMatch(/(never|not) record the same gate twice/i);
+    // A required gate recorded SKIPPED counts as missing, not as a pass.
+    expect(b).toContain('"SKIPPED"');
+  });
+
+  // The sharpest edge in the contract, and nothing else in this suite pins it: two unfenced
+  // `## Gate Results` headings make the evidence `malformed` outright, not stale, and D9 makes
+  // re-running on a VERIFIED artifact the ordinary case rather than the exception.
+  it('writes exactly one `## Gate Results` section and replaces it in place on a re-run', () => {
+    const b = instructions('verify-feature');
+    expect(b).toContain('## Gate Results');
+    expect(b).toMatch(/exactly one `?## Gate Results`? section/i);
+    expect(b).toMatch(/(never|do not) (write|append) a second `?## Gate Results`?/i);
+    expect(b).toMatch(/replace (it|that section) in place/i);
+    expect(b).toMatch(/keeping its position/i);
+    expect(b).toMatch(/next heading at the same level or above/i);
+    // the heading's own shape, which the assessor matches anchored with nothing trailing
+    expect(b).toMatch(/nothing after it/i);
+    // and the consequence of getting it wrong, so the rule carries its reason
+    expect(b).toMatch(/malformed/i);
+  });
+
+  // With Edit absent from allowed-tools (D1) every write to the artifact is a whole-file write,
+  // and this skill writes into a file whose other sections belong to four other skills.
+  it('re-reads before each write and writes back every byte it does not own', () => {
+    const b = instructions('verify-feature');
+    expect(b).toMatch(/re-read the whole artifact/i);
+    expect(b).toMatch(/never reconstruct it from an earlier read/i);
+    expect(b).toMatch(/write every other byte of the file back/i);
+    // the two things it writes, and the sections it does not
+    expect(b).toContain('## Implementation Report');
+    expect(b).toContain('## Constellation Map');
+    expect(b).toContain('## Gap Analysis');
+    expect(b).toContain('## Implementation Sketch');
+    expect(b).toMatch(/(never|do not) write the `?## Constellation Map`? section/i);
+  });
+
+  it('carries the default threshold and reads a declared one', () => {
+    const b = instructions('verify-feature');
+    expect(b).toContain('llm/constellize.json');
+    expect(b).toContain('coverageThreshold');
+    // the four floor numbers, each recorded by name. The brief's stub was /80/, which the
+    // ISO timestamp or any other number in the block would also have satisfied.
+    expect(b).toContain('"branch": 80');
+    expect(b).toContain('"criticalLogic": 100');
+    expect(b).toContain('"errorPaths": 100');
+    expect(b).toContain('"integrationPoints": 100');
+  });
+
+  // Review Focus 1. The brief's stub was /stricter/i plus /refuse|reject|ignore/i, which a prompt
+  // saying "a looser declaration is honoured, stricter ones are refused" would also satisfy.
+  it('refuses a declared threshold looser than the default', () => {
+    const b = instructions('verify-feature');
+    expect(b).toContain('A declared threshold is honoured only where it is stricter');
+    expect(b).toMatch(/refuse/i);
+    expect(b).toMatch(/the default applies/i);
+    expect(b).toMatch(/say so/i);
+    // and relabelling cannot launder it: the floor is checked whatever the source says
+    expect(b).toMatch(/whatever (it|the block) (names|records) as its `?source`?/i);
+  });
+
+  it('cannot write VERIFIED without a verdict for every required gate', () => {
+    const b = instructions('verify-feature');
+    expect(b).toContain(
+      'NEVER write `**Status:** VERIFIED` without a verdict for every required gate'
+    );
+    // the prose is not the defence this time: something other than this skill checks it
+    expect(b).toContain('VERIFIED (unsubstantiated)');
+    // and the failing path has a defined end state, with the gate named
+    expect(b).toContain('**Status:** IMPLEMENTED');
+    expect(b).toMatch(/nam(e|ing) the failing gate/i);
+  });
+
+  // D9. The brief's stub for this had an empty body. Both halves are asserted from the status
+  // gate's own bullets, so a prompt that refused the re-run or verified a SPECIFIED artifact
+  // would fail rather than pass silently.
+  it('re-runs on a VERIFIED artifact and refuses a SPECIFIED one', () => {
+    const b = instructions('verify-feature');
+    expect(b).toMatch(/\*\*Status:\*\* SPECIFIED`\*\*: refuse/);
+    expect(b).toMatch(/name the status you found/i);
+    expect(b).toContain('constellize-feature:implement');
+    expect(b).toMatch(/\*\*Status:\*\* IMPLEMENTED`\*\*: proceed/);
+    expect(b).toMatch(/\*\*Status:\*\* VERIFIED`\*\*: \*\*re-run\*\*/);
+    expect(b).toMatch(/code changes after a pass/i);
+    // a missing artifact is the third refusal, and it names the path it looked for
+    expect(b).toMatch(/llm\/features\//);
+    expect(b).toContain('constellize-feature:specify');
+  });
+
+  // Decision 4 / gate 1 consumes, never measures: `test-coverage` owns the measurement.
+  it('produces no coverage itself', () => {
+    expect(get('verify-feature')!.content).not.toMatch(/--cov|coverage run|nyc |go test -cover/);
+    const b = instructions('verify-feature');
+    expect(b).toContain('never runs a coverage command of its own');
+    expect(b).toMatch(/constellize-craft:test-coverage[\s\S]{0,400}verdict/);
+  });
+
+  it('rewrites the one status line in place and never appends a second', () => {
+    const b = instructions('verify-feature');
+    expect(b).toContain('**Status:** VERIFIED');
+    expect(b).toMatch(/in place/i);
+    expect(b).toMatch(/first[\s\S]{0,120}not inside a fenced code block/i);
+    expect(b).toMatch(/never append a second status line/i);
+  });
+
+  // The project's whole reason for existing: a status that precedes its evidence. Asserted
+  // structurally, by position within the phase list, as it is for implement-feature.
+  it('writes the gate-results block before the status it substantiates', () => {
+    const b = instructions('verify-feature');
+    const phases = b.slice(b.indexOf('### Phase 1'), b.indexOf('</task>'));
+    expect(phases.length).toBeGreaterThan(0);
+    const block = phases.indexOf('## Gate Results');
+    const memory = phases.indexOf('constellize-memory:update');
+    const status = phases.indexOf('**Status:** VERIFIED');
+    for (const i of [block, memory, status]) expect(i).toBeGreaterThan(-1);
+    expect(status).toBeGreaterThan(block);
+    expect(status).toBeGreaterThan(memory);
+  });
+
+  it('takes its lint and run commands from the project, never from this prompt', () => {
+    const b = instructions('verify-feature');
+    for (const key of ['lintCommand', 'runCommand']) expect(b).toContain(key);
+    expect(b).toMatch(/ask the user/i);
+    expect(b).toMatch(/(do not|never) (guess|invent)/i);
+  });
+
+  // The strongest assertion available here, and the one the rest of this describe block only
+  // approximates: the example block is what a reader copies, so it is handed to the real
+  // `assessGateResults` rather than eyeballed key by key. Every rule the parser enforces --
+  // the numeric schema, both surface booleans, the four threshold numbers at or above the
+  // floor, one entry per gate, a PASS for each of 1, 2 and 4 -- is checked at once, by the
+  // function that decides whether a VERIFIED status stands.
+  it('emits an example block the real assessor reads as complete evidence', () => {
+    const b = instructions('verify-feature');
+    const template = b.slice(b.indexOf('<output-format>'));
+    const fence = /```json\n([\s\S]*?)\n```/.exec(template);
+    expect(fence).not.toBeNull();
+    const artifact = [
+      '# Feature: example', '', '**Status:** VERIFIED', '', 'Prose.', '',
+      '## Gate Results', '', '```json', fence![1], '```', '',
+    ].join('\n');
+    expect(assessGateResults(artifact)).toEqual({
+      evidence: 'complete',
+      missingGates: [],
+      failedGates: [],
+    });
+  });
+
+  it('is the last section of the artifact, where the two sibling skills leave room for it', () => {
+    const b = instructions('verify-feature');
+    expect(b).toMatch(/(end|last section) of the (file|artifact)/i);
+    expect(b).toMatch(/## Gate Results/);
   });
 });
