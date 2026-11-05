@@ -28,6 +28,9 @@ Then create any missing directories and template files under `llm/`:
    - `llm/construction/requirements/`
    - `llm/construction/archive/`
    - `llm/features/`
+   - `llm/constellize.json` — optional project settings: `coverageThreshold`, `testCommand`, `lintCommand`, `runCommand`
+
+   Every key in `llm/constellize.json` is optional, and an absent file is valid — create it only to record a setting the project actually needs.
 
 2. **Create memory bank template files** (skip any that already exist):
    - `llm/memory-bank/projectbrief.md` — project objectives, requirements, scope

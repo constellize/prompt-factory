@@ -52,7 +52,7 @@ const CONTENT_DIR = 'content';
  * Derive a short skill directory name from a prompt ID.
  * Strips common verb prefixes that are redundant with the plugin context.
  */
-function deriveShortSkillName(promptId: string, pluginId: string): string {
+export function deriveShortSkillName(promptId: string, pluginId: string): string {
   // Check special cases first (complex IDs that need manual mapping)
   const specialCases: Record<string, string> = {
     'recover-from-staleness-drift': 'recover-staleness',
@@ -77,6 +77,9 @@ function deriveShortSkillName(promptId: string, pluginId: string): string {
     'assess-operational-knowledge-health': 'knowledge-health',
     'design-proactive-operational-architecture': 'proactive-architecture',
     'establish-operational-memory-bank': 'operational-memory-bank',
+    'specify-feature': 'specify',
+    'implement-feature': 'implement',
+    'verify-feature': 'verify',
   };
 
   if (specialCases[promptId]) {

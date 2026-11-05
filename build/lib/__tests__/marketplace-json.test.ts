@@ -36,6 +36,7 @@ describe('generateMarketplaceJson', () => {
       'constellize-craft',
       'constellize-deliver',
       'constellize-grow',
+      'constellize-feature',
       'constellize-harness'
     ]);
   });
@@ -45,7 +46,7 @@ describe('generateMarketplaceJson', () => {
       expect(Object.keys(entry)).toEqual(['name', 'source', 'description']);
       expect(entry.source).toBe(`./plugins/${entry.name}`);
     }
-    expect(catalog.plugins[5]).toEqual({
+    expect(catalog.plugins[6]).toEqual({
       name: 'constellize-harness',
       source: './plugins/constellize-harness',
       description: 'Project orchestration: assess state, plan next steps, execute constellize skills'
