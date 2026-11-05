@@ -110,7 +110,7 @@ describe.each(FEATURE_IDS)('%s', (id) => {
   });
 
   it('names llm/features/ in full, since rewriteLlmPaths does not prefix features/', () => {
-    expect(get(id)!.content).toContain('llm/features/');
+    expect(instructions(id)).toContain('llm/features/');
     // any unprefixed features/, not just features/<feature...: rewriteLlmPaths would ship it as is
     expect(get(id)!.content).not.toMatch(/(^|[^/])\bfeatures\//m);
   });

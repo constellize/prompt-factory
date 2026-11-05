@@ -43,7 +43,7 @@ Work through the phases in order. Each phase either delegates to a named skill o
 Derive the feature name from the request and apply the name rules below. Then look for `llm/features/<feature-name>.md`:
 
 - **No artifact**: this is a new feature. Continue to Phase 1.
-- **An artifact exists**: this is a revision. Apply the revision rules below before continuing.
+- **An artifact exists**: it is either a revision or an interrupted run of this skill — its status line is what tells the two apart. Apply the revision rules below before continuing.
 
 ### Phase 1: Project and feature context
 
@@ -95,7 +95,7 @@ By now `llm/features/<feature-name>.md` exists and holds the two sections the de
 3. Write the file back as: the title block (`# Feature: <Feature Name>`, then the date and the author, and **no status line yet** — Phase 7 adds it), then the template's sections in the template's order, then the two owned sections unchanged at the end, `## Gap Analysis` before `## Implementation Sketch`.
 4. No part of the template may land inside an owned section, and neither owned section may be dropped or summarised. If one is missing when you read the file, say which one and return to the phase that writes it; do not draft over the gap.
 
-That order is what makes the `## Sample Implementation` section's pointer to the `## Implementation Sketch` section *below* it true, and it leaves the line immediately after the title free for Phase 7's status line, which is where `constellize-harness:assess` looks for it. A draft that has not been through the review carries no status at all, which is honest: the assessor reports it as `unknown` rather than as a specification.
+That order is what makes the `## Sample Implementation` section's pointer to the `## Implementation Sketch` section *below* it true, and it leaves the line immediately after the title free for Phase 7's status line. `constellize-harness:assess` does not require that position: it reads the **first** `**Status:**` line in the file that is not inside a fenced code block, and reports `unknown` when there is none (`readDeclaredStatus` in the harness's `tier1.ts`). So the real constraint is that the status line must exist and must be the first such line, with nothing earlier in the artifact carrying one — putting it immediately after the title is this template's way of keeping it first. A draft that has not been through the review carries no status at all, which is honest: the assessor reports it as `unknown` rather than as a specification.
 
 ### Phase 6: Dual-persona review
 
@@ -114,7 +114,7 @@ Then put the questions to the user yourself:
 ### Phase 7: Final spec, status, record it
 
 - Fold every answer into the artifact.
-- Write the status line yourself, on the line immediately after the title: `**Status:** SPECIFIED`. This line is the feature's state, read by `constellize-harness:assess` and by the sibling `constellize-feature:implement` and `constellize-feature:verify` skills.
+- Write the status line yourself — by this template's convention on the line immediately after the title: `**Status:** SPECIFIED`. This line is the feature's state, read by `constellize-harness:assess` and by the sibling `constellize-feature:implement` and `constellize-feature:verify` skills. What they read is the first unfenced `**Status:**` line in the file, so what matters is that this one is the first. A status line left inside a fenced block — a pasted copy of this template, say — is skipped and does not count as the artifact's status.
 - Invoke `constellize-memory:update` so the memory bank records that this feature is specified.
 - Print a summary: the feature name, the artifact path, the number of acceptance criteria, and any question deferred to implementation.
 </task>
@@ -129,6 +129,7 @@ Then put the questions to the user yourself:
 
 **Revising an existing artifact.** Never overwrite an artifact without asking:
 
+- An artifact that declares **no status line** is not a revision: it is this skill's own run, interrupted. Phases 2, 4 and 5 each write to the artifact before Phase 7 writes the status, so a file can exist with `## Gap Analysis` alone, with both owned sections, or fully drafted and unreviewed. Say which sections are present, then offer to resume at the phase that writes the first missing one — Phase 2 for `## Gap Analysis`, Phase 4 for `## Implementation Sketch`, Phase 5 for the template's sections, Phase 6 when all of them are there. Do not ask the user to confirm revising it, and do not treat it as a specification: it never reached one. Resuming is lossless, because each delegated skill replaces its own section in place.
 - Ask for confirmation before revising, naming the artifact and its current status.
 - At `**Status:** SPECIFIED`, revise it on confirmation.
 - At `**Status:** IMPLEMENTED` or `**Status:** VERIFIED`, warn first that revising the contract invalidates the evidence already recorded against it. On confirmation, reset the status to `**Status:** SPECIFIED` and **delete the `## Gate Results` section entirely** — the heading and everything under it, up to the next heading at the same level or above, or the end of the file. That is the whole section, whatever it holds: a fenced block, prose, a table, or all three. Leave none of it behind. Evidence measured against a contract that has since changed is worse than no evidence: it reads as a verified feature that no one verified. On refusal, change nothing and stop.
@@ -241,7 +242,7 @@ ALWAYS:
 - Ask "What does the definition of done look like?" and "How will this be verified?"
 - Pass `llm/features/<feature-name>.md` as the `output_path` of every delegated design skill, so no project-level artifact is overwritten and two features never clobber each other.
 - Degrade to advisory when something is missing, naming what is missing, and verify the step's output before continuing.
-- Kebab-case the feature name, and refuse a path separator, a `../` segment, or a case-insensitive collision with an existing feature.
+- Kebab-case the feature name, and refuse a path separator, a `../` segment, a leading `.`, or a case-insensitive collision with an existing feature.
 - End with `**Status:** SPECIFIED` in the artifact and a summary in the session.
 
 REPEAT: The agent writes the questions. You ask them, one at a time, in this session. An interview held inside a subagent is a failure of this skill, whatever else is correct.
