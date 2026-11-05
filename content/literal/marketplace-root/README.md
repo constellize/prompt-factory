@@ -5,7 +5,7 @@ Official Constellize methodology plugins for Claude Code.
 ## Overview
 
 This marketplace provides the complete Constellize methodology as Claude Code plugins:
-- **74 Skills** across 6 plugins
+- **75 Skills** across 6 plugins
 - **14 Agents** for expert-in-role consultation
 
 ## Quick Start
@@ -36,7 +36,7 @@ This assesses your project state, proposes a plan, and walks you through executi
 | `constellize-harness` | 5 | **Start here.** Project orchestration — assess state, plan next steps, execute skills |
 | `constellize-memory` | 11 | Knowledge persistence across context resets |
 | `constellize-design` | 10 | Planning and architecture for software projects |
-| `constellize-craft` | 20 | Code quality, testing, and continuous excellence |
+| `constellize-craft` | 21 | Code quality, testing, and continuous excellence |
 | `constellize-deliver` | 12 | Deployment, operations, and incident management |
 | `constellize-grow` | 16 | Team learning, system evolution, and adoption |
 
