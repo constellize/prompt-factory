@@ -28,4 +28,14 @@ describe('defensive-programming', () => {
     expect(body).toContain('**Gate Status:** ✅ PASS / ❌ FAIL');
     expect(body).toMatch(/FAIL the gate/);
   });
+
+  it('declares every placeholder its body uses, so none ships unsubstituted', () => {
+    const prompt = byId('implement-defensive-programming')!;
+    const used = new Set([...prompt.content.matchAll(/\{\{\s*(\w+)\s*\}\}/g)].map(m => m[1]));
+    const declared = new Set((prompt.frontmatter.variables ?? []).map((v: { name: string }) => v.name));
+    expect(used.size).toBeGreaterThan(0);
+    for (const name of used) {
+      expect(declared).toContain(name);
+    }
+  });
 });

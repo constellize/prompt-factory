@@ -14,6 +14,15 @@ skill:
   allowed-tools: [Read, Glob, Grep, Write, Bash]
   model: sonnet
   context: inline
+variables:
+  - name: component_name
+    description: The component whose defensive programming is under review
+    example: "PaymentProcessor"
+    maps-to: "$0"
+  - name: system_name
+    description: The system the component belongs to
+    example: "Payment Processing System"
+    maps-to: "$1"
 outputs:
   website:
     include: false
