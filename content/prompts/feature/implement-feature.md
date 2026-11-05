@@ -119,7 +119,7 @@ Do not declare the implementation complete before this review has run. A suite t
 
 Verify the parts work together, using the commands the project declares and no others:
 
-- Run the declared `runCommand` and confirm the feature is reachable from the entry point the spec says it should be reachable from.
+- Run the declared `runCommand` and confirm the feature is reachable from the entry point the spec says it should be reachable from. Some projects have nothing to run — a library consumed by its callers, with no CLI and no service. When the project declares no run command and has no entry point to reach, say so, skip the reachability check, and record the skip on the report's **Integration:** line. Do not ask for a run command that does not exist, and do not invent an entry point so that this step has something to do: the remaining three checks are the validation for a project like that.
 - Run the declared `testCommand` once more, over the whole suite.
 - Run the declared `lintCommand` and fix what it reports.
 - Trace **each acceptance criterion** by hand against the running code: given this, when that, does the code do what the criterion says? Name the test that covers each one.
@@ -132,7 +132,12 @@ In this order, and the status write is last:
 
 1. **Write the `## Implementation Report` section into the artifact**, by the procedure in the context below. It carries the **Files created** and **Files modified** lists, among the rest of the template in `<output-format>`.
 2. **Invoke `constellize-memory:update`** so the memory bank records what was built, the files created and modified, the decisions taken during implementation — especially any deviation from the spec — and that verification is the next step.
-3. **Write the status, last.** Rewrite the artifact's existing status line **in place** so that it reads `**Status:** IMPLEMENTED`. The line to rewrite is the **first** `**Status:**` line in the file that is not inside a fenced code block: that is the one `readDeclaredStatus` in the harness's `tier1.ts` returns, and the one `constellize-feature:verify` reads. **Never append a second status line**, anywhere in the file, and never leave the old one standing beside a new one. A second status line is dead text — the assessor returns on the first match and never reaches it — and a reader who finds two has no way to tell which is current.
+3. **Write the status, last, and in place.** The artifact is not the file you read in Phase 1: Phase 2 appended `## Constellation Map`, Phase 3's two delegations replaced `## Gap Analysis` and `## Implementation Sketch`, and step 1 above added `## Implementation Report`. Four sections have landed since that read, three of them written by other skills through the `output_path` mechanism that exists to stop exactly this kind of collision, and the fourth the report `constellize-feature:verify` reads. So:
+
+   1. **Re-read the whole artifact now**, immediately before this write. **Never reconstruct it from an earlier read** — a Phase 1 buffer written back here deletes all four sections and leaves `**Status:** IMPLEMENTED` standing over the deletion, which is this workflow's own anti-goal reached by carelessness.
+   2. Find the **first** `**Status:**` line in the file that is not inside a fenced code block. That is the one `readDeclaredStatus` in the harness's `tier1.ts` returns, and the one `constellize-feature:verify` reads.
+   3. Change **that one line** so it reads `**Status:** IMPLEMENTED`, and **write every other byte of the file back** exactly as you just read it — every section above and below it, including every section you did not write.
+   4. **Never append a second status line**, anywhere in the file, and never leave the old one standing beside a new one. A second status line is dead text — the assessor returns on the first match and never reaches it — and a reader who finds two has no way to tell which is current.
 
 The status is written last because it attests to the work above it. A status line that precedes its own evidence is exactly the defect this workflow exists to remove: the phase order is the guarantee, so do not move it earlier for convenience, and do not write it at all if any step above is unfinished.
 
@@ -167,7 +172,9 @@ The procedure for your own section:
 1. **Read the artifact first.** Never write to a path you have not just read.
 2. If a `## Implementation Report` section is **already present** — from an interrupted run of this skill, or from a contract that was revised back to SPECIFIED after an earlier implementation — **replace that section in place**, keeping its position: the heading and everything under it, up to the next heading at the same level or above, or the end of the file. **Never write a second `## Implementation Report`.** Two reports are two accounts of one implementation, and the reader cannot tell which run produced the code in front of them.
 3. If it is absent, **append it at the end of the file**, after the delegated sections. At this point the artifact ends with `## Constellation Map`, because Phase 2 appended it; the report goes after that, which leaves the end of the file for the `## Gate Results` section `constellize-feature:verify` writes.
-4. Leave every other byte of the file alone, and change the status line only in Phase 7's own step.
+4. Leave every other byte of the file alone, and change the status line only in Phase 7's step 3, which has its own re-read-then-rewrite procedure for doing it.
+
+Both of this skill's writes to the artifact are whole-file writes, because the status line and the report section are edited inside a file nothing else here owns. So the rule behind both procedures is the same one: re-read immediately before each write, change only what is yours, and write everything else back untouched. The sections the delegated skills own land in this file *between* your reads, so a read taken a phase ago is not a safe basis for a write.
 
 **Invocation, and the advisory fallback.** Invoke each skill and each agent above in this session. When a skill you need is unavailable — the tool is missing, or the plugin that provides it is not installed — or the user would rather drive it step by step, fall back to advisory for that phase:
 
@@ -216,7 +223,7 @@ The `## Implementation Report` section, appended to `llm/features/<feature-name>
 
 **Both lists are always written, even when one is empty.** Write `None` under a list with no entries, and never drop the list or its heading. `constellize-feature:verify` reads **Files created** and **Files modified** to decide whether its conditional gates apply, together with the artifact's `## Technical Notes` and `## Dependencies` sections and the working-tree diff; absent or ambiguous evidence makes it run those gates anyway. So a dropped list costs the user gate runs and tells them nothing, while `None` tells them — and tells the next reader — that nothing was created. Record both lists for every run, however small the change.
 
-Then the closing summary in the session: the feature name, the artifact path, the counts of files created and modified, the tests added, anything marked untestable, any deviation from the spec, and that `constellize-feature:verify` is next.
+Then the closing summary in the session: the feature name, the artifact path, the counts of files created and modified, the tests added, anything marked untestable, any deviation from the spec, that Phase 3 replaced the specification's `## Gap Analysis` section with the implementation-time one, and that `constellize-feature:verify` is next. That last-but-one item matters to the user and not only to this prompt: it is their record of the gaps that was superseded, so they hear it from the summary rather than discovering it in the artifact.
 </output-format>
 
 <instructions>
@@ -228,6 +235,7 @@ NEVER:
 - Write `**Status:** IMPLEMENTED` before the report is written, the memory bank is updated, and every phase above has actually run.
 - Write a second `## Implementation Report`, or edit any other section of the artifact. The contract above is not yours to adjust, and the delegated sections are not yours to reword.
 - Write the `## Constellation Map` section yourself, or compile a second star catalog beside it. Delegate it with the artifact as its `output_path`.
+- Reconstruct the artifact from an earlier read. The delegated sections and your own report land in it between your reads, so a stale buffer written back destroys them.
 - NEVER write code without a test. Each unit's test comes first and is seen to fail for the right reason.
 - NEVER weaken a test to make it pass. Fix the implementation. The one exception is genuinely untestable code, marked in whatever form the language provides, justified, and reported.
 - Mark code untestable because it is hard to test, or leave a mark out of the report.
@@ -239,7 +247,8 @@ NEVER:
 - Start writing code before the user has confirmed the plan.
 
 ALWAYS:
-- Read the artifact first, and read its first unfenced status line before anything else.
+- Read the artifact, and its first unfenced status line, before anything else in Phase 1. That read is the status gate; it is not a buffer any later write may be built from.
+- Re-read the artifact immediately before each of your two writes to it, and write back unchanged every byte you did not mean to change.
 - Pass `llm/features/<feature-name>.md` as the `output_path` of every delegated design skill that takes one, so no project-level artifact is overwritten and two features never clobber each other.
 - Hand each delegated skill its feature-scoped context inline, rather than requiring a project-level file.
 - Present the plan and wait for confirmation.

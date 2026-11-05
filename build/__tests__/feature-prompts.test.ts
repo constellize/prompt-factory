@@ -125,6 +125,15 @@ describe.each(FEATURE_IDS)('%s', (id) => {
     expect(get(id)!.frontmatter.skill!.context).toBe('inline');
   });
 
+  // generate-marketplace substitutes {{name}} only when `variables:` is non-empty, so a
+  // placeholder in a prompt that declares none ships its braces literally to the user. These
+  // prompts take their argument as $ARGUMENTS and declare no variables, which only holds if
+  // nothing in the body reaches for one. A whole-body negative: the examples are covered too.
+  it('uses no placeholder, having declared no variables', () => {
+    expect(get(id)!.frontmatter.variables).toBeUndefined();
+    expect(get(id)!.content).not.toMatch(/\{\{/);
+  });
+
   it('names llm/features/ in full, since rewriteLlmPaths does not prefix features/', () => {
     expect(instructions(id)).toContain('llm/features/');
     // any unprefixed features/, not just features/<feature...: rewriteLlmPaths would ship it as is
@@ -228,6 +237,10 @@ describe('implement-feature', () => {
       'constellize-craft:contract-tests', 'constellize-craft:qa-engineers',
       'constellize-design:system-architects', 'constellize-memory:update',
     ]) expect(b).toContain(target);
+    // Presence alone would pass against a prompt that named a target in order to forbid it.
+    // `names no delegation target outside its own map` pins the set; this pins the one
+    // normative qualifier in the map, which otherwise nothing asserts.
+    expect(b).toMatch(/constellize-craft:contract-tests[\s\S]{0,200}when the feature crosses an API boundary/);
   });
 
   // Anti-goal 3: duplicating a capability another plugin already provides. The §6.2 map gives
@@ -259,6 +272,12 @@ describe('implement-feature', () => {
     expect(b).toMatch(/in place/i);
     expect(b).toMatch(/first[\s\S]{0,120}not inside a fenced code block/i);
     expect(b).toMatch(/never append a second status line/i);
+    // With Edit absent from allowed-tools (D1), this is a whole-file write, and four sections
+    // land in the artifact between the Phase 1 read and it -- three of them other skills'.
+    // Without the re-read, a literal reader writes back a stale buffer and deletes them.
+    expect(b).toMatch(/re-read the whole artifact/i);
+    expect(b).toMatch(/never reconstruct it from an earlier read/i);
+    expect(b).toMatch(/write every other byte of the file back/i);
   });
 
   // The whole point of the trio: a status that precedes its evidence is the defect this
@@ -298,7 +317,10 @@ describe('implement-feature', () => {
   it('owns no threshold and points at where one is declared', () => {
     const b = instructions('implement-feature');
     expect(b).toContain('llm/constellize.json');
-    expect(b).toMatch(/threshold/i);
+    // /threshold/i alone asserts almost nothing and is carried by the line above it: the
+    // requirement is the disclaimer of ownership, so that is what is asserted.
+    expect(b).toMatch(/Coverage is not this skill's to judge or to number/);
+    expect(b).toMatch(/The threshold in force is the project's/);
   });
 
   it('keeps the untestable-code rule in language-neutral form', () => {
@@ -339,5 +361,28 @@ describe('implement-feature', () => {
     expect(b).toMatch(/replace (it|that section) in place/i);
     expect(b).toMatch(/next heading at the same level or above/i);
     expect(b).toMatch(/(do not|never) write a second `?## Implementation Report`?/i);
+  });
+
+  // The template emits the colon inside the bold, while the prose and the loose /Files created/
+  // assertions do not care either way. C6's D3 determination parses these two markers, so the
+  // exact literals are pinned here and the two sides cannot drift apart silently.
+  it('pins the literal report markers that verify parses', () => {
+    const b = instructions('implement-feature');
+    expect(b).toContain('**Files created:**');
+    expect(b).toContain('**Files modified:**');
+  });
+
+  it('has an exit for a project with no run command and nothing to run', () => {
+    const b = instructions('implement-feature');
+    expect(b).toMatch(/no run command and has no entry point/i);
+    expect(b).toMatch(/skip the reachability check/i);
+    expect(b).toMatch(/record the skip/i);
+  });
+
+  // The supersession is correct per the ruling, but the user whose record was replaced has to
+  // hear it, so the closing summary carries it and not only the prompt's own prose.
+  it('tells the user in the summary that the spec gap analysis was superseded', () => {
+    const b = instructions('implement-feature');
+    expect(b).toMatch(/closing summary[\s\S]{0,500}## Gap Analysis/);
   });
 });
