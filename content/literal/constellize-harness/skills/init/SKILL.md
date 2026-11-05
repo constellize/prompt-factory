@@ -28,9 +28,6 @@ Then create any missing directories and template files under `llm/`:
    - `llm/construction/requirements/`
    - `llm/construction/archive/`
    - `llm/features/`
-   - `llm/constellize.json` — optional project settings: `coverageThreshold`, `testCommand`, `lintCommand`, `runCommand`
-
-   Every key in `llm/constellize.json` is optional, and an absent file is valid — create it only to record a setting the project actually needs.
 
 2. **Create memory bank template files** (skip any that already exist):
    - `llm/memory-bank/projectbrief.md` — project objectives, requirements, scope
@@ -51,4 +48,6 @@ Then create any missing directories and template files under `llm/`:
 4. **Report what was created** — list new directories and files, note any that were skipped because they already existed.
 
 This skill is idempotent — safe to run multiple times. It fills gaps without overwriting existing content.
+
+`llm/constellize.json` is an optional project settings file — `coverageThreshold`, `testCommand`, `lintCommand`, `runCommand`. Every key is optional and an absent file is valid, so `init` does not create it; a project adds it only to record a setting it actually needs.
 </task>
