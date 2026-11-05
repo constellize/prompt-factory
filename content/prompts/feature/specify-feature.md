@@ -82,15 +82,26 @@ Draw the rest from the agent's output, which should probe the real need (why thi
 
 ### Phase 4: Sample implementation
 
-Invoke `constellize-design:implementation-sketch`, passing `llm/features/<feature-name>.md` as its `output_path` so it owns the `## Implementation Sketch` section. The sketch is illustrative: it grounds the spec and it does not ship. Present it to the user for feedback before you draft.
+Invoke `constellize-design:implementation-sketch`, passing `llm/features/<feature-name>.md` as its `output_path` so it owns the `## Implementation Sketch` section. It resolves two prerequisites from sibling sections: the gaps from `## Gap Analysis`, which Phase 2 has written by now, and the star catalog from `## Constellation Map`, which is absent at this stage for the reason Phase 2 gives. So hand it the same Phase 1 notes **inline** — the components this feature could reuse and the integration points it touches — together with the answers from Phase 3. Without them the sketch is drawn with no star catalog at all.
+
+The sketch is illustrative: it grounds the spec and it does not ship. Present it to the user for feedback before you draft.
 
 ### Phase 5: Draft the spec
 
-Write the draft into `llm/features/<feature-name>.md` using the template in the output format below. The sections the delegated skills own stay as they wrote them; you fill in the rest.
+By now `llm/features/<feature-name>.md` exists and holds the two sections the delegated skills own, in the order they were written: `## Gap Analysis`, then `## Implementation Sketch`. This is the one phase where you own the whole file, so edit the artifact — never write the template over it:
+
+1. Read the artifact first. Never write to a path you have not just read.
+2. Take both owned sections out verbatim. Each runs from its `## ` heading to the next heading at the same level or above, or the end of the file. Do not reword, reorder or renumber anything inside them.
+3. Write the file back as: the title block (`# Feature: <Feature Name>`, then the date and the author, and **no status line yet** — Phase 7 adds it), then the template's sections in the template's order, then the two owned sections unchanged at the end, `## Gap Analysis` before `## Implementation Sketch`.
+4. No part of the template may land inside an owned section, and neither owned section may be dropped or summarised. If one is missing when you read the file, say which one and return to the phase that writes it; do not draft over the gap.
+
+That order is what makes the `## Sample Implementation` section's pointer to the `## Implementation Sketch` section *below* it true, and it leaves the line immediately after the title free for Phase 7's status line, which is where `constellize-harness:assess` looks for it. A draft that has not been through the review carries no status at all, which is honest: the assessor reports it as `unknown` rather than as a specification.
 
 ### Phase 6: Dual-persona review
 
-**Again: the agents write the questions, you ask them.** Invoke the `constellize-design:system-architects` agent and the `constellize-craft:qa-engineers` agent, each once, each with the draft. Ask the architects for 3–4 questions challenging business value, technical risk, alternatives and maintenance burden. Ask the QA engineers for 3–4 questions challenging testability, edge cases, user experience and debuggability. Every question must name a concrete detail of this draft; reject a canned question and ask the agent again.
+**Again: the agents write the questions, you ask them.** Invoke the `constellize-design:system-architects` agent and the `constellize-craft:qa-engineers` agent, one review pass each, each with the draft. Ask the architects for 3–4 questions challenging business value, technical risk, alternatives and maintenance burden. Ask the QA engineers for 3–4 questions challenging testability, edge cases, user experience and debuggability.
+
+Every question must name a concrete detail of this draft. Reject a canned or generic question and ask that agent for a sharper one, naming what was generic about it: re-prompting an agent within its own review pass is not a second pass, and it is the only way to get questions worth the user's turns. What neither agent does, however many times you prompt it, is talk to the user.
 
 Then put the questions to the user yourself:
 
@@ -112,7 +123,7 @@ Then put the questions to the user yourself:
 **The feature name rules.** The artifact path is derived, never taken on trust:
 
 - Kebab-case the name: lower case, words joined by single hyphens, no spaces.
-- After kebab-casing, refuse a name that still contains a path separator or `..`, and say why. Never write outside `llm/features/`.
+- After kebab-casing, refuse a name that still contains a path separator, or a `../` segment, or a leading `.`, and say why. Never write outside `llm/features/`.
 - Compare the kebab-cased name case-insensitively against the entries already in `llm/features/`. A case-insensitive match is the same file on a case-insensitive filesystem, so refuse to create a second feature with that name, name the artifact it collides with, and ask whether the user meant to revise that one.
 - Refuse an empty name, and ask for one.
 
@@ -120,7 +131,7 @@ Then put the questions to the user yourself:
 
 - Ask for confirmation before revising, naming the artifact and its current status.
 - At `**Status:** SPECIFIED`, revise it on confirmation.
-- At `**Status:** IMPLEMENTED` or `**Status:** VERIFIED`, warn first that revising the contract invalidates the evidence already recorded against it. On confirmation, reset the status to `**Status:** SPECIFIED` and **delete the `## Gate Results` section entirely** — heading and fenced block together. Evidence measured against a contract that has since changed is worse than no evidence: it reads as a verified feature that no one verified. On refusal, change nothing and stop.
+- At `**Status:** IMPLEMENTED` or `**Status:** VERIFIED`, warn first that revising the contract invalidates the evidence already recorded against it. On confirmation, reset the status to `**Status:** SPECIFIED` and **delete the `## Gate Results` section entirely** — the heading and everything under it, up to the next heading at the same level or above, or the end of the file. That is the whole section, whatever it holds: a fenced block, prose, a table, or all three. Leave none of it behind. Evidence measured against a contract that has since changed is worse than no evidence: it reads as a verified feature that no one verified. On refusal, change nothing and stop.
 
 **Invocation, and the advisory fallback.** Invoke each skill and each agent above in this session. When a skill you need is unavailable — the tool is missing, or the plugin that provides it is not installed — or the user would rather drive it step by step, fall back to advisory for that phase:
 
@@ -142,7 +153,7 @@ Before writing anything, work out:
 </thinking>
 
 <output-format>
-The artifact at `llm/features/<feature-name>.md`. The `## Gap Analysis` and `## Implementation Sketch` sections are written by the delegated skills in Phases 2 and 4 and left as they stand; the rest is this template. At `**Status:** SPECIFIED` the artifact carries no `## Constellation Map` section: that one is `constellize-feature:implement`'s to add.
+The artifact at `llm/features/<feature-name>.md`. The `## Gap Analysis` and `## Implementation Sketch` sections are written by the delegated skills in Phases 2 and 4, kept verbatim, and left at the end of the file in that order; everything above them is this template. The status line below is Phase 7's: the Phase 5 draft carries the title block without it. At `**Status:** SPECIFIED` the artifact carries no `## Constellation Map` section: that one is `constellize-feature:implement`'s to add.
 
 ```markdown
 # Feature: <Feature Name>
@@ -220,6 +231,7 @@ NEVER:
 - Batch the questions, or present them as a list to work through.
 - Write `**Status:** SPECIFIED` before every review question has been put to the user and answered.
 - Write outside `llm/features/`, or overwrite an existing artifact without confirmation.
+- Write the template over the artifact. By Phase 5 the file already holds the two sections the delegated skills own; read it, keep those sections verbatim, and write the template around them.
 - Write the `## Constellation Map` section. It belongs to `constellize-feature:implement`; two writers on one section is the collision the output path exists to prevent. Hand the reuse-and-integration context to `gap-analysis` inline instead.
 - Leave a `## Gate Results` section in place after revising a contract.
 
@@ -229,7 +241,7 @@ ALWAYS:
 - Ask "What does the definition of done look like?" and "How will this be verified?"
 - Pass `llm/features/<feature-name>.md` as the `output_path` of every delegated design skill, so no project-level artifact is overwritten and two features never clobber each other.
 - Degrade to advisory when something is missing, naming what is missing, and verify the step's output before continuing.
-- Kebab-case the feature name, and refuse a path separator, a `..`, or a case-insensitive collision with an existing feature.
+- Kebab-case the feature name, and refuse a path separator, a `../` segment, or a case-insensitive collision with an existing feature.
 - End with `**Status:** SPECIFIED` in the artifact and a summary in the session.
 
 REPEAT: The agent writes the questions. You ask them, one at a time, in this session. An interview held inside a subagent is a failure of this skill, whatever else is correct.
