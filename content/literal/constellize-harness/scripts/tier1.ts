@@ -185,8 +185,9 @@ export function assessGateResults(
   if (headings.length > 1) return { evidence: "malformed", missingGates, failedGates };
   if (headings.length === 0) return { evidence: "absent", missingGates, failedGates };
 
-  // The section runs from its heading to the next heading at the same level, so a
-  // heading that carries only prose cannot reach forward to a later json fence.
+  // The section runs from its heading to the next heading at the same level or
+  // above — a `###` stays inside it, a `##` or a `#` ends it — so a heading that
+  // carries only prose cannot reach forward to a later json fence.
   const start = headings[0] + 1;
   const nextSection = sections.find((line) => line > headings[0]);
   const end = nextSection === undefined ? lines.length : nextSection;
