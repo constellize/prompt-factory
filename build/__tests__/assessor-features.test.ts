@@ -37,8 +37,13 @@ function project(files: Record<string, string> = {}, dirs: string[] = []): strin
 }
 
 const features = (root: string) => assessLlmArtifacts(root).features;
-const named = (root: string, name: string) =>
-  features(root).features.find((f) => f.name === name)!;
+const named = (root: string, name: string) => {
+  const entry = features(root).features.find((f) => f.name === name);
+  // Asserted here so a feature the assessor did not report at all fails as a
+  // missing entry, rather than as a TypeError on the next property access.
+  expect(entry).toBeDefined();
+  return entry!;
+};
 
 const FENCE = '```';
 
@@ -634,5 +639,36 @@ describe('a block that does not record the schema has not substantiated anything
     expect(
       assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD, DEFAULT_SURFACE], gates)),
     ).toEqual({ evidence: 'complete', missingGates: [], failedGates: [] });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Mid-migration layouts, and the status line's own boundary
+// ---------------------------------------------------------------------------
+
+it('reports one entry for a feature that has both a directory and a .md', () => {
+  // The expected transitional shape: constellize-feature:specify has written
+  // rate-limiting.md beside the pre-2.0 rate-limiting/ directory.
+  const root = project({ 'rate-limiting.md': artifact('IMPLEMENTED') }, ['rate-limiting', 'untouched']);
+  expect(features(root).count).toBe(2);
+  expect([...features(root).entries].sort()).toEqual(['rate-limiting', 'untouched']);
+  expect(named(root, 'rate-limiting').status).toBe('IMPLEMENTED');
+  expect(features(root).features.filter((f) => f.name === 'rate-limiting')).toHaveLength(1);
+});
+
+describe('the status line ends where the status ends', () => {
+  it('does not read a status out of a longer word', () => {
+    expect(readDeclaredStatus('**Status:** VERIFIED-ish\n')).toBeNull();
+    expect(readDeclaredStatus('**Status:** SPECIFIEDLY\n')).toBeNull();
+  });
+
+  it('still reads VERIFIED from a status the file wrote as unsubstantiated', () => {
+    // The assessor re-derives the qualifier from the evidence rather than trusting
+    // the file, so this status has to be read, not skipped.
+    expect(readDeclaredStatus('**Status:** VERIFIED (unsubstantiated)\n')).toBe('VERIFIED');
+  });
+
+  it('reads a status followed by trailing prose on the same line', () => {
+    expect(readDeclaredStatus('**Status:** IMPLEMENTED — awaiting verification\n')).toBe('IMPLEMENTED');
   });
 });

@@ -80,7 +80,10 @@ const DESIGN_ARTIFACTS = [
 // A feature artifact's status line, matched at the start of a line and only
 // outside fenced code blocks: the spec template itself contains a fenced example
 // carrying `**Status:** SPECIFIED`.
-const STATUS_LINE = /^\*\*Status:\*\*[ \t]*(SPECIFIED|IMPLEMENTED|VERIFIED)\b/;
+// The status has to end where the word ends — `VERIFIED-ish` is not VERIFIED —
+// while `VERIFIED (unsubstantiated)` still reads as VERIFIED, because the
+// qualifier is re-derived from the evidence rather than trusted.
+const STATUS_LINE = /^\*\*Status:\*\*[ \t]*(SPECIFIED|IMPLEMENTED|VERIFIED)(?=\s|$)/;
 // A fence line: up to three spaces of indent, the marker, then its info string.
 const FENCE_LINE = /^ {0,3}(`{3,}|~{3,})([^\n]*)$/;
 
@@ -366,6 +369,11 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
     } catch {
       items = []; // ignore read errors
     }
+    // Mid-migration a feature has both an artifact and its pre-2.0 directory. The
+    // artifact is the feature; the directory beside it is not a second one.
+    const artifactNames = new Set(
+      items.filter((item) => item.endsWith(".md")).map((item) => item.slice(0, -".md".length)),
+    );
     for (const item of items) {
       const full = join(featuresDir, item);
       let isDirectory = false;
@@ -376,6 +384,7 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
       }
 
       if (isDirectory) {
+        if (artifactNames.has(item)) continue;
         featureEntries.push(item);
         featureDetails.push({
           name: item,
