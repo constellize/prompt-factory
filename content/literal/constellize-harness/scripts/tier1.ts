@@ -92,8 +92,9 @@ const GATE_RESULTS_BLOCK =
 // any gate the block itself marks required is required too.
 const ALWAYS_REQUIRED_GATES = [1, 2, 4];
 
-// The default coverage threshold. A declared threshold looser than this in any
-// dimension is refused, so a project cannot lower the bar it was measured against.
+// The default coverage threshold. A recorded threshold looser than this in any
+// dimension is refused — whatever it names as its source — so a project cannot
+// lower the bar it was measured against. Only a stricter threshold is an opt-in.
 const THRESHOLD_FLOOR: Array<[string, number]> = [
   ["branch", 80],
   ["criticalLogic", 100],
@@ -279,16 +280,16 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
             }
           }
 
+          // The floor applies to whatever numbers the block records, whatever it
+          // labels their source: the floor *is* the default, so an honest block
+          // records exactly the default and cannot be refused, while a loose
+          // number cannot escape by being relabelled "default".
           let loosened = false;
           const threshold = results["threshold"];
-          if (
-            threshold !== null &&
-            typeof threshold === "object" &&
-            (threshold as Record<string, unknown>)["source"] === "declared"
-          ) {
-            const declaredThreshold = threshold as Record<string, unknown>;
+          if (threshold !== null && typeof threshold === "object") {
+            const recorded = threshold as Record<string, unknown>;
             for (const [field, floor] of THRESHOLD_FLOOR) {
-              const value = declaredThreshold[field];
+              const value = recorded[field];
               if (typeof value === "number" && value < floor) loosened = true;
             }
           }

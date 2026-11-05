@@ -282,3 +282,19 @@ it('refuses a declared threshold looser than the default, and accepts a stricter
   expect(named(root, 'stricter').status).toBe('VERIFIED');
   expect(named(root, 'stricter').evidence).toBe('complete');
 });
+
+// Review Focus 1, continued: the floor cannot be escaped by relabelling the source.
+it('refuses a threshold looser than the default even when it is labelled "default"', () => {
+  const gates = [
+    '{',
+    '  "schema": 1,',
+    '  "threshold": { "source": "default", "branch": 50, "criticalLogic": 100, "errorPaths": 100, "integrationPoints": 100 },',
+    '  "surface": { "operational": true, "deployment": false },',
+    `  "gates": [${pass(1)}, ${pass(2)}, ${pass(4)}]`,
+    '}',
+  ].join('\n');
+  const entry = named(project({ 'relabelled.md': artifact('VERIFIED', gates) }), 'relabelled');
+  expect(entry.evidence).toBe('incomplete');
+  expect(entry.status).toBe('VERIFIED (unsubstantiated)');
+  expect(entry.missingGates).toEqual([]);
+});
