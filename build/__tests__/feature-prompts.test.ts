@@ -43,7 +43,7 @@ describe('defensive-programming', () => {
 // The shared table covers every constellize:feature prompt. It is built up one id per task:
 // Task C4 seeds it with specify-feature; Task C5 appends implement-feature and Task C6
 // appends verify-feature, each alongside the prompt it writes, so the suite stays green.
-const FEATURE_IDS = ['specify-feature'] as const;
+const FEATURE_IDS = ['specify-feature', 'implement-feature'] as const;
 
 // The authored instructions only: the body up to the <examples> block.
 //
@@ -78,6 +78,22 @@ const ALLOWED_TARGETS: Record<string, readonly string[]> = {
     'constellize-memory:update',
     // named only as readers of the status line
     'constellize-feature:implement',
+    'constellize-feature:verify',
+  ],
+  'implement-feature': [
+    // the §6.2 delegation map
+    'constellize-design:constellation-map',
+    'constellize-design:gap-analysis',
+    'constellize-design:implementation-sketch',
+    'constellize-design:code-generation-plan',
+    'constellize-craft:unit-tests',
+    'constellize-craft:integration-tests',
+    'constellize-craft:contract-tests',
+    'constellize-craft:qa-engineers',
+    'constellize-design:system-architects',
+    'constellize-memory:update',
+    // named only as the siblings a refusal points at, never invoked
+    'constellize-feature:specify',
     'constellize-feature:verify',
   ],
 };
@@ -199,5 +215,129 @@ describe('specify-feature', () => {
     expect(b).toMatch(/delete|remove/i);
     // the whole section, not just a fenced block: C6 has not fixed its shape yet
     expect(b).toMatch(/next heading at the same level or above/i);
+  });
+});
+
+describe('implement-feature', () => {
+  it('delegates every phase in the §6.2 map', () => {
+    const b = instructions('implement-feature');
+    for (const target of [
+      'constellize-design:constellation-map', 'constellize-design:gap-analysis',
+      'constellize-design:implementation-sketch', 'constellize-design:code-generation-plan',
+      'constellize-craft:unit-tests', 'constellize-craft:integration-tests',
+      'constellize-craft:contract-tests', 'constellize-craft:qa-engineers',
+      'constellize-design:system-architects', 'constellize-memory:update',
+    ]) expect(b).toContain(target);
+  });
+
+  // Anti-goal 3: duplicating a capability another plugin already provides. The §6.2 map gives
+  // the star catalog to `constellation-map`, which is also why Task B1 gave it an output_path,
+  // and why C4 was corrected for writing that section itself.
+  it('gets the constellation map by delegation and never writes the section itself', () => {
+    const b = instructions('implement-feature');
+    expect(b).toContain('## Constellation Map');
+    expect(b).toMatch(/constellize-design:constellation-map[\s\S]{0,600}output_path/);
+    expect(b).toMatch(/(do not|never) write (that|the `?## Constellation Map`?) section yourself/i);
+  });
+
+  it('records files created and modified, which verify reads for the surface determination', () => {
+    const b = instructions('implement-feature');
+    expect(b).toContain('## Implementation Report');
+    expect(b).toMatch(/Files created/);
+    expect(b).toMatch(/Files modified/);
+    // D3 fails toward more checking, so an omitted list is safe but wasteful: both are always
+    // written, and an empty one is written as empty rather than dropped.
+    expect(b).toMatch(/even when one is empty/i);
+    expect(b).toMatch(/never drop (the|a) list/i);
+  });
+
+  // The artifact already carries C4's status line. A second one is dead text: the assessor's
+  // readDeclaredStatus returns on the first unfenced match and never reaches it.
+  it('rewrites the one status line in place and never appends a second', () => {
+    const b = instructions('implement-feature');
+    expect(b).toContain('**Status:** IMPLEMENTED');
+    expect(b).toMatch(/in place/i);
+    expect(b).toMatch(/first[\s\S]{0,120}not inside a fenced code block/i);
+    expect(b).toMatch(/never append a second status line/i);
+  });
+
+  // The whole point of the trio: a status that precedes its evidence is the defect this
+  // project exists to fix. Asserted structurally, by position within the phase list.
+  it('writes the status last, after the work it attests to', () => {
+    const b = instructions('implement-feature');
+    const phases = b.slice(b.indexOf('### Phase 1'), b.indexOf('</task>'));
+    expect(phases.length).toBeGreaterThan(0);
+    const review = phases.indexOf('Adversarial test review');
+    const report = phases.indexOf('## Implementation Report');
+    const memory = phases.indexOf('constellize-memory:update');
+    const status = phases.indexOf('**Status:** IMPLEMENTED');
+    for (const i of [review, report, memory, status]) expect(i).toBeGreaterThan(-1);
+    expect(status).toBeGreaterThan(review);
+    expect(status).toBeGreaterThan(report);
+    expect(status).toBeGreaterThan(memory);
+  });
+
+  // D9. The brief's stub was `/refuse|stop/i`, which a prompt saying the opposite would also
+  // satisfy, so the Hard Rule itself is asserted instead of the word.
+  it('refuses a missing, IMPLEMENTED or VERIFIED artifact and names the status', () => {
+    const b = instructions('implement-feature');
+    expect(b).toMatch(/NEVER implement an artifact that is not at `?\*\*Status:\*\* SPECIFIED/);
+    expect(b).toMatch(/name the status you found/i);
+    for (const s of ['SPECIFIED', 'IMPLEMENTED', 'VERIFIED']) expect(b).toContain(`**Status:** ${s}`);
+    // a stop with no exit is not a refusal: it names the sibling skill to run instead
+    expect(b).toContain('constellize-feature:specify');
+    expect(b).toContain('constellize-feature:verify');
+    // and the missing-artifact case names the path it looked for
+    expect(b).toMatch(/llm\/features\//);
+  });
+
+  it('carries no coverage number of its own', () => {
+    expect(get('implement-feature')!.content).not.toMatch(/\b(80|100)\s?%/);
+  });
+
+  it('owns no threshold and points at where one is declared', () => {
+    const b = instructions('implement-feature');
+    expect(b).toContain('llm/constellize.json');
+    expect(b).toMatch(/threshold/i);
+  });
+
+  it('keeps the untestable-code rule in language-neutral form', () => {
+    const b = instructions('implement-feature');
+    expect(b).toMatch(/untestable/i);
+    expect(b).toMatch(/justification/i);
+    expect(b).toMatch(/whatever form the language provides/i);
+    expect(get('implement-feature')!.content).not.toMatch(/pragma: ?no ?cover/i);
+  });
+
+  it('takes its test, lint and run commands from the project, never from this prompt', () => {
+    const b = instructions('implement-feature');
+    for (const key of ['testCommand', 'lintCommand', 'runCommand']) expect(b).toContain(key);
+    expect(b).toMatch(/ask the user/i);
+    expect(b).toMatch(/(do not|never) (guess|invent)/i);
+  });
+
+  it('is test-first per unit, and turns a revealed gap into a test first', () => {
+    const b = instructions('implement-feature');
+    expect(b).toMatch(/test-first/i);
+    expect(b).toMatch(/becomes a (failing )?test first/i);
+    expect(b).toMatch(/NEVER weaken a test/);
+  });
+
+  it('keeps the plan-confirmation turn with the user', () => {
+    const b = instructions('implement-feature');
+    expect(b).toMatch(/confirm/i);
+    expect(b).toMatch(/\bwait\b/i);
+    expect(b).toMatch(/(do not|never) (start|begin) (writing )?code before/i);
+  });
+
+  // The artifact already holds sections two other skills wrote, and C6 writes into it next.
+  it('places its report section without clobbering what other skills wrote', () => {
+    const b = instructions('implement-feature');
+    expect(b).toMatch(/read the artifact first/i);
+    expect(b).toMatch(/## Gap Analysis/);
+    expect(b).toMatch(/## Implementation Sketch/);
+    expect(b).toMatch(/replace (it|that section) in place/i);
+    expect(b).toMatch(/next heading at the same level or above/i);
+    expect(b).toMatch(/(do not|never) write a second `?## Implementation Report`?/i);
   });
 });
