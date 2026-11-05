@@ -79,10 +79,9 @@ const DESIGN_ARTIFACTS = [
 
 // A feature artifact's status line, matched at the start of a line and only
 // outside fenced code blocks: the spec template itself contains a fenced example
-// carrying `**Status:** SPECIFIED`.
-// The status has to end where the word ends — `VERIFIED-ish` is not VERIFIED —
-// while `VERIFIED (unsubstantiated)` still reads as VERIFIED, because the
-// qualifier is re-derived from the evidence rather than trusted.
+// carrying `**Status:** SPECIFIED`. The status ends where the word ends, so
+// `VERIFIED-ish` is not VERIFIED, while `VERIFIED (unsubstantiated)` still reads
+// as VERIFIED — that qualifier is re-derived from the evidence, never trusted.
 const STATUS_LINE = /^\*\*Status:\*\*[ \t]*(SPECIFIED|IMPLEMENTED|VERIFIED)(?=\s|$)/;
 // A fence line: up to three spaces of indent, the marker, then its info string.
 const FENCE_LINE = /^ {0,3}(`{3,}|~{3,})([^\n]*)$/;
