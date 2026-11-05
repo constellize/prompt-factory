@@ -360,6 +360,19 @@ validateStartup()
     process.exit(1);
   });
 ```
+
+## Gate 3: Deployment Readiness Status
+
+### Requirements
+- [ ] No value the change added that differs between environments is hardcoded
+- [ ] No secret appears in source, in a committed file, or in a log line
+- [ ] Every new configuration value has a documented name, type and default, or is marked required
+- [ ] A missing required value fails at startup, naming the value
+- [ ] Defaults are safe for the least-privileged environment
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -392,6 +405,9 @@ ALWAYS:
 - Use type-safe configuration objects (not raw process.env)
 - Document what each configuration value controls
 - Provide examples of valid values
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Configuration MUST be external. Validate at startup. Fail fast with clear errors. Document all variables. NEVER commit secrets.
 </instructions>

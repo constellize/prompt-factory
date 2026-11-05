@@ -455,6 +455,19 @@ async function verifyDependencies(): Promise<void> {
   }
 }
 ```
+
+## Gate 3: Deployment Readiness Status
+
+### Requirements
+- [ ] The change assumes no absolute path, hostname or user account on the host
+- [ ] A clean checkout installs and runs the change with no manual step in between
+- [ ] Behaviour does not depend on state left by a previous run
+- [ ] Every environment-specific value arrives as configuration
+- [ ] The install-and-run command the project declares succeeds from a clean state
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -487,6 +500,9 @@ ALWAYS:
 - Verify dependencies at startup
 - Support graceful degradation for optional dependencies
 - Fail fast for required dependencies
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Same deployment process everywhere. Only configuration differs. Version everything. Migrations must be idempotent and reversible.
 </instructions>

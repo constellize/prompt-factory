@@ -284,6 +284,19 @@ process.on('SIGTERM', async () => {
   }, 30000);
 });
 ```
+
+## Gate 3: Deployment Readiness Status
+
+### Requirements
+- [ ] If the change altered the runtime image, the image builds reproducibly from the committed definition
+- [ ] The process exits non-zero on a fatal error and handles a termination signal
+- [ ] The change needs no write access outside the paths it declares
+- [ ] A readiness signal distinguishes started from able to serve
+- [ ] If the change altered no image, that is stated with the reason
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -316,6 +329,9 @@ ALWAYS:
 - Close connections before exit
 - Test container startup with minimum resources
 - Verify health checks work (docker inspect)
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Containers MUST build cleanly, start predictably, signal readiness, and shutdown gracefully. Use non-root user. Define resource limits. Test with minimum resources.
 </instructions>

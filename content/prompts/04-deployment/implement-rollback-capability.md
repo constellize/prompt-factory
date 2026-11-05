@@ -440,6 +440,19 @@ kubectl rollout status deployment/$COMPONENT -n $NAMESPACE --timeout=2m
 
 echo "✓ Configuration rolled back to $PREVIOUS_VERSION"
 ```
+
+## Gate 3: Deployment Readiness Status
+
+### Requirements
+- [ ] The change can be reverted without a manual data repair
+- [ ] Any state migration the change introduced is reversible, or its forward-only nature is stated with the reason
+- [ ] The previous version can still run against the state this version writes
+- [ ] The rollback procedure is written down, naming the command and the check that it worked
+- [ ] The rollback was exercised, not asserted
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -472,6 +485,9 @@ ALWAYS:
 - Test rollback quarterly (not just during incidents)
 - Verify service works after rollback
 - Consider automated rollback on health failures
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Rollback MUST be fast (<5 minutes), documented, and tested regularly. Every migration needs down() function. Keep old versions available.
 </instructions>
