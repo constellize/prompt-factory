@@ -8,6 +8,8 @@ import {
 import { join } from "path";
 import type {
   LlmArtifacts,
+  FeatureEntry,
+  FeatureStatus,
   CodebaseState,
   GitTopology,
   ProjectType,
@@ -75,6 +77,30 @@ const DESIGN_ARTIFACTS = [
   "code-generation-plan.md", // also matched by wildcard code-generation-plan-*.md
 ];
 
+// A feature artifact's status line, matched at the start of a line and only
+// outside fenced code blocks: the spec template itself contains a fenced example
+// carrying `**Status:** SPECIFIED`.
+const STATUS_LINE = /^\*\*Status:\*\*\s*(SPECIFIED|IMPLEMENTED|VERIFIED)\b/;
+const FENCE_LINE = /^ {0,3}(`{3,}|~{3,})/;
+
+// The one ```json block under `## Gate Results`, written by constellize-feature:verify.
+const GATE_RESULTS_BLOCK =
+  /^##[ \t]+Gate Results[ \t]*$\n[\s\S]*?^```[ \t]*json[ \t]*$\n([\s\S]*?)^```/m;
+
+// Gates 1, 2 and 4 always have to run — gate 2 because its defensive-programming
+// member is unconditional. Gate 3 follows the recorded surface determination, and
+// any gate the block itself marks required is required too.
+const ALWAYS_REQUIRED_GATES = [1, 2, 4];
+
+// The default coverage threshold. A declared threshold looser than this in any
+// dimension is refused, so a project cannot lower the bar it was measured against.
+const THRESHOLD_FLOOR: Array<[string, number]> = [
+  ["branch", 80],
+  ["criticalLogic", 100],
+  ["errorPaths", 100],
+  ["integrationPoints", 100],
+];
+
 export function assessLlmArtifacts(root: string): LlmArtifacts {
   // Memory bank
   const mbDir = join(root, "llm", "memory-bank");
@@ -130,24 +156,155 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
       ? "complete"
       : "in-progress";
 
-  // Features: count subdirectories under llm/features/
+  // Features: the *.md artifacts under llm/features/, plus any pre-2.0 directory
+  // (discovery moved from directories to files; an existing project must not lose
+  // its count). Each artifact's status is read, and a VERIFIED status is checked
+  // against the gate-results block it is supposed to point at.
   const featuresDir = join(root, "llm", "features");
   const featureEntries: string[] = [];
+  const featureDetails: FeatureEntry[] = [];
   if (existsSync(featuresDir)) {
+    let items: string[] = [];
     try {
-      const items = readdirSync(featuresDir);
-      for (const item of items) {
-        const full = join(featuresDir, item);
-        try {
-          if (statSync(full).isDirectory()) {
-            featureEntries.push(item);
+      items = readdirSync(featuresDir);
+    } catch {
+      items = []; // ignore read errors
+    }
+    for (const item of items) {
+      const full = join(featuresDir, item);
+      let isDirectory = false;
+      try {
+        isDirectory = statSync(full).isDirectory();
+      } catch {
+        continue; // ignore stat errors
+      }
+
+      if (isDirectory) {
+        featureEntries.push(item);
+        featureDetails.push({
+          name: item,
+          status: "unknown",
+          evidence: "absent",
+          missingGates: [],
+        });
+        continue;
+      }
+
+      if (!item.endsWith(".md")) continue;
+      const name = item.slice(0, -".md".length);
+      featureEntries.push(name);
+
+      let text: string;
+      try {
+        text = readFileSync(full, "utf8").replace(/\r\n/g, "\n");
+      } catch {
+        featureDetails.push({
+          name,
+          status: "unknown",
+          evidence: "absent",
+          missingGates: [],
+        });
+        continue;
+      }
+
+      // Status: the first status line that is not inside a fenced code block.
+      let declared: string | null = null;
+      let openFence: string | null = null;
+      for (const line of text.split("\n")) {
+        const fence = line.match(FENCE_LINE);
+        if (openFence !== null) {
+          if (fence && fence[1][0] === openFence[0] && fence[1].length >= openFence.length) {
+            openFence = null;
           }
-        } catch {
-          // ignore stat errors
+          continue;
+        }
+        if (fence) {
+          openFence = fence[1];
+          continue;
+        }
+        const status = line.match(STATUS_LINE);
+        if (status) {
+          declared = status[1];
+          break;
         }
       }
-    } catch {
-      // ignore read errors
+
+      // Evidence: the gate-results block, if it is there and parses.
+      let evidence: FeatureEntry["evidence"] = "absent";
+      const missingGates: number[] = [];
+      const block = text.match(GATE_RESULTS_BLOCK);
+      if (block) {
+        let parsed: unknown;
+        try {
+          parsed = JSON.parse(block[1]);
+        } catch {
+          parsed = undefined; // unparseable evidence is not evidence, and never propagates
+        }
+        const results =
+          parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)
+            ? (parsed as Record<string, unknown>)
+            : null;
+        const gates =
+          results && Array.isArray(results["gates"]) ? (results["gates"] as unknown[]) : null;
+
+        if (!results || !gates) {
+          evidence = "malformed";
+        } else {
+          const required = new Set<number>(ALWAYS_REQUIRED_GATES);
+          const surface = results["surface"];
+          if (
+            surface !== null &&
+            typeof surface === "object" &&
+            (surface as Record<string, unknown>)["deployment"] === true
+          ) {
+            required.add(3);
+          }
+
+          const verdicts = new Map<number, unknown>();
+          for (const entry of gates) {
+            if (entry === null || typeof entry !== "object") continue;
+            const gate = entry as Record<string, unknown>;
+            const gateNumber = gate["gate"];
+            if (typeof gateNumber !== "number") continue;
+            if (gate["required"] === true) required.add(gateNumber);
+            verdicts.set(gateNumber, gate["verdict"]);
+          }
+
+          for (const gate of [...required].sort((a, b) => a - b)) {
+            const verdict = verdicts.get(gate);
+            // A required gate recorded as SKIPPED carries no verdict for a gate
+            // that had to run, so it counts as missing.
+            if (typeof verdict !== "string" || verdict === "" || verdict === "SKIPPED") {
+              missingGates.push(gate);
+            }
+          }
+
+          let loosened = false;
+          const threshold = results["threshold"];
+          if (
+            threshold !== null &&
+            typeof threshold === "object" &&
+            (threshold as Record<string, unknown>)["source"] === "declared"
+          ) {
+            const declaredThreshold = threshold as Record<string, unknown>;
+            for (const [field, floor] of THRESHOLD_FLOOR) {
+              const value = declaredThreshold[field];
+              if (typeof value === "number" && value < floor) loosened = true;
+            }
+          }
+
+          evidence = missingGates.length === 0 && !loosened ? "complete" : "incomplete";
+        }
+      }
+
+      const status: FeatureStatus =
+        declared === null
+          ? "unknown"
+          : declared === "VERIFIED" && evidence !== "complete"
+          ? "VERIFIED (unsubstantiated)"
+          : (declared as FeatureStatus);
+
+      featureDetails.push({ name, status, evidence, missingGates });
     }
   }
 
@@ -165,6 +322,7 @@ export function assessLlmArtifacts(root: string): LlmArtifacts {
     features: {
       count: featureEntries.length,
       entries: featureEntries,
+      features: featureDetails,
     },
   };
 }
