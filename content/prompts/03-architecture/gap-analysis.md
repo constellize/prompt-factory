@@ -20,7 +20,7 @@ skill:
   description: >
     Identify gaps between trusted components and document missing capabilities.
     After constellation mapping, when identifying what needs to be built.
-  argument-hint: "[system_name] [stakeholder_requirements]"
+  argument-hint: "[system_name] [stakeholder_requirements] [output_path]"
   allowed-tools:
     - Read
     - Glob
@@ -42,6 +42,13 @@ variables:
     description: Key stakeholder needs and requirements
     example: "Real-time fraud detection, PCI compliance, multi-currency support"
     maps-to: "$1"
+  - name: output_path
+    description: >
+      Optional. A markdown file to write this artifact into as a single owned section,
+      instead of the default project-level path. Prerequisites are then read from
+      sibling sections of the same file.
+    example: "llm/features/rate-limiting.md"
+    maps-to: "$2"
 
 # === Output Targets ===
 outputs:
@@ -98,6 +105,9 @@ Follow this process:
 <context>
 **Standard Construction Folder Structure:**
 This prompt reads from `construction/requirements/constellation-map.md` and outputs to `construction/requirements/gap-analysis.md`.
+
+**Optional output path (`{{output_path}}`):**
+`output_path` is a markdown file. When it is given, this skill owns the one section in that file titled `## Gap Analysis`: it replaces that section in place and leaves the rest of the file untouched. It resolves the constellation map from the sibling `## Constellation Map` section of the same file; when that section is absent it says so and proceeds with the context the caller supplied inline. When `output_path` is absent, every path is exactly as stated above. This skill never creates a project-level file it was not asked for, and never scaffolds `llm/construction/`.
 
 Stakeholder requirements:
 {{stakeholder_requirements}}

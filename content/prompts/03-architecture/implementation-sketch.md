@@ -20,7 +20,7 @@ skill:
   description: >
     Sketch implementation approaches for gaps before coding.
     After gap analysis and scope lock, before implementation to guide design.
-  argument-hint: "[system_name]"
+  argument-hint: "[system_name] [output_path]"
   allowed-tools:
     - Read
     - Glob
@@ -38,6 +38,13 @@ variables:
     description: The name of your system
     example: "Payment Processing System"
     maps-to: "$0"
+  - name: output_path
+    description: >
+      Optional. A markdown file to write this artifact into as a single owned section,
+      instead of the default project-level path. Prerequisites are then read from
+      sibling sections of the same file.
+    example: "llm/features/rate-limiting.md"
+    maps-to: "$1"
 
 # === Output Targets ===
 outputs:
@@ -101,6 +108,9 @@ This prompt reads from:
 - `construction/requirements/scope-lock.md` (scope governance)
 
 And outputs to: `construction/design/implementation-sketches.md`
+
+**Optional output path (`{{output_path}}`):**
+`output_path` is a markdown file. When it is given, this skill owns the one section in that file titled `## Implementation Sketch`: it replaces that section in place and leaves the rest of the file untouched. It resolves each prerequisite from a sibling section of the same file (the gaps from `## Gap Analysis`, the star catalog from `## Constellation Map`); when a prerequisite section is absent it says so and proceeds with the context the caller supplied inline, treating the scope lock as optional. When `output_path` is absent, every path is exactly as stated above. This skill never creates a project-level file it was not asked for, and never scaffolds `llm/construction/`.
 </context>
 
 <thinking>

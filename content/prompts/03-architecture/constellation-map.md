@@ -20,7 +20,7 @@ skill:
   description: >
     Map constellation of trusted components and their integration points.
     When planning system architecture using existing proven components.
-  argument-hint: "[system_name] [system_description] [known_components]"
+  argument-hint: "[system_name] [system_description] [known_components] [output_path]"
   allowed-tools:
     - Read
     - Glob
@@ -46,6 +46,13 @@ variables:
     description: Any known components, services, or constraints
     example: "Using Stripe API, PostgreSQL database, Redis cache, existing AuthService"
     maps-to: "$2"
+  - name: output_path
+    description: >
+      Optional. A markdown file to write this artifact into as a single owned section,
+      instead of the default project-level path. Prerequisites are then read from
+      sibling sections of the same file.
+    example: "llm/features/rate-limiting.md"
+    maps-to: "$3"
 
 # === Output Targets ===
 outputs:
@@ -102,6 +109,11 @@ Follow this process:
 </task>
 
 <context>
+This prompt outputs to `construction/requirements/constellation-map.md`.
+
+**Optional output path (`{{output_path}}`):**
+`output_path` is a markdown file. When it is given, this skill owns the one section in that file titled `## Constellation Map`: it replaces that section in place and leaves the rest of the file untouched. It has no prerequisite artifact; it proceeds with the context the caller supplied inline. When `output_path` is absent, every path is exactly as stated above. This skill never creates a project-level file it was not asked for, and never scaffolds `llm/construction/`.
+
 System description:
 {{system_description}}
 
