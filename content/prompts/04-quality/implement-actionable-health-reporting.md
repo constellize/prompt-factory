@@ -159,6 +159,19 @@ Structure health reports with:
 - Specific errors (what failed, how to fix)
 - Thresholds (what's concerning)
 - Timestamps (when failure started)
+
+## Gate 2: Health Check Completeness Status
+
+### Requirements
+- [ ] Every unhealthy state the change can reach names the component and the next action
+- [ ] Each reported threshold states its value and its unit
+- [ ] The report maps a failure to the dependency that caused it
+- [ ] A reader who did not write the change can act on the report without reading the code
+- [ ] Health output distinguishes healthy, degraded and unhealthy rather than a single boolean
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -191,6 +204,9 @@ ALWAYS:
 - Show capacity remaining (not just current usage)
 - Report dependencies recursively (each component includes its own dependency health)
 - Create cascade view showing full dependency chain (trace to root cause)
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Health reports MUST be actionable. Include WHAT failed, WHY it matters, HOW to fix it. Use UP/DEGRADED/DOWN. Report each dependency separately.
 </instructions>

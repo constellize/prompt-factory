@@ -170,6 +170,19 @@ class ApplicationHealthValidator {
   }
 }
 ```
+
+## Gate 2: Health Check Completeness Status
+
+### Requirements
+- [ ] Every configuration value the change reads is validated at startup, with a named failure
+- [ ] The environment the change requires is checked before first use, not on first request
+- [ ] Each business rule the specification states has a validation with a distinct error
+- [ ] A validation failure stops startup rather than degrading silently
+- [ ] The validation reports what it checked and the outcome
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -199,6 +212,9 @@ ALWAYS:
 - Return NOT_READY if any validation fails
 - Provide clear remediation steps in error messages
 - Test validation in unit tests (ensure it catches issues)
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: FAIL FAST at startup. Don't accept requests if validation fails. Return SPECIFIC errors with remediation steps. Required config MUST be present (no defaults).
 </instructions>

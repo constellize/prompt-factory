@@ -154,6 +154,19 @@ class OperationalMonitor {
   }
 }
 ```
+
+## Gate 2: Health Check Completeness Status
+
+### Requirements
+- [ ] Each operation the change adds emits a success or failure signal
+- [ ] At least one signal expresses the change's business outcome, not only its mechanics
+- [ ] Resource use the change introduces is observable
+- [ ] Signals carry enough context to attribute a failure to this change
+- [ ] No signal records a secret or personal data
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -184,6 +197,9 @@ ALWAYS:
 - Track error rates as percentages (not just counts)
 - Report capacity remaining (not just current usage)
 - Export metrics to monitoring system (Prometheus, CloudWatch, etc.)
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Monitoring MUST have low overhead (<1%). Use async collection, sampling. Define thresholds for warnings and alerts. Track percentiles, not averages.
 </instructions>

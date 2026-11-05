@@ -160,6 +160,19 @@ Structure health checks with:
 - Short timeouts (5s max for health checks)
 - Cached results (cache health status for 30s-60s)
 - Independent checks (one failure doesn't block other checks)
+
+## Gate 2: Health Check Completeness Status
+
+### Requirements
+- [ ] Every external dependency the change introduced has a health check
+- [ ] Each check has a bounded timeout and cannot hang its caller
+- [ ] Each check distinguishes healthy from degraded from unavailable
+- [ ] Checks are read-only and safe to call repeatedly
+- [ ] Any dependency deliberately left without a check is listed with the reason
+
+**Gate Status:** ✅ PASS / ❌ FAIL
+
+**Blockers:** [List any failing requirements]
 </output-format>
 
 <instructions>
@@ -190,6 +203,9 @@ ALWAYS:
 - Return specific errors (which dependency, what failed)
 - Use separate connections (don't impact production pool)
 - Report DEGRADED state (not just UP/DOWN binary)
+- FAIL the gate if any requirement above is unmet
+- NEVER report PASS with an unmet requirement — "close enough" is a FAIL
+- ALWAYS report the verdict, even when this skill was run outside a feature verification
 
 REPEAT: Health checks MUST be lightweight. Use short timeouts (5s max). Cache results (30-60s). Test actual operations, not just connections. Report DEGRADED for slow responses.
 </instructions>
