@@ -1,10 +1,15 @@
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { assessLlmArtifacts } from '../../content/literal/constellize-harness/scripts/tier1';
+import {
+  assessLlmArtifacts,
+  readDeclaredStatus,
+  assessGateResults,
+} from '../../content/literal/constellize-harness/scripts/tier1';
 
-// Every test writes a real scratch llm/features/ and reads it back through the
-// assessor, so what is under test is the parsing of real artifacts on disk.
+// The project-level tests write a real scratch llm/features/ and read it back
+// through the assessor, so what is under test is the parsing of real artifacts on
+// disk. The two parsers are also exercised directly, on text, at the end.
 
 const created: string[] = [];
 
@@ -362,4 +367,176 @@ it('refuses a threshold looser than the default even when it is labelled "defaul
   expect(entry.evidence).toBe('incomplete');
   expect(entry.status).toBe('VERIFIED (unsubstantiated)');
   expect(entry.missingGates).toEqual([]);
+});
+
+// ---------------------------------------------------------------------------
+// readDeclaredStatus — the fence machine, exercised directly on text
+// ---------------------------------------------------------------------------
+
+describe('readDeclaredStatus', () => {
+  it('skips a tilde fence', () => {
+    const text = ['# Feature template', '', '~~~markdown', '**Status:** SPECIFIED', '~~~', ''].join('\n');
+    expect(readDeclaredStatus(text)).toBeNull();
+  });
+
+  it('skips a four-backtick fence whose content includes a three-backtick line', () => {
+    const text = [
+      '# Feature template',
+      '',
+      '````markdown',
+      '```json',
+      '{ "schema": 1 }',
+      '```',
+      '',
+      '**Status:** SPECIFIED',
+      '````',
+      '',
+    ].join('\n');
+    expect(readDeclaredStatus(text)).toBeNull();
+  });
+
+  it('does not close a fence on a line that carries an info string', () => {
+    // CommonMark forbids an info string on a closing fence, so the ```json line is
+    // content: the outer fence stays open and the status line in it stays hidden.
+    const text = ['# Feature template', '', '```markdown', '```json', '**Status:** SPECIFIED', '```', ''].join('\n');
+    expect(readDeclaredStatus(text)).toBeNull();
+  });
+
+  it('closes a fence on a bare marker, so text after it is read', () => {
+    const text = ['```markdown', '**Status:** SPECIFIED', '```', '', '**Status:** IMPLEMENTED', ''].join('\n');
+    expect(readDeclaredStatus(text)).toBe('IMPLEMENTED');
+  });
+
+  it('skips a fence indented by up to three spaces', () => {
+    const text = ['# Feature template', '', '   ```markdown', '   **Status:** SPECIFIED', '   ```', ''].join('\n');
+    expect(readDeclaredStatus(text)).toBeNull();
+  });
+
+  it('treats an unclosed fence as open to the end of the file', () => {
+    // Conservative on purpose: an artifact that opens a fence and never closes it
+    // hides the rest of itself, which reports `unknown` rather than reading a
+    // status out of what the author marked as an example.
+    const text = ['# Feature template', '', '```markdown', '**Status:** SPECIFIED', ''].join('\n');
+    expect(readDeclaredStatus(text)).toBeNull();
+  });
+
+  it('reads a status line written with CRLF line endings', () => {
+    expect(readDeclaredStatus('# Feature: example\r\n\r\n**Status:** IMPLEMENTED\r\n')).toBe('IMPLEMENTED');
+  });
+
+  it('reads the status from a CRLF file whose example fence hides another', () => {
+    const text = '# Feature: example\r\n\r\n**Status:** IMPLEMENTED\r\n\r\n```markdown\r\n**Status:** SPECIFIED\r\n```\r\n';
+    expect(readDeclaredStatus(text)).toBe('IMPLEMENTED');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// assessGateResults — which section the evidence is read from
+// ---------------------------------------------------------------------------
+
+const gateResultsSection = (json: string) => ['## Gate Results', '', '```json', json, '```', ''].join('\n');
+
+describe('assessGateResults', () => {
+  it('reads the block in its own section as evidence', () => {
+    expect(assessGateResults(`# Feature: example\n\n${gateResultsSection(COMPLETE_GATES)}`)).toEqual({
+      evidence: 'complete',
+      missingGates: [],
+      failedGates: [],
+    });
+  });
+
+  it('ignores a gate-results block that is only a fenced example', () => {
+    const text = [
+      '# Feature: example',
+      '',
+      'The verify skill writes a section like this one:',
+      '',
+      '````markdown',
+      gateResultsSection(COMPLETE_GATES),
+      '````',
+      '',
+    ].join('\n');
+    expect(assessGateResults(text).evidence).toBe('absent');
+  });
+
+  it('does not reach past the end of the section for a json fence', () => {
+    const text = [
+      '# Feature: example',
+      '',
+      '## Gate Results',
+      '',
+      'The gates have not been run yet.',
+      '',
+      '## Appendix',
+      '',
+      '```json',
+      COMPLETE_GATES,
+      '```',
+      '',
+    ].join('\n');
+    expect(assessGateResults(text).evidence).toBe('absent');
+  });
+
+  it('reads the first json fence in the section, past a fence that is not json', () => {
+    const text = [
+      '# Feature: example',
+      '',
+      '## Gate Results',
+      '',
+      '```text',
+      'the command that was run',
+      '```',
+      '',
+      '```json',
+      COMPLETE_GATES,
+      '```',
+      '',
+    ].join('\n');
+    expect(assessGateResults(text).evidence).toBe('complete');
+  });
+
+  it('reports two gate-results sections as malformed', () => {
+    const text = [
+      '# Feature: example',
+      '',
+      gateResultsSection(COMPLETE_GATES),
+      '',
+      gateResultsSection(COMPLETE_GATES),
+    ].join('\n');
+    expect(assessGateResults(text).evidence).toBe('malformed');
+  });
+
+  it('keeps a deeper heading inside the section', () => {
+    const text = [
+      '# Feature: example',
+      '',
+      '## Gate Results',
+      '',
+      '### Gate 1',
+      '',
+      '```json',
+      COMPLETE_GATES,
+      '```',
+      '',
+    ].join('\n');
+    expect(assessGateResults(text).evidence).toBe('complete');
+  });
+});
+
+it('reports a VERIFIED artifact that only quotes the template example as unsubstantiated', () => {
+  const body = [
+    '# Feature: example',
+    '',
+    '**Status:** VERIFIED',
+    '',
+    'The verify skill writes a section like this one:',
+    '',
+    '````markdown',
+    gateResultsSection(COMPLETE_GATES),
+    '````',
+    '',
+  ].join('\n');
+  const entry = named(project({ 'quoted.md': body }), 'quoted');
+  expect(entry.evidence).toBe('absent');
+  expect(entry.status).toBe('VERIFIED (unsubstantiated)');
 });

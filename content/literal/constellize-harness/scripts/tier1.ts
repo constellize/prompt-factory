@@ -80,12 +80,15 @@ const DESIGN_ARTIFACTS = [
 // A feature artifact's status line, matched at the start of a line and only
 // outside fenced code blocks: the spec template itself contains a fenced example
 // carrying `**Status:** SPECIFIED`.
-const STATUS_LINE = /^\*\*Status:\*\*\s*(SPECIFIED|IMPLEMENTED|VERIFIED)\b/;
-const FENCE_LINE = /^ {0,3}(`{3,}|~{3,})/;
+const STATUS_LINE = /^\*\*Status:\*\*[ \t]*(SPECIFIED|IMPLEMENTED|VERIFIED)\b/;
+// A fence line: up to three spaces of indent, the marker, then its info string.
+const FENCE_LINE = /^ {0,3}(`{3,}|~{3,})([^\n]*)$/;
 
-// The one ```json block under `## Gate Results`, written by constellize-feature:verify.
-const GATE_RESULTS_BLOCK =
-  /^##[ \t]+Gate Results[ \t]*$\n[\s\S]*?^```[ \t]*json[ \t]*$\n([\s\S]*?)^```/m;
+// The gate-results section, written by constellize-feature:verify: a `## Gate
+// Results` heading, and the one ```json fence between it and the next heading at
+// the same level.
+const GATE_RESULTS_HEADING = /^##[ \t]+Gate Results[ \t]*$/;
+const SECTION_HEADING = /^##[ \t]/;
 
 // Gates 1, 2 and 4 always have to run — gate 2 because its defensive-programming
 // member is unconditional. Gate 3 follows the recorded surface determination, and
@@ -103,6 +106,24 @@ const THRESHOLD_FLOOR: Array<[string, number]> = [
 ];
 
 /**
+ * The fence marker still open after `line`, given the one open before it. A fence
+ * is closed only by the same character, at least as long, and carrying no info
+ * string — CommonMark forbids an info string on a closing fence, so a ```json line
+ * inside an open block is content, not a close. A fence that is never closed stays
+ * open to the end of the file, which hides the rest of it rather than reading an
+ * author's example as the artifact's own text.
+ */
+function trackFence(openFence: string | null, line: string): string | null {
+  const fence = FENCE_LINE.exec(line);
+  if (!fence) return openFence;
+  if (openFence === null) return fence[1];
+  if (fence[1][0] === openFence[0] && fence[1].length >= openFence.length && fence[2].trim() === "") {
+    return null;
+  }
+  return openFence;
+}
+
+/**
  * The status a feature artifact declares: the first `**Status:**` line that is not
  * inside a fenced code block, or null when it declares none.
  */
@@ -111,17 +132,10 @@ export function readDeclaredStatus(
 ): "SPECIFIED" | "IMPLEMENTED" | "VERIFIED" | null {
   let openFence: string | null = null;
   for (const line of text.replace(/\r\n/g, "\n").split("\n")) {
-    const fence = line.match(FENCE_LINE);
-    if (openFence !== null) {
-      if (fence && fence[1][0] === openFence[0] && fence[1].length >= openFence.length) {
-        openFence = null;
-      }
-      continue;
-    }
-    if (fence) {
-      openFence = fence[1];
-      continue;
-    }
+    const next = trackFence(openFence, line);
+    const fenced = openFence !== null || next !== null;
+    openFence = next;
+    if (fenced) continue; // inside a fence, or the line that opens or closes one
     const status = line.match(STATUS_LINE);
     if (status) {
       return status[1] as "SPECIFIED" | "IMPLEMENTED" | "VERIFIED";
@@ -140,13 +154,60 @@ export function assessGateResults(
 ): Pick<FeatureEntry, "evidence" | "missingGates" | "failedGates"> {
   const missingGates: number[] = [];
   const failedGates: number[] = [];
+  const lines = text.replace(/\r\n/g, "\n").split("\n");
 
-  const block = text.replace(/\r\n/g, "\n").match(GATE_RESULTS_BLOCK);
-  if (!block) return { evidence: "absent", missingGates, failedGates };
+  // Which `## Gate Results` heading the evidence is read from. The heading has to
+  // be outside a fence — a fenced example of a gate-results section is an example,
+  // not a record — and two of them are two records, one of which is wrong.
+  const headings: number[] = [];
+  const sections: number[] = [];
+  let scanFence: string | null = null;
+  for (let i = 0; i < lines.length; i++) {
+    const next = trackFence(scanFence, lines[i]);
+    const fenced = scanFence !== null || next !== null;
+    scanFence = next;
+    if (fenced) continue;
+    if (SECTION_HEADING.test(lines[i])) {
+      sections.push(i);
+      if (GATE_RESULTS_HEADING.test(lines[i])) headings.push(i);
+    }
+  }
+  if (headings.length > 1) return { evidence: "malformed", missingGates, failedGates };
+  if (headings.length === 0) return { evidence: "absent", missingGates, failedGates };
+
+  // The section runs from its heading to the next heading at the same level, so a
+  // heading that carries only prose cannot reach forward to a later json fence.
+  const start = headings[0] + 1;
+  const nextSection = sections.find((line) => line > headings[0]);
+  const end = nextSection === undefined ? lines.length : nextSection;
+
+  // The first ```json fence inside that section, skipping any other fence whole.
+  let json: string | null = null;
+  let openFence: string | null = null;
+  let collecting = false;
+  const collected: string[] = [];
+  for (let i = start; i < end && json === null; i++) {
+    const next = trackFence(openFence, lines[i]);
+    if (openFence === null) {
+      if (next !== null) {
+        const fence = FENCE_LINE.exec(lines[i]);
+        collecting = fence !== null && fence[2].trim() === "json";
+        collected.length = 0;
+      }
+    } else if (next === null) {
+      if (collecting) json = collected.join("\n"); // the fence closed
+      collecting = false;
+    } else if (collecting) {
+      collected.push(lines[i]);
+    }
+    openFence = next;
+  }
+  // An unclosed json fence records nothing readable, so it is no evidence at all.
+  if (json === null) return { evidence: "absent", missingGates, failedGates };
 
   let parsed: unknown;
   try {
-    parsed = JSON.parse(block[1]);
+    parsed = JSON.parse(json);
   } catch {
     parsed = undefined; // unparseable evidence is not evidence, and never propagates
   }
