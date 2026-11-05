@@ -419,6 +419,16 @@ describe('readDeclaredStatus', () => {
     expect(readDeclaredStatus(text)).toBe('IMPLEMENTED');
   });
 
+  it('does not close a backtick fence with a tilde line', () => {
+    const text = ['```markdown', '~~~', '**Status:** SPECIFIED', '```', '', '**Status:** IMPLEMENTED', ''].join('\n');
+    expect(readDeclaredStatus(text)).toBe('IMPLEMENTED');
+  });
+
+  it('closes a fence with a longer bare marker', () => {
+    const text = ['```markdown', '**Status:** SPECIFIED', '`````', '', '**Status:** IMPLEMENTED', ''].join('\n');
+    expect(readDeclaredStatus(text)).toBe('IMPLEMENTED');
+  });
+
   it('skips a fence indented by up to three spaces', () => {
     const text = ['# Feature template', '', '   ```markdown', '   **Status:** SPECIFIED', '   ```', ''].join('\n');
     expect(readDeclaredStatus(text)).toBeNull();
@@ -518,6 +528,24 @@ describe('assessGateResults', () => {
     expect(assessGateResults(text).evidence).toBe('malformed');
   });
 
+  it('does not reach past a shallower heading for a json fence', () => {
+    const text = [
+      '# Feature: example',
+      '',
+      '## Gate Results',
+      '',
+      'The gates have not been run yet.',
+      '',
+      '# Appendix',
+      '',
+      '```json',
+      COMPLETE_GATES,
+      '```',
+      '',
+    ].join('\n');
+    expect(assessGateResults(text).evidence).toBe('absent');
+  });
+
   it('keeps a deeper heading inside the section', () => {
     const text = [
       '# Feature: example',
@@ -610,6 +638,30 @@ describe('a block that does not record the schema has not substantiated anything
 
   it('refuses a surface whose deployment is not a boolean', () => {
     const surface = '"surface": { "operational": true, "deployment": "no" }';
+    expect(assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD, surface])).evidence).toBe(
+      'incomplete',
+    );
+  });
+
+  it('reports a block that records no schema as malformed', () => {
+    expect(assessGateResults(allPassWith([DEFAULT_THRESHOLD, DEFAULT_SURFACE])).evidence).toBe('malformed');
+  });
+
+  it('reports a schema recorded as a string as malformed', () => {
+    expect(assessGateResults(allPassWith(['"schema": "1"', DEFAULT_THRESHOLD, DEFAULT_SURFACE])).evidence).toBe(
+      'malformed',
+    );
+  });
+
+  it('refuses a surface that does not say whether there is an operational surface', () => {
+    const surface = '"surface": { "deployment": false }';
+    expect(assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD, surface])).evidence).toBe(
+      'incomplete',
+    );
+  });
+
+  it('refuses a surface whose operational is not a boolean', () => {
+    const surface = '"surface": { "operational": "yes", "deployment": false }';
     expect(assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD, surface])).evidence).toBe(
       'incomplete',
     );

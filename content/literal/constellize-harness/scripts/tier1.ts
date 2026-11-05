@@ -88,11 +88,12 @@ const FENCE_LINE = /^ {0,3}(`{3,}|~{3,})([^\n]*)$/;
 
 // The gate-results section, written by constellize-feature:verify: a `## Gate
 // Results` heading, and the one ```json fence between it and the next heading at
-// the same level.
+// the same level or above. A `###` is inside the section; a `##` or a `#` ends it.
 const GATE_RESULTS_HEADING = /^##[ \t]+Gate Results[ \t]*$/;
-const SECTION_HEADING = /^##[ \t]/;
+const SECTION_HEADING = /^#{1,2}[ \t]/;
 
-// The only gate-results schema this assessor can read.
+// The only gate-results schema this assessor can read. A block that does not
+// record it records a shape this assessor cannot vouch for.
 const GATE_RESULTS_SCHEMA = 1;
 
 // Gates 1, 2 and 4 always have to run — gate 2 because its defensive-programming
@@ -111,21 +112,25 @@ const THRESHOLD_FLOOR: Array<[string, number]> = [
 ];
 
 /**
- * The fence marker still open after `line`, given the one open before it. A fence
- * is closed only by the same character, at least as long, and carrying no info
- * string — CommonMark forbids an info string on a closing fence, so a ```json line
- * inside an open block is content, not a close. A fence that is never closed stays
- * open to the end of the file, which hides the rest of it rather than reading an
- * author's example as the artifact's own text.
+ * The fence marker still open after `line`, given the one open before it, and the
+ * info string when `line` is what opened it. A fence is closed only by the same
+ * character, at least as long, and carrying no info string — CommonMark forbids an
+ * info string on a closing fence, so a ```json line inside an open block is
+ * content, not a close. A fence that is never closed stays open to the end of the
+ * file, which hides the rest of it rather than reading an author's example as the
+ * artifact's own text.
  */
-function trackFence(openFence: string | null, line: string): string | null {
+function trackFence(
+  openFence: string | null,
+  line: string,
+): { open: string | null; openedWith: string | null } {
   const fence = FENCE_LINE.exec(line);
-  if (!fence) return openFence;
-  if (openFence === null) return fence[1];
+  if (!fence) return { open: openFence, openedWith: null };
+  if (openFence === null) return { open: fence[1], openedWith: fence[2].trim() };
   if (fence[1][0] === openFence[0] && fence[1].length >= openFence.length && fence[2].trim() === "") {
-    return null;
+    return { open: null, openedWith: null };
   }
-  return openFence;
+  return { open: openFence, openedWith: null };
 }
 
 /**
@@ -137,9 +142,9 @@ export function readDeclaredStatus(
 ): "SPECIFIED" | "IMPLEMENTED" | "VERIFIED" | null {
   let openFence: string | null = null;
   for (const line of text.replace(/\r\n/g, "\n").split("\n")) {
-    const next = trackFence(openFence, line);
-    const fenced = openFence !== null || next !== null;
-    openFence = next;
+    const { open } = trackFence(openFence, line);
+    const fenced = openFence !== null || open !== null;
+    openFence = open;
     if (fenced) continue; // inside a fence, or the line that opens or closes one
     const status = line.match(STATUS_LINE);
     if (status) {
@@ -168,9 +173,9 @@ export function assessGateResults(
   const sections: number[] = [];
   let scanFence: string | null = null;
   for (let i = 0; i < lines.length; i++) {
-    const next = trackFence(scanFence, lines[i]);
-    const fenced = scanFence !== null || next !== null;
-    scanFence = next;
+    const { open } = trackFence(scanFence, lines[i]);
+    const fenced = scanFence !== null || open !== null;
+    scanFence = open;
     if (fenced) continue;
     if (SECTION_HEADING.test(lines[i])) {
       sections.push(i);
@@ -192,20 +197,19 @@ export function assessGateResults(
   let collecting = false;
   const collected: string[] = [];
   for (let i = start; i < end && json === null; i++) {
-    const next = trackFence(openFence, lines[i]);
+    const { open, openedWith } = trackFence(openFence, lines[i]);
     if (openFence === null) {
-      if (next !== null) {
-        const fence = FENCE_LINE.exec(lines[i]);
-        collecting = fence !== null && fence[2].trim() === "json";
+      if (open !== null) {
+        collecting = openedWith === "json";
         collected.length = 0;
       }
-    } else if (next === null) {
+    } else if (open === null) {
       if (collecting) json = collected.join("\n"); // the fence closed
       collecting = false;
     } else if (collecting) {
       collected.push(lines[i]);
     }
-    openFence = next;
+    openFence = open;
   }
   // An unclosed json fence records nothing readable, so it is no evidence at all.
   if (json === null) return { evidence: "absent", missingGates, failedGates };
@@ -224,22 +228,26 @@ export function assessGateResults(
     results && Array.isArray(results["gates"]) ? (results["gates"] as unknown[]) : null;
   if (!results || !gates) return { evidence: "malformed", missingGates, failedGates };
 
-  // A schema this assessor does not know records a shape it cannot read, so it is
-  // refused rather than read as though it were this one.
-  const schema = results["schema"];
-  if (schema !== undefined && schema !== GATE_RESULTS_SCHEMA) {
+  // The schema has to be recorded, and be one this assessor knows: a block with no
+  // schema is not read as though it were this one, any more than a block naming a
+  // schema this assessor cannot read is.
+  if (results["schema"] !== GATE_RESULTS_SCHEMA) {
     return { evidence: "malformed", missingGates, failedGates };
   }
 
   // Gate 3's `required` follows the surface determination, so a block that records
-  // no determination has nothing for it to follow. `deployment` has to be stated
-  // as a boolean; silence is not "no deployment surface".
+  // no determination has nothing for it to follow. Both surfaces have to be stated
+  // as booleans; silence is not "no deployment surface". Nothing follows from
+  // `operational` — gate 2 is required either way — but it is a member of the
+  // schema, and an unvalidated member is one a writer can drift on.
   const surface = results["surface"];
   const recordedSurface =
     surface !== null && typeof surface === "object" && !Array.isArray(surface)
       ? (surface as Record<string, unknown>)
       : null;
   const deployment = recordedSurface === null ? undefined : recordedSurface["deployment"];
+  const operational = recordedSurface === null ? undefined : recordedSurface["operational"];
+  const surfaceDetermined = typeof deployment === "boolean" && typeof operational === "boolean";
 
   const required = new Set<number>(ALWAYS_REQUIRED_GATES);
   if (deployment === true) required.add(3);
@@ -290,10 +298,7 @@ export function assessGateResults(
     });
 
   const evidence =
-    missingGates.length === 0 &&
-    failedGates.length === 0 &&
-    thresholdHoldsFloor &&
-    typeof deployment === "boolean"
+    missingGates.length === 0 && failedGates.length === 0 && thresholdHoldsFloor && surfaceDetermined
       ? "complete"
       : "incomplete";
   return { evidence, missingGates, failedGates };
