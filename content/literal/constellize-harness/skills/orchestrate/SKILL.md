@@ -77,12 +77,10 @@ Based on the user's chosen intent, map to a skill sequence using this routing ta
 Resume at the next missing construction artifact. Filter out completed steps based on artifact presence in `llm/construction/design/`.
 
 **Any situation + "Add a new feature":**
-1. constellize-design:gap-analysis (feature-scoped)
-2. constellize-design:implementation-sketch
-3. constellize-design:code-generation-plan
-4. constellize-craft:unit-tests
-5. constellize-craft:integration-tests
-6. constellize-memory:update
+1. constellize-feature:specify
+2. constellize-feature:implement
+3. constellize-feature:verify
+Resume at the step the feature's status implies: SPECIFIED goes to implement, IMPLEMENTED to verify, `VERIFIED (unsubstantiated)` back to verify.
 
 **Any situation + "Fix a bug or incident":**
 1. constellize-deliver:incident-investigation
