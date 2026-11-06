@@ -52,7 +52,7 @@ Gates 1, 2 and 4 always run, and they are always required — gate 2 because its
 
 ### Phase 1: Spec, report and project context
 
-Resolve the feature name to `llm/features/<feature-name>.md` and read it. Then read the artifact's **first** `**Status:**` line that is not inside a fenced code block. If that line does not read `**Status:** IMPLEMENTED` — or there is no artifact, or no such line — apply **the status gate** in the context below and stop there, except for the one status the gate sends back here for a second run.
+Resolve the feature name to `llm/features/<feature-name>.md` and read it. Then read the artifact's **first recognised** `**Status:**` line — one carrying `SPECIFIED`, `IMPLEMENTED` or `VERIFIED`, not inside a fenced code block, which is the line the harness's assessor reads too. A line such as `**Status:** blocked on review` is skipped, not returned. If that line does not read `**Status:** IMPLEMENTED` — or there is no artifact, or no such line — apply **the status gate** in the context below and stop there, except for the one status the gate sends back here for a second run.
 
 With the gate passed, read for context:
 
@@ -289,7 +289,7 @@ NEVER:
 - NEVER verify an artifact that is not at `**Status:** IMPLEMENTED`, except a VERIFIED one, which is a re-run. Refuse, name the status you found or its absence, and name the sibling skill to run instead.
 - NEVER leave a VERIFIED line standing when this run failed a gate or could not substantiate one. A failing re-run of a VERIFIED artifact writes `**Status:** IMPLEMENTED` over it and says so: the artifact that was verified last week is not verified now.
 - Write a second `## Gate Results` section, or leave an old one beside a new one. Two unfenced headings make the block malformed, which is worse than a stale record: it discards evidence that was correct.
-- Append a second `**Status:**` line, or leave the old one beside a new one. Rewrite the first unfenced one in place.
+- Append a second `**Status:**` line, or leave the old one beside a new one. Rewrite the first recognised unfenced one in place.
 - Reconstruct the artifact from an earlier read. Your own block lands in it between your reads, and four of its sections were written by other skills.
 - Write the `## Constellation Map`, `## Gap Analysis`, `## Implementation Sketch` or `## Implementation Report` sections, or edit the contract above them. You write two things: your section and the status line.
 - Record the same gate twice, or leave a required gate out of the array. One gate, one verdict.

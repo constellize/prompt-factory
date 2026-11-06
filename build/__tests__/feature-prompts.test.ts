@@ -794,4 +794,16 @@ describe('final review fixes', () => {
     expect(b).not.toMatch(/a gate skill that writes anything of its own writes it into the same file/);
     expect(b).toMatch(/whole-file write into a file whose other sections belong to other skills, which the user may have touched between runs/);
   });
+
+  // The Phase 1 read is the gate's own input, so an imprecise rule here reaches a state the
+  // gate has no branch for: an unrecognised line first, with a recognised one below it.
+  it.each(['implement-feature', 'verify-feature'])('%s reads the first RECOGNISED status line in Phase 1', (id) => {
+    const b = instructions(id);
+    const phase1 = b.slice(b.indexOf('Resolve the feature name'));
+    expect(phase1.slice(0, 600)).toMatch(
+      /read the artifact's \*\*first recognised\*\* `\*\*Status:\*\*` line — one carrying `SPECIFIED`, `IMPLEMENTED` or `VERIFIED`, not inside a fenced code block, which is the line the harness's assessor reads too\. A line such as `\*\*Status:\*\* blocked on review` is skipped, not returned/,
+    );
+    expect(b).not.toMatch(/read the artifact's \*\*first\*\* `\*\*Status:\*\*` line that is not inside a fenced code block/);
+    expect(b).toMatch(/Rewrite the first recognised unfenced one in place/);
+  });
 });

@@ -40,7 +40,7 @@ Work through the phases in order. Each phase either delegates to a named skill o
 
 ### Phase 1: Spec and repository context
 
-Resolve the feature name to `llm/features/<feature-name>.md` and read it. Then read the artifact's **first** `**Status:**` line that is not inside a fenced code block. If that line does not read `**Status:** SPECIFIED` — or there is no artifact, or no such line — apply **the status gate** in the context below and stop there. Everything after this phase assumes a contract that was signed off.
+Resolve the feature name to `llm/features/<feature-name>.md` and read it. Then read the artifact's **first recognised** `**Status:**` line — one carrying `SPECIFIED`, `IMPLEMENTED` or `VERIFIED`, not inside a fenced code block, which is the line the harness's assessor reads too. A line such as `**Status:** blocked on review` is skipped, not returned. If that line does not read `**Status:** SPECIFIED` — or there is no artifact, or no such line — apply **the status gate** in the context below and stop there. Everything after this phase assumes a contract that was signed off.
 
 With the gate passed, read for context:
 
@@ -231,7 +231,7 @@ CRITICAL: The status write is the last step of the last phase. Everything above 
 
 NEVER:
 - NEVER implement an artifact that is not at `**Status:** SPECIFIED`. Refuse, name the status you found or its absence, and name the sibling skill to run instead.
-- Append a second `**Status:**` line, or leave the old one beside a new one. Rewrite the first unfenced one in place.
+- Append a second `**Status:**` line, or leave the old one beside a new one. Rewrite the first recognised unfenced one in place.
 - Write `**Status:** IMPLEMENTED` before the report is written, the memory bank is updated, and every phase above has actually run.
 - Write a second `## Implementation Report`, or edit any other section of the artifact. The contract above is not yours to adjust, and the delegated sections are not yours to reword.
 - Write the `## Constellation Map` section yourself, or compile a second star catalog beside it. Delegate it with the artifact as its `output_path`.
