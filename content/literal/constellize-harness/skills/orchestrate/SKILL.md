@@ -80,7 +80,8 @@ Resume at the next missing construction artifact. Filter out completed steps bas
 1. constellize-feature:specify
 2. constellize-feature:implement
 3. constellize-feature:verify
-Resume at the step the feature's status implies: SPECIFIED goes to implement, IMPLEMENTED to verify, `VERIFIED (unsubstantiated)` back to verify.
+
+Resume at the step the feature's status implies: `unknown` or no status starts at specify, SPECIFIED goes to implement, IMPLEMENTED and `VERIFIED (unsubstantiated)` go to verify. VERIFIED needs nothing unless code changed since, then re-run verify.
 
 **Any situation + "Fix a bug or incident":**
 1. constellize-deliver:incident-investigation
