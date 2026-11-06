@@ -429,6 +429,12 @@ describe('implement-feature', () => {
     const b = instructions('implement-feature');
     expect(b).toMatch(/closing summary[\s\S]{0,500}## Gap Analysis/);
   });
+
+  // The sketch is the one artefact the user personally approved in specify, and Phase 3 replaces it.
+  it('tells the user in the summary that the approved implementation sketch was superseded', () => {
+    const b = instructions('implement-feature');
+    expect(b).toMatch(/closing summary[\s\S]{0,800}replaced the `## Implementation Sketch` the user signed off/);
+  });
 });
 
 // Every positive assertion below runs against `instructions('verify-feature')`, and that matters
@@ -744,5 +750,48 @@ describe('verify-feature', () => {
       const targets = [...row[3].matchAll(/constellize-[a-z-]+:[a-z-]+/g)].map(m => m[0]);
       expect(targets).toEqual(expected[Number(row[1])]);
     }
+  });
+});
+
+// Prose-versus-code drift found by the final whole-branch review. Positive assertions run
+// against instructions(), so the BAD examples cannot satisfy them.
+describe('final review fixes', () => {
+  it('specify Phase 5 preserves the constellation map and implementation report on a revision', () => {
+    const b = instructions('specify-feature');
+    const phase5 = b.slice(b.indexOf('### Phase 5'), b.indexOf('### Phase 6'));
+    expect(phase5).toMatch(/may hold two more[\s\S]{0,200}`## Constellation Map` and `## Implementation Report`/);
+    expect(phase5).toMatch(/write both back \*\*unchanged\*\* after those two, in that order/);
+    expect(phase5).toMatch(/nor the `## Constellation Map` or `## Implementation Report` of a revision/);
+    expect(b).toMatch(/`## Constellation Map` and `## Implementation Report` sections are kept/);
+  });
+
+  it('implement report procedure does not claim unconditionally that the file ends with the map', () => {
+    const b = instructions('implement-feature');
+    expect(b).not.toMatch(/At this point the artifact ends with `## Constellation Map`/);
+    expect(b).toMatch(/On a fresh run the artifact ends with `## Constellation Map`/);
+    expect(b).toMatch(/On a revised artifact Phase 2's delegation replaced the map in place, mid-file/);
+  });
+
+  it.each(FEATURE_IDS)('%s never says the assessor returns the first unrecognised status line', (id) => {
+    const b = instructions(id);
+    expect(b).not.toMatch(/first\*\* `\*\*Status:\*\*` line in the file that is not inside a fenced code block/);
+  });
+
+  it('specify says the assessor reads the first recognised status line', () => {
+    const b = instructions('specify-feature');
+    expect(b).toMatch(/reads the \*\*first recognised\*\* `\*\*Status:\*\*` line in the file — one carrying `SPECIFIED`, `IMPLEMENTED` or `VERIFIED`/);
+    expect(b).toMatch(/first recognised unfenced `\*\*Status:\*\*` line in the file \(one carrying `SPECIFIED`, `IMPLEMENTED` or `VERIFIED`\)/);
+  });
+
+  it.each(['implement-feature', 'verify-feature'])('%s rewrites the first recognised status line and gates on recognition', (id) => {
+    const b = instructions(id);
+    expect(b).toMatch(/Find the \*\*first recognised\*\* `\*\*Status:\*\*` line in the file — one carrying `SPECIFIED`, `IMPLEMENTED` or `VERIFIED`, not inside a fenced code block\. A line such as `\*\*Status:\*\* blocked on review` is skipped, not returned/);
+    expect(b).toMatch(/no recognised `\*\*Status:\*\*` line outside a fenced block\*\* — none carrying `SPECIFIED`, `IMPLEMENTED` or `VERIFIED`, which includes one whose only status line carries some other value/);
+  });
+
+  it('verify gives a true reason for re-reading before the write', () => {
+    const b = instructions('verify-feature');
+    expect(b).not.toMatch(/a gate skill that writes anything of its own writes it into the same file/);
+    expect(b).toMatch(/whole-file write into a file whose other sections belong to other skills, which the user may have touched between runs/);
   });
 });
