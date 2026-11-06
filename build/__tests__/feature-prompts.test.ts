@@ -577,6 +577,27 @@ describe('verify-feature', () => {
     // and the failing path has a defined end state, with the gate named
     expect(b).toContain('**Status:** IMPLEMENTED');
     expect(b).toMatch(/nam(e|ing) the failing gate/i);
+    // The checklist a reader works from names all four of the conditions `assessGateResults`
+    // checks, and `surfaceDetermined` is the one that is easy to leave out: a block missing
+    // either surface boolean is incomplete even when every verdict is a PASS.
+    expect(b).toMatch(/both surface booleans are recorded/i);
+  });
+
+  // D9 makes a re-run of a VERIFIED artifact ordinary, so "stays at IMPLEMENTED" and "the
+  // IMPLEMENTED it started from" were both false on that path, and the most literal reading of
+  // them left the VERIFIED line alone over a block holding a FAIL. The assessor would have
+  // caught it as unsubstantiated, but the artifact would have been wrong, and a reader should
+  // not have to infer the demotion from a NEVER sixty lines further down.
+  it('demotes a VERIFIED artifact whose re-run fails', () => {
+    const b = instructions('verify-feature');
+    expect(b).toContain('whether it started this run at IMPLEMENTED or at VERIFIED');
+    expect(b).toMatch(/demote/i);
+    // the instruction is to write the status, not to describe the state the artifact was in
+    expect(b).toMatch(/written to IMPLEMENTED/);
+    expect(b).toMatch(/(never|not) leave a VERIFIED line standing/i);
+    // whole-body: the presupposition is gone from the prompt, examples included
+    expect(get('verify-feature')!.content).not.toMatch(/it started from/);
+    expect(get('verify-feature')!.content).not.toMatch(/stays at IMPLEMENTED/);
   });
 
   // D9. The brief's stub for this had an empty body. Both halves are asserted from the status
@@ -613,16 +634,27 @@ describe('verify-feature', () => {
 
   // The project's whole reason for existing: a status that precedes its evidence. Asserted
   // structurally, by position within the phase list, as it is for implement-feature.
+  //
+  // Each anchor is the opening of the Phase 7 step that performs the write, not a phrase that
+  // also occurs in prose: `## Gate Results` on its own resolved to Phase 1's "note whether the
+  // artifact already holds a ## Gate Results section", so the test used to order two sentences
+  // that were not the writes it named. Anchoring on the step openings also makes the ordering
+  // fail loudly if a step is renumbered or reworded, which is the point.
   it('writes the gate-results block before the status it substantiates', () => {
     const b = instructions('verify-feature');
     const phases = b.slice(b.indexOf('### Phase 1'), b.indexOf('</task>'));
     expect(phases.length).toBeGreaterThan(0);
-    const block = phases.indexOf('## Gate Results');
-    const memory = phases.indexOf('constellize-memory:update');
-    const status = phases.indexOf('**Status:** VERIFIED');
+    const block = phases.indexOf('2. **Write the `## Gate Results` section into the artifact**');
+    const memory = phases.indexOf('4. **Invoke `constellize-memory:update`**');
+    const status = phases.indexOf('5. **Write the status, last, and in place**');
     for (const i of [block, memory, status]) expect(i).toBeGreaterThan(-1);
+    // one occurrence each, so `indexOf` cannot be pointing at a second copy of the step
+    for (const anchor of [block, memory, status]) {
+      expect(phases.indexOf(phases.slice(anchor, phases.indexOf('\n', anchor)), anchor + 1)).toBe(-1);
+    }
     expect(status).toBeGreaterThan(block);
     expect(status).toBeGreaterThan(memory);
+    expect(memory).toBeGreaterThan(block);
   });
 
   it('takes its lint and run commands from the project, never from this prompt', () => {
@@ -640,7 +672,15 @@ describe('verify-feature', () => {
   // function that decides whether a VERIFIED status stands.
   it('emits an example block the real assessor reads as complete evidence', () => {
     const b = instructions('verify-feature');
-    const template = b.slice(b.indexOf('<output-format>'));
+    // The section tag on its own line, not the inline `<output-format>` reference in Phase 7:
+    // `indexOf('<output-format>')` matched that reference and started the slice ~75 lines early,
+    // so the test would silently validate a different block the day one is added to <context>.
+    const tag = b.indexOf('\n<output-format>\n');
+    expect(tag).toBeGreaterThan(-1);
+    expect(b.indexOf('\n<output-format>\n', tag + 1)).toBe(-1);
+    const template = b.slice(tag);
+    // and the slice really does begin at the section, not at a mention of it
+    expect(template.slice(0, 40)).toContain('\n<output-format>\n');
     const fence = /```json\n([\s\S]*?)\n```/.exec(template);
     expect(fence).not.toBeNull();
     const artifact = [
@@ -654,9 +694,55 @@ describe('verify-feature', () => {
     });
   });
 
+  // Ruling 3. The two assertions used to be independent, so a prompt saying "last section of the
+  // file" about anything at all would have satisfied them; each one now ties the position to the
+  // section it is about, in one match.
   it('is the last section of the artifact, where the two sibling skills leave room for it', () => {
     const b = instructions('verify-feature');
-    expect(b).toMatch(/(end|last section) of the (file|artifact)/i);
-    expect(b).toMatch(/## Gate Results/);
+    expect(b).toMatch(/`## Gate Results` section into the artifact[\s\S]{0,200}last section of the artifact/);
+    expect(b).toMatch(/after `## Implementation Report`\.[\s\S]{0,80}last section of the artifact/);
+  });
+
+  // `delegates to every gate skill in the §6.3 map` pins the set and the count, and
+  // `runs Gates 1 and 4 ... unconditionally` pins the When column. Neither pins which gate a
+  // target belongs to: moving `constellize-deliver:rollback-capability` into gate 2's row would
+  // pass both. This reads the gate map's Delegates-to cells row by row.
+  it('maps each target to its own gate', () => {
+    const expected: Record<number, readonly string[]> = {
+      1: ['constellize-craft:test-coverage'],
+      2: [
+        'constellize-craft:defensive-programming',
+        'constellize-craft:application-health-validation',
+        'constellize-craft:infrastructure-health-checks',
+        'constellize-craft:operational-monitoring',
+        'constellize-craft:actionable-health-reporting',
+      ],
+      3: [
+        'constellize-deliver:externalize-config',
+        'constellize-deliver:environment-independence',
+        'constellize-deliver:reliable-containers',
+        'constellize-deliver:rollback-capability',
+      ],
+      4: ['constellize-craft:architectural-consistency', 'constellize-craft:dependency-hygiene'],
+    };
+    // every gate skill belongs to exactly one gate, and together they are the whole map
+    expect(Object.values(expected).flat().slice().sort()).toEqual([...GATE_SKILLS].slice().sort());
+
+    const b = instructions('verify-feature');
+    // scoped to the gate map: the phase table's rows are numbered too, and 11 rows in the body
+    // match a bare row regex, so an unscoped match would read the wrong table
+    const header = b.indexOf('| Gate | When it runs | Delegates to |');
+    expect(header).toBeGreaterThan(-1);
+    const map = b.slice(header, b.indexOf('### Phase 1'));
+    expect(map).toContain('| 1. Test integrity |');
+    expect(map).not.toContain('| Phase |');
+
+    const rows = [...map.matchAll(/^\| (\d)\. [^|]+\|([^|]*)\|([^|]*)\|\s*$/gm)];
+    expect(rows).toHaveLength(4);
+    expect(rows.map(r => Number(r[1]))).toEqual([1, 2, 3, 4]);
+    for (const row of rows) {
+      const targets = [...row[3].matchAll(/constellize-[a-z-]+:[a-z-]+/g)].map(m => m[0]);
+      expect(targets).toEqual(expected[Number(row[1])]);
+    }
   });
 });

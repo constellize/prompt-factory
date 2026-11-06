@@ -127,9 +127,10 @@ In this order, and the status write is last:
 
 1. **Collect the verdicts.** One entry per gate, in gate order: its number, whether it was required, its verdict, what it measured or inspected, what it read, and when. **One gate, one verdict** — never record the same gate twice, in any form. The assessor reads a repeated gate number as a malformed block and reports the whole feature as `VERIFIED (unsubstantiated)`, whatever else the block holds.
 2. **Write the `## Gate Results` section into the artifact**, by the procedure in the context below and in the shape `<output-format>` gives. It is the last section of the artifact, which is where the two sibling skills leave room for it. The section is written whatever the verdicts are: a recorded FAIL is the evidence that the gate ran and what it found, and it is what the next run is measured against. A failing run that writes no block leaves the user with nothing but a sentence in a session they will have closed by tomorrow.
-3. **Decide the status from the block, not from the run.** The artifact goes to VERIFIED only when every required gate carries a verdict, every one of those verdicts is `PASS`, and the threshold in force is at or above the default in all four dimensions. Otherwise it stays at IMPLEMENTED, and you say which gate failed or carried no verdict.
+3. **Decide the status from the block, not from the run.** The artifact is written to VERIFIED only when all four of these hold: every required gate carries a verdict; every one of those verdicts is `PASS`; both surface booleans are recorded; and the threshold in force is at or above the default in all four dimensions. These are the same four conditions the assessor checks, so a block that fails any of them cannot carry a VERIFIED status however the run felt.
+   Otherwise the artifact is written to IMPLEMENTED — **whether it started this run at IMPLEMENTED or at VERIFIED**. A failing re-run **demotes** the artifact, and a demotion is said out loud: name the gate that failed or carried no verdict, and say that the feature is no longer verified. Never leave a VERIFIED line standing over a block that holds a FAIL, a missing verdict or an unrecorded surface — the re-run path is the one a reader skims, so it is the one that has to say what to do rather than describe where the artifact already was.
 4. **Invoke `constellize-memory:update`** so the memory bank records the verification: which gates ran, which were skipped and why, the verdicts, and whether the feature is verified or is back with the implementer.
-5. **Write the status, last, and in place** — `**Status:** VERIFIED`, or the `**Status:** IMPLEMENTED` it started from, naming the failing gate in the session — by the status procedure in the context below.
+5. **Write the status, last, and in place** — `**Status:** VERIFIED`, or `**Status:** IMPLEMENTED` for a run that failed a gate or could not substantiate one, naming the failing gate in the session — by the status procedure in the context below.
 
 Then print the closing summary in the session, as `<output-format>` gives it.
 
@@ -168,7 +169,7 @@ In every refusal, name the status you found — or its absence — and the skill
 
 The procedure for your own section:
 
-1. **Read the artifact first.** Never write to a path you have not just read.
+1. **Read the artifact first** — re-read the whole of it immediately before this write, and leave every other byte of the file alone. Never write to a path you have not just read: five delegating phases sit between the Phase 1 read and this one, and a gate skill that writes anything of its own writes it into the same file.
 2. If a `## Gate Results` section is **already present** — a re-run, or an interrupted run of this skill — **replace that section in place, keeping its position**: the heading and everything under it, up to the next heading at the same level or above, or the end of the file. **Never write a second `## Gate Results` section.** The artifact carries exactly one `## Gate Results` section, and two of them are not a stale record beside a current one: the assessor reads two unfenced headings as a **malformed** block and reports the feature as `VERIFIED (unsubstantiated)` even when the newer block is perfect.
 3. If it is absent, **append it at the end of the file**, after `## Implementation Report`. It is the last section of the artifact.
 4. The heading is exactly `## Gate Results` — two hashes, a space, that text, and nothing after it. A heading that reads `## Gate Results (re-run)`, or that sits inside a fenced block, is not the section the assessor reads, so the evidence is absent and the status is unsubstantiated.
@@ -271,7 +272,7 @@ The `## Gate Results` section, replacing the one already there or appended as th
 Every field above is written every run. What each one is for:
 
 - `"schema": 1` is the number, not the string. A block with no `schema`, or a different one, records a shape the assessor cannot vouch for, so it reads as malformed.
-- `"threshold"` records all four dimensions as numbers, with `"source"` naming where they came from — `"default"` or `"declared"`. All four are always present, because an omitted dimension is not a threshold.
+- `"threshold"` records all four dimensions as numbers, with `"source"` naming where they came from: `"declared"` when **any** dimension in force came from the project's declaration — including a mixed threshold where a loose dimension was refused back to the default — and `"default"` only when all four in force are the default. All four are always present, because an omitted dimension is not a threshold. The assessor ignores `"source"` entirely and checks the numbers against the floor regardless, so this field is for the human reading the artifact: it tells them whether to go looking for a declaration.
 - `"surface"` records `"operational"` and `"deployment"` as booleans and `"reason"` as the evidence behind them. Both booleans, every run, including the fail-safe `true`.
 - Each gate entry carries `"gate"` as a positive integer, `"required"`, `"verdict"`, `"measured"`, `"read"` and `"at"`. `"verdict"` is `"PASS"`, `"FAIL"` or `"SKIPPED"`, and `"SKIPPED"` is only ever used for a gate that was not required.
 - The `"gates"` array holds one entry per gate, 1 through 4, each gate exactly once.
@@ -286,6 +287,7 @@ CRITICAL: The block is written before the status, and the status is read off the
 NEVER:
 - NEVER write `**Status:** VERIFIED` without a verdict for every required gate, and a `PASS` in every one of them. Gates 1, 2 and 4 are always required; gate 3 is required whenever the surface determination records a deployment surface. A status that is not backed by the block is reported as `VERIFIED (unsubstantiated)` by the next assessor run, which is the user hearing about it from someone else.
 - NEVER verify an artifact that is not at `**Status:** IMPLEMENTED`, except a VERIFIED one, which is a re-run. Refuse, name the status you found or its absence, and name the sibling skill to run instead.
+- NEVER leave a VERIFIED line standing when this run failed a gate or could not substantiate one. A failing re-run of a VERIFIED artifact writes `**Status:** IMPLEMENTED` over it and says so: the artifact that was verified last week is not verified now.
 - Write a second `## Gate Results` section, or leave an old one beside a new one. Two unfenced headings make the block malformed, which is worse than a stale record: it discards evidence that was correct.
 - Append a second `**Status:**` line, or leave the old one beside a new one. Rewrite the first unfenced one in place.
 - Reconstruct the artifact from an earlier read. Your own block lands in it between your reads, and four of its sections were written by other skills.
@@ -306,11 +308,11 @@ ALWAYS:
 - Replace an existing `## Gate Results` section in place, keeping its position, up to the next heading at the same level or above.
 - Record all four threshold dimensions as numbers, with the source that produced them.
 - Record every gate that ran and every gate that did not, with what it read and when.
-- Say in the session which gates ran, which were skipped and why, and what the status now is.
+- Say in the session which gates ran, which were skipped and why, and what the status now is — and when a re-run demoted the artifact, say that too, in those words.
 - Degrade to advisory when something is missing, naming what is missing, and verify the step's output before continuing.
 - End with one `## Gate Results` section in the artifact, one status line rewritten in place, and the summary in the session.
 
-REPEAT: The block substantiates the status, and the assessor checks that it does. A required gate with no verdict, a repeated gate number, an unrecorded surface, or a threshold under the floor each turn a VERIFIED status into `VERIFIED (unsubstantiated)` — so the honest status for a run like that is the IMPLEMENTED it started from, with the gate named.
+REPEAT: The block substantiates the status, and the assessor checks that it does. A required gate with no verdict, a repeated gate number, an unrecorded surface, or a threshold under the floor each turn a VERIFIED status into `VERIFIED (unsubstantiated)` — so the honest status for a run like that is IMPLEMENTED, written over whatever the artifact said before, with the gate named.
 </instructions>
 
 <examples>
@@ -321,8 +323,9 @@ REPEAT: The block substantiates the status, and the assessor checks that it does
  already holds a ## Gate Results section — so this is a re-run, not a refusal]
 [Phase 2: Files modified names a new outbound call and a new environment variable; operational
  true, deployment true, reason recorded]
-[Phases 3-6: test-coverage reports 87% branch / 100% critical / 100% error paths against the
- default; defensive-programming and the four operational skills pass; the four readiness
+[Phases 3-6: test-coverage reports 87% branch / 100% critical / 100% error paths / 100%
+ integration points against the default, which is all four dimensions of the floor;
+ defensive-programming and the four operational skills pass; the four readiness
  skills pass and the declared runCommand reaches the entry point; gate 4 passes, lint clean]
 
 Skill: reads the artifact, replaces the existing ## Gate Results section in place with one
