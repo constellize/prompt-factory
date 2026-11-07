@@ -19,7 +19,7 @@ skill:
   description: >
     Generate software specification document.
     When creating detailed functional and non-functional requirements.
-  argument-hint: ""
+  argument-hint: "[product_name]"
   allowed-tools:
     - Read
     - Glob
@@ -32,7 +32,10 @@ skill:
 
 # === Variables ===
 variables:
-  []
+  - name: product_name
+    description: The name of your product
+    example: "CodePromptu"
+    maps-to: "$0"
 
 # === Output Targets ===
 outputs:
