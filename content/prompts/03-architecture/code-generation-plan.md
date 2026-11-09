@@ -117,7 +117,9 @@ Before creating the plan, analyze:
 </thinking>
 
 <output-format>
-Format your output as `construction/design/code-generation-plan-{{gap_to_implement}}.md`:
+Format your output as `construction/design/code-generation-plan-<slug>.md`, where `<slug>` names the gap:
+
+**The plan's filename.** `<slug>` is the gap name lowercased, with every character that is not a letter, a digit or a hyphen replaced by a hyphen and any leading or trailing hyphens removed. Take the gap name from `{{gap_to_implement}}` when it was supplied as an argument, and otherwise from **the gap the caller described inline** — a delegated skill is invoked by name and receives no positional arguments at all, so an absent argument does not mean an absent gap, and this skill is normally reached by delegation. **One plan per gap is the point of the per-gap filename:** `constellize-feature:implement` invokes this skill once for each gap worth planning and reads each plan back, so two gaps must never slug to the same name, and a plan must never overwrite another gap's. Only when no gap can be identified at all does the plan go to the fixed path `construction/design/code-generation-plan.md` — a name the harness assessor already recognises alongside the per-gap one — and then say in the session that the gap was unnamed. Never write a filename containing a literal `$1`, a `$` followed by a digit, or any character the slug rule removes — a colon, for instance. A placeholder surviving into a path means the gap name was taken from the wrong place, not that there was no gap.
 
 # Code Generation Plan: {{gap_to_implement}}
 
