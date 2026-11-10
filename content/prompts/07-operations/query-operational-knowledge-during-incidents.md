@@ -54,8 +54,8 @@ variables:
     example: "5 minutes (active outage)"
     maps-to: "$2"
   - name: memory_bank_structure
-    description: Whether operational knowledge is separate or integrated
-    example: "Separate: operations-memory-bank/"
+    description: Operational knowledge root, as a path prefix ending in a slash — `operations-memory-bank/` when operational knowledge is kept separate, `memory-bank/` when it is integrated
+    example: "operations-memory-bank/"
     maps-to: "$3"
 
 # === Output Targets ===
@@ -87,6 +87,8 @@ Incident Context: {{incident_context}}
 Severity: {{incident_severity}}
 Time Constraint: {{time_constraint}}
 Memory Bank Structure: {{memory_bank_structure}}
+
+Every operational path below is formed by prefixing this root to a relative path, so the root must be a path ending in a slash — `operations-memory-bank/` when operational knowledge is kept separate from development knowledge, `memory-bank/` when the two are integrated. The root encodes that distinction; it is not a label, and a value such as `Separate: operations-memory-bank/` is wrong. An indexed placeholder that receives no argument stays in the text literally, so a bare `\$3` surviving where the root belongs means no root was supplied: fall back to `operations-memory-bank/` when that directory exists and `memory-bank/` otherwise, and state which you used. Arguments are split on whitespace, so a root that arrives with a colon in it, or as a single word of prose, is a label passed where a path belongs — apply the same fallback.
 
 During incidents, engineers need rapid access to relevant operational knowledge: which runbooks apply, what similar incidents occurred, what dependencies might be affected, what architectural constraints matter. The challenge is filtering vast operational knowledge to incident-specific context without information overload while under time pressure.
 
