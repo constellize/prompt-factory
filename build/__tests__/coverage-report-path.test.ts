@@ -45,14 +45,33 @@ describe('the generated test-coverage skill names a defined report path', () => 
 
   it('explains why a delegated run has no component name, so the rule is not arbitrary', () => {
     expect(skill).toMatch(
-      /a delegated skill is invoked by name and receives no positional arguments at all/
+      /a delegating caller often supplies no argument in that position/
     );
+    // The mechanism, stated correctly: an unsupplied placeholder stays literal. A delegated
+    // skill CAN be given positionals -- the Skill tool takes an args parameter -- so the old
+    // wording ("receives no positional arguments at all") was false and must not come back.
+    expect(skill).toMatch(
+      /an indexed placeholder that receives no argument stays in the text literally/
+    );
+    expect(skill).not.toMatch(/receives no positional arguments at all/);
   });
 
   it('forbids the literal argument placeholder in the report filename', () => {
-    expect(skill).toMatch(
-      /Never write a report whose filename contains a literal `\$0`, a `\$` followed by a digit/
-    );
+    expect(skill).toContain('Never write a report whose filename contains a literal `\\$0`');
+    expect(skill).toMatch(/a `\$` followed by a digit/);
+  });
+
+  // The defect this guards: `$N` is substituted even inside a backtick code span, so an
+  // UNESCAPED `$0` here reached the model as the component's real name, making the sentence
+  // forbid the very filename the slug rule requires. The escape is a single backslash.
+  it('escapes the placeholder it names, so the sentence survives substitution', () => {
+    expect(skill).toContain('a literal `\\$0`');
+    expect(skill).not.toContain('a literal `$0`');
+  });
+
+  it('treats prose passed where a component name belongs as absent', () => {
+    expect(skill).toMatch(/Arguments are split on whitespace/);
+    expect(skill).toMatch(/treat it as absent and use the fixed path/);
   });
 
   it('forbids the stray characters that produced coverage-report-expand-codes:.md', () => {
@@ -147,8 +166,10 @@ describe('the generated code-generation-plan skill names a defined plan path', (
   it('takes the gap name from the inline description when no argument was supplied', () => {
     expect(plan).toMatch(/otherwise from \*\*the gap the caller described inline\*\*/);
     expect(plan).toMatch(
-      /a delegated skill is invoked by name and receives no positional arguments at all, so an absent argument does not mean an absent gap/
+      /a skill reached by delegation may or may not be given that argument/
     );
+    expect(plan).toMatch(/means no gap name arrived, not that there is no gap/);
+    expect(plan).not.toMatch(/receives no positional arguments at all/);
   });
 
   // The guard that matters most: the per-gap behaviour spec §6.6b requires must survive the fix.
@@ -166,9 +187,22 @@ describe('the generated code-generation-plan skill names a defined plan path', (
   });
 
   it('forbids the literal argument placeholder in the plan filename', () => {
-    expect(plan).toMatch(
-      /Never write a filename containing a literal `\$1`, a `\$` followed by a digit/
-    );
+    expect(plan).toContain('Never write a filename containing a literal `\\$1`');
+    expect(plan).toMatch(/a `\$` followed by a digit/);
+  });
+
+  // Same defect as on the craft side: unescaped, this named the gap's real name and inverted
+  // the slug rule. Both places that NAME a placeholder must escape it; places that USE its
+  // value must not.
+  it('escapes both placeholders it names, so neither sentence inverts its own rule', () => {
+    expect(plan).toContain('a literal `\\$1`');
+    expect(plan).not.toContain('a literal `$1`');
+    expect(plan).toContain('Take the gap name from the `\\$1` argument when one was supplied');
+  });
+
+  it('treats prose passed where the gap name belongs as a fragment', () => {
+    expect(plan).toMatch(/Arguments are split on whitespace/);
+    expect(plan).toMatch(/prefer the gap the caller described inline/);
   });
 
   // The fallback name is the assessor's existing contract, not a new convention:
