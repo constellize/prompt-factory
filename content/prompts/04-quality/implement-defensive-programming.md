@@ -64,7 +64,10 @@ Follow this process:
    - Each validation and each error path needs a test that triggers it
    - Defensive code that genuinely cannot be triggered must carry a comment saying why it is kept; unmarked dead defence is a finding
 
-7. **Fix what you find, then report the verdict.**
+7. **Report the verdict always. Fix what you find only when a verification run did not reach you.**
+   - Run on its own, fixing what you find is the point of the review: harden the input, then report.
+   - Run as a member of `constellize-feature:verify`'s gate 2, it is not. A fix made during a verification run is code written untested and unreviewed, and the gate would then be measuring work this run did to itself. Name each finding and hand the verdict back unfixed; the artifact stays at `**Status:** IMPLEMENTED` and this skill runs again once the finding has been addressed.
+   - You can tell which you are: a verification run invokes you for a verdict on a named feature and reads the `**Gate Status:**` line back. When you cannot tell, report without fixing and say so — an unfixed finding is recoverable, an unreviewed fix inside the evidence is not.
 </task>
 
 <context>

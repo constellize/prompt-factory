@@ -74,7 +74,12 @@ Three inputs, in this order:
 2. The `## Implementation Report`'s **Files created:** and **Files modified:** lists.
 3. The working-tree diff, where one is available.
 
-Either surface is touched when **any** of these is true: a new runtime dependency; a new configuration value or environment variable; a new outbound service, network or database call; a touched deployment artifact.
+**Each surface has its own triggers, and they are not the same list.** A surface is touched when **any** of its own triggers is true:
+
+- **Operational** — a new outbound service, network or database call; a new runtime dependency the feature calls at run time.
+- **Deployment** — a new configuration value or environment variable; a touched deployment artifact; a new runtime dependency.
+
+A trigger on one surface says nothing about the other. A touched Dockerfile makes the feature's deployment readiness worth checking and says nothing about whether it needs health checks, so reading one list as covering both sends a run at four structurally inapplicable operational members and buries the verdict that matters in them.
 
 **When the evidence is absent or ambiguous, both gates run.** Failing toward more checking is the only safe default here: the opposite lets a feature skip a gate silently, which is the defect this whole workflow exists to remove. Say plainly in the session that the evidence was thin and that you ran the gates anyway, and record that as the determination's reason.
 
