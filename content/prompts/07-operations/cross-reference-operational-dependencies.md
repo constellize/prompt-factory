@@ -48,11 +48,11 @@ variables:
     example: "Direct runtime dependencies"
     maps-to: "$1"
   - name: memory_bank_location
-    description: Where development knowledge lives
+    description: Development knowledge root, as a path prefix ending in a slash
     example: "memory-bank/"
     maps-to: "$2"
   - name: operations_memory_location
-    description: Where operational knowledge lives
+    description: Operational knowledge root, as a path prefix ending in a slash
     example: "operations-memory-bank/"
     maps-to: "$3"
 
@@ -85,6 +85,8 @@ System: {{system_name}}
 Dependency Scope: {{dependency_scope}}
 Development Memory: {{memory_bank_location}}
 Operations Memory: {{operations_memory_location}}
+
+Both memory locations are roots: every path below is formed by prefixing one of them to a relative path, so each must be a path ending in a slash — `memory-bank/` for development knowledge and `operations-memory-bank/` for operational knowledge. A root is not a label and not a single file. An indexed placeholder that receives no argument stays in the text literally, so a bare `\$2` or `\$3` surviving where a root belongs means none was supplied: fall back to `memory-bank/` for development knowledge, and for operational knowledge to `operations-memory-bank/` when that directory exists and `memory-bank/` otherwise, and state which you used. Arguments are split on whitespace, so a root that arrives with a colon in it, or as a single word of prose, is a label passed where a path belongs — apply the same fallback.
 
 Operational dependencies include runtime service dependencies, data flow dependencies, infrastructure dependencies, and shared resource dependencies. These must connect to design documentation explaining why dependencies exist, what constraints they impose, and how they affect operational behavior.
 
@@ -168,9 +170,9 @@ Operational Impact:
 - {{system_name}} failure: Impacts [downstream services]
 
 Documentation Links:
-Architecture: {{memory_bank_location}}/systemPatterns.md#dependencies
-Design Decisions: {{memory_bank_location}}/systemPatterns.md#cache-strategy
-Operational Runbooks: {{operations_memory_location}}/runbooks/incident-response.md#dependency-failures
+Architecture: {{memory_bank_location}}systemPatterns.md#dependencies
+Design Decisions: {{memory_bank_location}}systemPatterns.md#cache-strategy
+Operational Runbooks: {{operations_memory_location}}runbooks/incident-response.md#dependency-failures
 ```
 
 ---
@@ -178,7 +180,7 @@ Operational Runbooks: {{operations_memory_location}}/runbooks/incident-response.
 ## Cross-Reference Pattern (Development → Operations)
 
 ```
-File: {{memory_bank_location}}/systemPatterns.md
+File: {{memory_bank_location}}systemPatterns.md
 
 ## System Architecture
 
@@ -188,25 +190,25 @@ File: {{memory_bank_location}}/systemPatterns.md
 Design rationale: [Why this dependency exists]
 Constraints: [Performance characteristics, limitations]
 Operational context:
-- Runbook: {{operations_memory_location}}/runbooks/database-procedures.md
-- Performance baseline: {{operations_memory_location}}/performance/database-metrics.md
-- Recent incidents: {{operations_memory_location}}/incidents/2026-01-15-db-connection-pool.md
-- Failover procedures: {{operations_memory_location}}/runbooks/database-failover.md
+- Runbook: {{operations_memory_location}}runbooks/database-procedures.md
+- Performance baseline: {{operations_memory_location}}performance/database-metrics.md
+- Recent incidents: {{operations_memory_location}}incidents/2026-01-15-db-connection-pool.md
+- Failover procedures: {{operations_memory_location}}runbooks/database-failover.md
 
 **Cache API (Redis):**
 Design rationale: [Why this dependency exists]
 Constraints: [Cache invalidation strategy, TTLs]
 Operational context:
-- Runbook: {{operations_memory_location}}/runbooks/cache-procedures.md
-- Performance baseline: {{operations_memory_location}}/performance/cache-metrics.md
-- Degradation behavior: {{operations_memory_location}}/runbooks/incident-response.md#cache-failure
+- Runbook: {{operations_memory_location}}runbooks/cache-procedures.md
+- Performance baseline: {{operations_memory_location}}performance/cache-metrics.md
+- Degradation behavior: {{operations_memory_location}}runbooks/incident-response.md#cache-failure
 
 **Downstream Impact:**
 This service is depended on by:
-- [ServiceA]: {{operations_memory_location}}/dependencies/downstream-impacts.md#serviceA
-- [ServiceB]: {{operations_memory_location}}/dependencies/downstream-impacts.md#serviceB
+- [ServiceA]: {{operations_memory_location}}dependencies/downstream-impacts.md#serviceA
+- [ServiceB]: {{operations_memory_location}}dependencies/downstream-impacts.md#serviceB
 
-SLO implications documented: {{operations_memory_location}}/dependencies/service-level-objectives.md
+SLO implications documented: {{operations_memory_location}}dependencies/service-level-objectives.md
 ```
 
 ---
@@ -214,7 +216,7 @@ SLO implications documented: {{operations_memory_location}}/dependencies/service
 ## Cross-Reference Pattern (Operations → Development)
 
 ```
-File: {{operations_memory_location}}/dependencies/operational-dependencies.md
+File: {{operations_memory_location}}dependencies/operational-dependencies.md
 
 # Operational Dependencies for {{system_name}}
 
@@ -225,38 +227,38 @@ Criticality: CRITICAL
 Failure Mode: Complete service outage
 
 Design Context:
-- Architecture: {{memory_bank_location}}/systemPatterns.md#database-layer
-- Connection pooling design: {{memory_bank_location}}/systemPatterns.md#connection-management
-- Schema design: {{memory_bank_location}}/techContext.md#database-schema
+- Architecture: {{memory_bank_location}}systemPatterns.md#database-layer
+- Connection pooling design: {{memory_bank_location}}systemPatterns.md#connection-management
+- Schema design: {{memory_bank_location}}techContext.md#database-schema
 
 Operational Procedures:
-- Connection failures: {{operations_memory_location}}/runbooks/database-procedures.md#connection-troubleshooting
-- Performance degradation: {{operations_memory_location}}/runbooks/database-procedures.md#performance-investigation
-- Failover: {{operations_memory_location}}/runbooks/database-failover.md
+- Connection failures: {{operations_memory_location}}runbooks/database-procedures.md#connection-troubleshooting
+- Performance degradation: {{operations_memory_location}}runbooks/database-procedures.md#performance-investigation
+- Failover: {{operations_memory_location}}runbooks/database-failover.md
 
 Recent Incidents:
 - 2026-01-15: Connection pool exhaustion
-  - Incident: {{operations_memory_location}}/incidents/2026-01-15-db-connection-pool.md
+  - Incident: {{operations_memory_location}}incidents/2026-01-15-db-connection-pool.md
   - Root cause: Design assumption about connection reuse
-  - Design updated: {{memory_bank_location}}/systemPatterns.md#connection-management (see revision note)
+  - Design updated: {{memory_bank_location}}systemPatterns.md#connection-management (see revision note)
 
 Performance Baseline:
-- Query latency: {{operations_memory_location}}/performance/database-metrics.md
-- Connection pool usage: {{operations_memory_location}}/performance/database-metrics.md#connection-pool
+- Query latency: {{operations_memory_location}}performance/database-metrics.md
+- Connection pool usage: {{operations_memory_location}}performance/database-metrics.md#connection-pool
 
 ### Cache API (Redis)
 Criticality: HIGH (degrades without, does not fail)
 Failure Mode: 3x latency increase, increased database load
 
 Design Context:
-- Caching strategy: {{memory_bank_location}}/systemPatterns.md#caching-strategy
-- Invalidation design: {{memory_bank_location}}/systemPatterns.md#cache-invalidation
-- Degradation handling: {{memory_bank_location}}/systemPatterns.md#graceful-degradation
+- Caching strategy: {{memory_bank_location}}systemPatterns.md#caching-strategy
+- Invalidation design: {{memory_bank_location}}systemPatterns.md#cache-invalidation
+- Degradation handling: {{memory_bank_location}}systemPatterns.md#graceful-degradation
 
 Operational Procedures:
-- Cache unavailable: {{operations_memory_location}}/runbooks/incident-response.md#cache-failure
-- Cache warming: {{operations_memory_location}}/runbooks/deployment-runbook.md#cache-warming
-- Performance monitoring: {{operations_memory_location}}/performance/cache-metrics.md
+- Cache unavailable: {{operations_memory_location}}runbooks/incident-response.md#cache-failure
+- Cache warming: {{operations_memory_location}}runbooks/deployment-runbook.md#cache-warming
+- Performance monitoring: {{operations_memory_location}}performance/cache-metrics.md
 
 ---
 
@@ -271,12 +273,12 @@ Their Documentation:
 - Their degradation: [How they handle our failures]
 
 Our SLO:
-- Documented: {{operations_memory_location}}/dependencies/service-level-objectives.md
+- Documented: {{operations_memory_location}}dependencies/service-level-objectives.md
 - Monitoring: [Link to SLO dashboard]
 
 Operational Coordination:
 - On-call contact: [PagerDuty rotation or contact method]
-- Incident escalation: {{operations_memory_location}}/runbooks/incident-response.md#escalation
+- Incident escalation: {{operations_memory_location}}runbooks/incident-response.md#escalation
 
 ### Analytics Service
 Impact if we fail: MEDIUM (delayed analytics, not real-time critical)
@@ -287,26 +289,26 @@ Their Documentation:
 - Their degradation: Queue events, replay later
 
 Our SLO:
-- Documented: {{operations_memory_location}}/dependencies/service-level-objectives.md#analytics
+- Documented: {{operations_memory_location}}dependencies/service-level-objectives.md#analytics
 
 ---
 
 ## Infrastructure Dependencies
 
 ### Container Orchestration (Kubernetes/ECS/etc.)
-- Deployment procedures: {{operations_memory_location}}/runbooks/deployment-runbook.md
-- Design decisions: {{memory_bank_location}}/techContext.md#deployment-architecture
-- Scaling policies: {{operations_memory_location}}/performance/capacity-planning.md
+- Deployment procedures: {{operations_memory_location}}runbooks/deployment-runbook.md
+- Design decisions: {{memory_bank_location}}techContext.md#deployment-architecture
+- Scaling policies: {{operations_memory_location}}performance/capacity-planning.md
 
 ### Load Balancer
-- Health check design: {{memory_bank_location}}/systemPatterns.md#health-checks
-- Routing policies: {{operations_memory_location}}/runbooks/deployment-runbook.md#traffic-routing
-- Failover behavior: {{operations_memory_location}}/runbooks/incident-response.md#load-balancer-issues
+- Health check design: {{memory_bank_location}}systemPatterns.md#health-checks
+- Routing policies: {{operations_memory_location}}runbooks/deployment-runbook.md#traffic-routing
+- Failover behavior: {{operations_memory_location}}runbooks/incident-response.md#load-balancer-issues
 
 ### Monitoring & Observability
-- Metrics design: {{memory_bank_location}}/systemPatterns.md#observability
-- Alert thresholds: {{operations_memory_location}}/runbooks/alert-response.md
-- Logging strategy: {{memory_bank_location}}/techContext.md#logging
+- Metrics design: {{memory_bank_location}}systemPatterns.md#observability
+- Alert thresholds: {{operations_memory_location}}runbooks/alert-response.md
+- Logging strategy: {{memory_bank_location}}techContext.md#logging
 ```
 
 ---
@@ -350,7 +352,7 @@ Automated Validation (if applicable):
 ## Incident Integration Pattern
 
 ```
-File: {{operations_memory_location}}/incidents/2026-01-15-db-connection-pool.md
+File: {{operations_memory_location}}incidents/2026-01-15-db-connection-pool.md
 
 # Incident: Database Connection Pool Exhaustion
 
@@ -362,7 +364,7 @@ Duration: 47 minutes
 
 Affected Dependency: Database (PostgreSQL)
 Dependency Criticality: CRITICAL
-Design Documentation: {{memory_bank_location}}/systemPatterns.md#database-layer
+Design Documentation: {{memory_bank_location}}systemPatterns.md#database-layer
 
 ## Root Cause
 
@@ -370,7 +372,7 @@ Design assumption: Connection pool size adequate based on traffic estimates
 Reality: Traffic pattern changed, connection reuse assumption violated
 
 Design Documentation Impact:
-- UPDATED: {{memory_bank_location}}/systemPatterns.md#connection-management
+- UPDATED: {{memory_bank_location}}systemPatterns.md#connection-management
   - Added: Connection pool sizing calculation
   - Added: Traffic pattern considerations
   - Added: Monitoring requirements
@@ -378,21 +380,21 @@ Design Documentation Impact:
 ## Operational Changes
 
 Runbook Updates:
-- {{operations_memory_location}}/runbooks/database-procedures.md#connection-troubleshooting
+- {{operations_memory_location}}runbooks/database-procedures.md#connection-troubleshooting
   - Added: Connection pool exhaustion detection
   - Added: Emergency pool size increase procedure
 
 Performance Baseline Updates:
-- {{operations_memory_location}}/performance/database-metrics.md#connection-pool
+- {{operations_memory_location}}performance/database-metrics.md#connection-pool
   - Added: Connection pool utilization alerting thresholds
 
 ## Cross-Reference Updates
 
 Development → Operations:
-- {{memory_bank_location}}/systemPatterns.md now references this incident as example
+- {{memory_bank_location}}systemPatterns.md now references this incident as example
 
 Operations → Development:
-- {{operations_memory_location}}/runbooks/database-procedures.md now references updated design
+- {{operations_memory_location}}runbooks/database-procedures.md now references updated design
 
 Bidirectional: ✓ Verified
 ```

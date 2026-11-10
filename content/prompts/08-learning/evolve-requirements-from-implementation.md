@@ -78,6 +78,8 @@ Feature: {{feature_name}}
 Original Requirement: {{original_requirement}}
 Documentation: {{memory_bank_location}}
 
+This location is a path, not a label — a directory ending in a slash, or the file to add to. An indexed placeholder that receives no argument stays in the text literally, so a bare `\$2` surviving where the location belongs means none was supplied: fall back to `memory-bank/` and state that you did. Arguments are split on whitespace, so a location that arrives with a colon in it, or as a single word of prose, is a label passed where a path belongs — apply the same fallback.
+
 Requirement evolution happens constantly during implementation. Engineers discover:
 1. Original requirements were incomplete
 2. Technical constraints change what's feasible

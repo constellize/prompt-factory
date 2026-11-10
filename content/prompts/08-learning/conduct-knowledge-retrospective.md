@@ -84,6 +84,8 @@ Team: {{team_name}}
 Duration: {{sprint_duration}}
 Documentation: {{memory_bank_location}}
 
+This location is a path, not a label — a directory ending in a slash, or the file to add to. An indexed placeholder that receives no argument stays in the text literally, so a bare `\$3` surviving where the location belongs means none was supplied: fall back to `memory-bank/` and state that you did. Arguments are split on whitespace, so a location that arrives with a colon in it, or as a single word of prose, is a label passed where a path belongs — apply the same fallback.
+
 Knowledge retrospectives complement traditional retrospectives:
 - Traditional retrospective: Team dynamics, process effectiveness, collaboration
 - Knowledge retrospective: Learning capture, documentation quality, knowledge transfer
