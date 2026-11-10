@@ -95,7 +95,12 @@ What is yours is the comparison, and only when the project has declared a thresh
 - **A stricter declaration**: judge the measured numbers against the declared threshold yourself, dimension by dimension, and record the declared numbers as the threshold in force. No skill can know a per-project setting, which is why this one comparison is the aggregate owner's.
 - **A looser declaration**: refused. See the threshold rule in the context below.
 
-Gate 1's verdict is PASS when every dimension of the threshold in force is met, and FAIL otherwise.
+**Then take the enforcement fact `constellize-craft:test-coverage` reports**: whether the project's own test command fails when a dimension falls below the threshold in force, or whether the numbers are merely true on the day. Record it as `threshold.enforced`. You do not establish it yourself, for the reason you do not measure — it is a property of the project's test configuration, and that skill is the one that ran it. When the report says nothing either way, record `false`: never claim a guarantee nothing substantiated.
+
+- **A declared threshold that nothing enforces fails gate 1.** The project named a number its own tooling does not keep, so the number describes an intention rather than the code, and every later run would measure against something no commit has to satisfy. Name the finding precisely: the declaration, where it was declared, and that the test command passes below it.
+- **An undeclared threshold that nothing enforces does not fail gate 1.** The project claimed nothing, so there is nothing hollow to report. Record `enforced: false`, say in the session that the coverage is measured rather than guarded, and let the numbers decide. Failing here would fail a feature for a project-level gap, and a gate requirement has to be answerable for the feature in front of you.
+
+Gate 1's verdict is PASS when every dimension of the threshold in force is met **and no declared threshold was found unenforced**, and FAIL otherwise.
 
 ### Phase 4: Gate 2 — health check completeness
 
@@ -132,7 +137,7 @@ In this order, and the status write is last:
 
 1. **Collect the verdicts.** One entry per gate, in gate order: its number, whether it was required, its verdict, what it measured or inspected, what it read, and when. **One gate, one verdict** — never record the same gate twice, in any form. The assessor reads a repeated gate number as a malformed block and reports the whole feature as `VERIFIED (unsubstantiated)`, whatever else the block holds.
 2. **Write the `## Gate Results` section into the artifact**, by the procedure in the context below and in the shape `<output-format>` gives. It is the last section of the artifact, which is where the two sibling skills leave room for it. The section is written whatever the verdicts are: a recorded FAIL is the evidence that the gate ran and what it found, and it is what the next run is measured against. A failing run that writes no block leaves the user with nothing but a sentence in a session they will have closed by tomorrow.
-3. **Decide the status from the block, not from the run.** The artifact is written to VERIFIED only when all four of these hold: every required gate carries a verdict; every one of those verdicts is `PASS`; both surface booleans are recorded; and the threshold in force is at or above the default in all four dimensions. These are the same four conditions the assessor checks, so a block that fails any of them cannot carry a VERIFIED status however the run felt.
+3. **Decide the status from the block, not from the run.** The artifact is written to VERIFIED only when all five of these hold: every required gate carries a verdict; every one of those verdicts is `PASS`; both surface booleans are recorded; the threshold in force is at or above the default in all four dimensions; and `threshold.enforced` is recorded as a boolean, and is `true` whenever the source is `"declared"`. These are the same five conditions the assessor checks, so a block that fails any of them cannot carry a VERIFIED status however the run felt.
    Otherwise the artifact is written to IMPLEMENTED — **whether it started this run at IMPLEMENTED or at VERIFIED**. A failing re-run **demotes** the artifact, and a demotion is said out loud: name the gate that failed or carried no verdict, and say that the feature is no longer verified. Never leave a VERIFIED line standing over a block that holds a FAIL, a missing verdict or an unrecorded surface — the re-run path is the one a reader skims, so it is the one that has to say what to do rather than describe where the artifact already was.
 4. **Invoke `constellize-memory:update`** so the memory bank records the verification: which gates ran, which were skipped and why, the verdicts, and whether the feature is verified or is back with the implementer.
 5. **Write the status, last, and in place** — `**Status:** VERIFIED`, or `**Status:** IMPLEMENTED` for a run that failed a gate or could not substantiate one, naming the failing gate in the session — by the status procedure in the context below.
@@ -159,6 +164,7 @@ In every refusal, name the status you found — or its absence — and the skill
 - **A declared threshold** lives in `llm/constellize.json` under `coverageThreshold`. **A declared threshold is honoured only where it is stricter** than the default, dimension by dimension.
 - **A looser declaration is refused.** Refuse the loose dimension, say so plainly in the session, and record the default in its place. Without that floor, the bar a project is measured against is whatever that project felt like on the day — which is how a suite at a fifth of its coverage shipped with every feature marked verified. Where every dimension of a declaration is loose, the whole declaration is refused and **the default applies**.
 - The refusal is not a labelling question. The floor is checked **whatever the block records as its `source`**, so a loose number cannot escape by being recorded as `"default"` — and an honest default block records exactly the four default numbers and passes.
+- **A threshold is enforced when the project's own test command fails below it**, and merely measured when the numbers happen to be above it today. The two are not the same claim, and only one of them survives the next commit. A *declared* threshold that is not enforced is a broken promise and fails gate 1; an *undeclared* one that is not enforced is simply an absent promise, and is recorded without failing anything. The assessor applies this rule too, so recording `enforced: true` without having established it does not launder a declaration any more than relabelling a loose number does.
 
 **The project's declared commands, and the one file they come from.** The lint and install-and-run commands are the project's, read from `llm/constellize.json`:
 
@@ -201,7 +207,7 @@ A gate whose verdict never arrived is **not** a pass, and it is not a `SKIPPED` 
 <thinking>
 Before writing the block, work out:
 1. Which of the three inputs actually says this feature touched the operational or deployment surface, and would I be able to show that sentence to someone who disagreed?
-2. Is the threshold in force the default, or has the project declared one — and if it has, is every dimension of it stricter?
+2. Is the threshold in force the default, or has the project declared one — and if it has, is every dimension of it stricter, and does the project's test command actually fail below it?
 3. Which gate's verdict am I about to record without having read the thing that produced it?
 4. If one gate failed, what exactly does the user do next, and is that in the summary?
 5. Does the block I am about to write substantiate the status I am about to write, read by something that is not me?
@@ -217,11 +223,12 @@ The `## Gate Results` section, replacing the one already there or appended as th
 
 ```json
 {
-  "schema": 1,
+  "schema": 2,
   "feature": "<feature-name>",
   "at": "<ISO 8601 timestamp of this run>",
   "threshold": {
     "source": "default",
+    "enforced": true,
     "branch": 80,
     "criticalLogic": 100,
     "errorPaths": 100,
@@ -276,14 +283,15 @@ The `## Gate Results` section, replacing the one already there or appended as th
 
 Every field above is written every run. What each one is for:
 
-- `"schema": 1` is the number, not the string. A block with no `schema`, or a different one, records a shape the assessor cannot vouch for, so it reads as malformed.
-- `"threshold"` records all four dimensions as numbers, with `"source"` naming where they came from: `"declared"` when **any** dimension in force came from the project's declaration — including a mixed threshold where a loose dimension was refused back to the default — and `"default"` only when all four in force are the default. All four are always present, because an omitted dimension is not a threshold. The assessor ignores `"source"` entirely and checks the numbers against the floor regardless, so this field is for the human reading the artifact: it tells them whether to go looking for a declaration.
+- `"schema": 2` is the number, not the string. A block with no `schema`, or one the assessor does not know, records a shape it cannot vouch for, so it reads as malformed. Write `2`. Schema `1` is still read, and read exactly as it always was — an artifact verified before `"enforced"` existed is not demoted by a release that had nothing to do with it — but it is not the shape to write now.
+- `"threshold"` records all four dimensions as numbers, with `"source"` naming where they came from: `"declared"` when **any** dimension in force came from the project's declaration — including a mixed threshold where a loose dimension was refused back to the default — and `"default"` only when all four in force are the default. All four are always present, because an omitted dimension is not a threshold. The assessor checks the numbers against the floor regardless of `"source"`, so the field launders no *number* — but it is not decorative either, because `"source"` and `"enforced"` together decide one thing: a block recording `"declared"` with `"enforced"` anything but `true` cannot substantiate a verified status.
+- `"enforced"` is a boolean, every run, and says whether the project's own test command fails when a dimension drops below the threshold in force — not whether the numbers are above it today. `false` is an ordinary, honest value for a project that declared nothing and guards nothing; it is a failure only against a declaration. Omitting it, or writing anything but a boolean, makes the evidence incomplete: silence is not "not enforced", for the reason silence is not "no deployment surface".
 - `"surface"` records `"operational"` and `"deployment"` as booleans and `"reason"` as the evidence behind them. Both booleans, every run, including the fail-safe `true`.
 - Each gate entry carries `"gate"` as a positive integer, `"required"`, `"verdict"`, `"measured"`, `"read"` and `"at"`. `"verdict"` is `"PASS"`, `"FAIL"` or `"SKIPPED"`, and `"SKIPPED"` is only ever used for a gate that was not required.
 - The `"gates"` array holds one entry per gate, 1 through 4, each gate exactly once.
 - The fence opens with ` ```json ` — that exact info string — and it is closed. A fence that is never closed, or that opens with anything else, records nothing the assessor can read, so the evidence is absent and a VERIFIED status over it is unsubstantiated.
 
-Then the closing summary in the session: the feature name, the artifact path, the surface determination and the input it came from, the threshold in force and whether it was the default, one line per gate with its verdict, the status the artifact now carries, and — when a gate failed or carried no verdict — what the user does next, naming the failing gate and the finding.
+Then the closing summary in the session: the feature name, the artifact path, the surface determination and the input it came from, the threshold in force, whether it was the default, and whether it is enforced or only measured, one line per gate with its verdict, the status the artifact now carries, and — when a gate failed or carried no verdict — what the user does next, naming the failing gate and the finding.
 </output-format>
 
 <instructions>
@@ -302,6 +310,8 @@ NEVER:
 - Leave `"operational"` or `"deployment"` unrecorded, or record either as anything but a boolean. Silence is not "no surface".
 - Run a coverage command, for any language or tool. Gate 1 consumes `constellize-craft:test-coverage`'s verdict.
 - Honour a declared threshold looser than the default in any dimension, whatever it names as its source.
+- Record `"enforced": true` without a reported basis for it, or leave it out. An unestablished guarantee is the one field in the block no later run can correct, because every later run would trust it.
+- Fail gate 1 because a project guards no threshold it never declared. Record it, say it, and let the numbers decide.
 - Fix what a gate reports. Report it, name it, and hand it back.
 - Call the two project-scope reviews. Whether a team can comprehend a codebase is not a property of one feature.
 - Name a lint or run command of your own. They come from `llm/constellize.json`, or you ask.
@@ -311,13 +321,13 @@ ALWAYS:
 - Make the surface determination from the three inputs, record both booleans and the reason, and run both conditional gates when the evidence is absent or ambiguous.
 - Re-read the artifact immediately before each of your two writes to it, and write back unchanged every byte you did not mean to change.
 - Replace an existing `## Gate Results` section in place, keeping its position, up to the next heading at the same level or above.
-- Record all four threshold dimensions as numbers, with the source that produced them.
+- Record all four threshold dimensions as numbers, with the source that produced them and whether they are enforced.
 - Record every gate that ran and every gate that did not, with what it read and when.
 - Say in the session which gates ran, which were skipped and why, and what the status now is — and when a re-run demoted the artifact, say that too, in those words.
 - Degrade to advisory when something is missing, naming what is missing, and verify the step's output before continuing.
 - End with one `## Gate Results` section in the artifact, one status line rewritten in place, and the summary in the session.
 
-REPEAT: The block substantiates the status, and the assessor checks that it does. A required gate with no verdict, a repeated gate number, an unrecorded surface, or a threshold under the floor each turn a VERIFIED status into `VERIFIED (unsubstantiated)` — so the honest status for a run like that is IMPLEMENTED, written over whatever the artifact said before, with the gate named.
+REPEAT: The block substantiates the status, and the assessor checks that it does. A required gate with no verdict, a repeated gate number, an unrecorded surface, a threshold under the floor, an unrecorded enforcement, or a declared threshold nothing enforces each turn a VERIFIED status into `VERIFIED (unsubstantiated)` — so the honest status for a run like that is IMPLEMENTED, written over whatever the artifact said before, with the gate named.
 </instructions>
 
 <examples>
@@ -329,7 +339,8 @@ REPEAT: The block substantiates the status, and the assessor checks that it does
 [Phase 2: Files modified names a new outbound call and a new environment variable; operational
  true, deployment true, reason recorded]
 [Phases 3-6: test-coverage reports 87% branch / 100% critical / 100% error paths / 100%
- integration points against the default, which is all four dimensions of the floor;
+ integration points against the default, which is all four dimensions of the floor, and
+ reports the project's test command as failing below it, so the threshold is enforced;
  defensive-programming and the four operational skills pass; the four readiness
  skills pass and the declared runCommand reaches the entry point; gate 4 passes, lint clean]
 
@@ -341,8 +352,8 @@ Skill: invokes constellize-memory:update
 Skill: re-reads the artifact, finds line 3 `**Status:** VERIFIED` — the first status line
        outside a fence — and rewrites that one line, leaving it at VERIFIED
 Skill → user: "rate-limiting re-verified. Deployment surface this time, so gate 3 ran: four
-       readiness skills, all PASS. Threshold: the default. One Gate Results section in the
-       artifact, replaced in place."
+       readiness skills, all PASS. Threshold: the default, enforced by the project's
+       test command. One Gate Results section in the artifact, replaced in place."
 ```
 
 **Why this is GOOD:**
@@ -366,7 +377,7 @@ Skill: appends to the end of the artifact:
        ## Gate Results
 
        ```json
-       { "schema": 1,
+       { "schema": 2,
          "threshold": { "source": "default", "branch": 40 },
          "gates": [ { "gate": 1, "verdict": "PASS" }, { "gate": 1, "verdict": "PASS" } ] }
        ```
@@ -378,6 +389,7 @@ Skill → user: "rate-limiting is VERIFIED. All gates green."
 **Why this is BAD:**
 - Two unfenced `## Gate Results` headings, so the assessor reads the evidence as malformed and discards the earlier record that was correct
 - The 40 was recorded as `"default"`, which launders nothing: the floor is checked whatever the source says, so the threshold fails and the status is unsubstantiated
+- `"enforced"` is absent, so even a block whose numbers cleared the floor could not have substantiated a status — and a declaration at 40 is exactly the case the enforcement rule exists for
 - Gate 1 appears twice and gates 2 and 4 not at all — a repeated gate number is malformed on its own, and two required gates have no verdict
 - `surface` is absent, so the determination that justified skipping gate 3 does not exist for anyone to audit
 - The status line was appended rather than rewritten, so the first unfenced one still stands and the new one is dead text — and the user was told "all gates green" about a block that says the opposite

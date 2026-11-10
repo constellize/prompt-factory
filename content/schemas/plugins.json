@@ -64,7 +64,7 @@
     },
     {
       "id": "constellize:craft",
-      "version": "1.1.3",
+      "version": "1.1.4",
       "name": "Constellize Craft",
       "description": "Code quality, testing, and continuous excellence",
       "skills": {
@@ -161,14 +161,14 @@
     },
     {
       "id": "constellize:feature",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "name": "Constellize Feature",
       "description": "The feature workflow: specify, implement and verify one feature with tracked state",
       "skills": { "include": ["specify-feature", "implement-feature", "verify-feature"] }
     },
     {
       "id": "constellize:harness",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "name": "Constellize Harness",
       "description": "Project orchestration: assess state, plan next steps, execute constellize skills",
       "literal": { "source": "constellize-harness" }

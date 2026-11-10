@@ -668,9 +668,76 @@ describe('a block that does not record the schema has not substantiated anything
   });
 
   it('reports a schema it does not know as malformed', () => {
-    expect(assessGateResults(allPassWith(['"schema": 2', DEFAULT_THRESHOLD, DEFAULT_SURFACE])).evidence).toBe(
+    expect(assessGateResults(allPassWith(['"schema": 3', DEFAULT_THRESHOLD, DEFAULT_SURFACE])).evidence).toBe(
       'malformed',
     );
+  });
+
+  it('reports a schema recorded as a string, not a number, as malformed', () => {
+    expect(assessGateResults(allPassWith(['"schema": "2"', DEFAULT_THRESHOLD, DEFAULT_SURFACE])).evidence).toBe(
+      'malformed',
+    );
+  });
+
+  // Schema 2 adds `threshold.enforced`: whether the project's own test command
+  // fails when a dimension drops below the threshold, rather than the threshold
+  // merely being measured true on the day. `enforced` text is raw JSON so a
+  // non-boolean can be tested, and omitted entirely when it is undefined.
+  const thresholdV2 = (source: string, enforced?: string) =>
+    '"threshold": { ' +
+    `"source": "${source}", ` +
+    (enforced === undefined ? '' : `"enforced": ${enforced}, `) +
+    '"branch": 80, "criticalLogic": 100, "errorPaths": 100, "integrationPoints": 100 }';
+
+  it('reads a schema 2 block that records an enforced default threshold as complete', () => {
+    expect(
+      assessGateResults(allPassWith(['"schema": 2', thresholdV2('default', 'true'), DEFAULT_SURFACE])).evidence,
+    ).toBe('complete');
+  });
+
+  it('accepts an unenforced threshold the project never declared: an absent claim is not a broken one', () => {
+    expect(
+      assessGateResults(allPassWith(['"schema": 2', thresholdV2('default', 'false'), DEFAULT_SURFACE])).evidence,
+    ).toBe('complete');
+  });
+
+  it('refuses a schema 2 block that leaves enforcement unrecorded, because silence is not "not enforced"', () => {
+    expect(
+      assessGateResults(allPassWith(['"schema": 2', thresholdV2('default'), DEFAULT_SURFACE])).evidence,
+    ).toBe('incomplete');
+  });
+
+  it('refuses a schema 2 block whose enforced is not a boolean', () => {
+    expect(
+      assessGateResults(allPassWith(['"schema": 2', thresholdV2('default', '"yes"'), DEFAULT_SURFACE])).evidence,
+    ).toBe('incomplete');
+  });
+
+  it('refuses a declared threshold that nothing enforces: a claim the project does not keep', () => {
+    expect(
+      assessGateResults(allPassWith(['"schema": 2', thresholdV2('declared', 'false'), DEFAULT_SURFACE])).evidence,
+    ).toBe('incomplete');
+  });
+
+  it('accepts a declared threshold that is enforced', () => {
+    expect(
+      assessGateResults(allPassWith(['"schema": 2', thresholdV2('declared', 'true'), DEFAULT_SURFACE])).evidence,
+    ).toBe('complete');
+  });
+
+  // Back-compatibility is the whole reason the assessor reads two schemas: an
+  // artifact verified before `enforced` existed must not be demoted by a release
+  // that had nothing to do with it.
+  it('leaves schema 1 untouched by the enforcement rules, enforced absent', () => {
+    expect(assessGateResults(allPassWith(['"schema": 1', DEFAULT_THRESHOLD, DEFAULT_SURFACE])).evidence).toBe(
+      'complete',
+    );
+  });
+
+  it('leaves schema 1 untouched even with a declared threshold and no enforcement recorded', () => {
+    const declared =
+      '"threshold": { "source": "declared", "branch": 90, "criticalLogic": 100, "errorPaths": 100, "integrationPoints": 100 }';
+    expect(assessGateResults(allPassWith(['"schema": 1', declared, DEFAULT_SURFACE])).evidence).toBe('complete');
   });
 
   it('reports a repeated gate number as malformed, so a second entry cannot launder a FAIL', () => {

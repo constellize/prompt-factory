@@ -92,9 +92,15 @@ const FENCE_LINE = /^ {0,3}(`{3,}|~{3,})([^\n]*)$/;
 const GATE_RESULTS_HEADING = /^##[ \t]+Gate Results[ \t]*$/;
 const SECTION_HEADING = /^#{1,2}[ \t]/;
 
-// The only gate-results schema this assessor can read. A block that does not
-// record it records a shape this assessor cannot vouch for.
+// The gate-results schemas this assessor can read. A block recording neither
+// records a shape this assessor cannot vouch for.
+//
+// Schema 1 predates `threshold.enforced` and is still read exactly as it was: an
+// artifact verified before that field existed is not retroactively unsubstantiated,
+// because nothing about it changed. Schema 2 adds the field and is held to it.
 const GATE_RESULTS_SCHEMA = 1;
+const GATE_RESULTS_SCHEMA_ENFORCED = 2;
+const GATE_RESULTS_SCHEMAS: number[] = [GATE_RESULTS_SCHEMA, GATE_RESULTS_SCHEMA_ENFORCED];
 
 // Gates 1, 2 and 4 always have to run — gate 2 because its defensive-programming
 // member is unconditional. Gate 3 follows the recorded surface determination, and
@@ -232,7 +238,8 @@ export function assessGateResults(
   // The schema has to be recorded, and be one this assessor knows: a block with no
   // schema is not read as though it were this one, any more than a block naming a
   // schema this assessor cannot read is.
-  if (results["schema"] !== GATE_RESULTS_SCHEMA) {
+  const schema = results["schema"];
+  if (typeof schema !== "number" || !GATE_RESULTS_SCHEMAS.includes(schema)) {
     return { evidence: "malformed", missingGates, failedGates };
   }
 
@@ -298,8 +305,35 @@ export function assessGateResults(
       return typeof value === "number" && value >= floor;
     });
 
+  // Schema 2 also records whether the threshold in force is *enforced* — whether the
+  // project's own test command fails when a dimension drops below it — rather than
+  // merely measured true on the day of the run. Two separate checks, for two separate
+  // failures:
+  //
+  //   `enforcementRecorded` — the field has to be there, and be a boolean. Silence is
+  //   not "not enforced", for the same reason silence is not "no deployment surface".
+  //
+  //   `declaredThresholdIsKept` — a project that *declared* a threshold nothing
+  //   enforces has made a claim its own tooling does not keep, and a block cannot
+  //   substantiate a verified status on it. An undeclared threshold makes no such
+  //   claim, so `enforced: false` is recorded against the default and passes.
+  //
+  // Checked here and not only in the skill, for the reason the floor is checked here:
+  // a rule only the writer applies is a rule a writer can drift on.
+  const enforced = recordedThreshold === null ? undefined : recordedThreshold["enforced"];
+  const enforcementRecorded = schema === GATE_RESULTS_SCHEMA || typeof enforced === "boolean";
+  const declaredSource =
+    recordedThreshold !== null && recordedThreshold["source"] === "declared";
+  const declaredThresholdIsKept =
+    schema === GATE_RESULTS_SCHEMA || !declaredSource || enforced === true;
+
   const evidence =
-    missingGates.length === 0 && failedGates.length === 0 && thresholdHoldsFloor && surfaceDetermined
+    missingGates.length === 0 &&
+    failedGates.length === 0 &&
+    thresholdHoldsFloor &&
+    surfaceDetermined &&
+    enforcementRecorded &&
+    declaredThresholdIsKept
       ? "complete"
       : "incomplete";
   return { evidence, missingGates, failedGates };

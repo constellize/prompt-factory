@@ -235,6 +235,10 @@ Generate coverage report at the report path named in the context above — `cons
 - [ ] No flaky tests
 - [ ] Tests are self-documenting
 
+**Threshold enforcement:** `enforced` or `not enforced`, and what you read to decide — whether the project's own test configuration makes the test command **fail** when a dimension falls below the threshold, as against the numbers merely sitting above it on the day of this run. Determine it from the project's own test configuration, name a language or a tool nowhere, and write `not enforced` when you cannot establish it.
+
+**Report this line; do not judge it.** An unenforced threshold does not by itself fail this gate: whether it is a defect turns on whether the project *declared* a threshold, and the declaration lives where only `constellize-feature:verify` reads it. So this is a fact handed to the aggregate owner — and the one fact in this report that a later run cannot correct, because a later run would trust it.
+
 **Gate Status:** ✅ PASS / ❌ FAIL
 
 **Blockers:** [List any failing requirements]
@@ -417,6 +421,8 @@ REPEAT: 80% branch coverage overall, 100% CRITICAL logic, 100% error paths. Cove
 - ✅ All tests pass (212/212 passing)
 - ✅ No flaky tests (all deterministic)
 - ✅ Tests are self-documenting (descriptive names, AAA pattern)
+
+**Threshold enforcement:** enforced — the project's test configuration fails the test command when branch coverage drops below 80%, so the number is guarded on every run rather than true only on this one.
 
 **Gate Status:** ✅ PASS
 

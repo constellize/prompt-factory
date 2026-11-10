@@ -507,7 +507,16 @@ describe('verify-feature', () => {
 
   it('emits the gate-results schema the assessor parses', () => {
     const b = instructions('verify-feature');
-    for (const key of ['"schema": 1', '"gates"', '"required"', '"verdict"', '"measured"', '"threshold"', '"source"']) {
+    for (const key of [
+      '"schema": 2',
+      '"gates"',
+      '"required"',
+      '"verdict"',
+      '"measured"',
+      '"threshold"',
+      '"source"',
+      '"enforced"',
+    ]) {
       expect(b).toContain(key);
     }
     // One gate, one verdict: a repeated gate number makes the whole block malformed.
@@ -515,6 +524,35 @@ describe('verify-feature', () => {
     expect(b).toMatch(/(never|not) record the same gate twice/i);
     // A required gate recorded SKIPPED counts as missing, not as a pass.
     expect(b).toContain('"SKIPPED"');
+  });
+
+  it('emits a schema the assessor accepts, not merely a schema number', () => {
+    const emitted = /"schema":\s*(\d+)/.exec(instructions('verify-feature'));
+    expect(emitted).not.toBeNull();
+    const schema = Number(emitted![1]);
+
+    const gate = (n: number) =>
+      `{ "gate": ${n}, "required": true, "verdict": "PASS", "measured": "87% branch", "at": "2026-11-10T00:00:00Z" }`;
+    const block = [
+      '# Feature: coupling',
+      '',
+      '## Gate Results',
+      '',
+      '```json',
+      '{',
+      `  "schema": ${schema},`,
+      '  "threshold": { "source": "default", "enforced": true, "branch": 80, "criticalLogic": 100, "errorPaths": 100, "integrationPoints": 100 },',
+      '  "surface": { "operational": true, "deployment": false, "reason": "nothing deployable changed" },',
+      `  "gates": [${gate(1)}, ${gate(2)}, ${gate(4)}]`,
+      '}',
+      '```',
+      '',
+    ].join('\n');
+
+    // Not just "not malformed": a block in exactly the shape the prompt documents
+    // has to substantiate a verified status, or the prompt is teaching writers to
+    // produce evidence the assessor will reject.
+    expect(assessGateResults(block).evidence).toBe('complete');
   });
 
   // The sharpest edge in the contract, and nothing else in this suite pins it: two unfenced
