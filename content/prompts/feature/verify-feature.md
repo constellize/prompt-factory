@@ -87,7 +87,7 @@ Then state both determinations as booleans. **Silence is not a determination**: 
 
 ### Phase 3: Gate 1 — test integrity
 
-Invoke `constellize-craft:test-coverage` and read the verdict and the numbers it reports. **Gate 1 consumes that verdict; it never runs a coverage command of its own**, for any language or tool. The measurement belongs to that skill, and a second measurement made here would be a different number from the one the project's own gate reports.
+Invoke `constellize-craft:test-coverage`, **passing the feature name as its first argument**, and read the verdict and the numbers it reports. That argument is what keeps the report it writes at a per-feature path: with nothing in that position the skill has to infer its subject from what you described inline, and two features verified in one project would otherwise write the same report and overwrite each other's evidence — leaving this gate's verdict pointing at a file that describes a different feature. **Gate 1 consumes that verdict; it never runs a coverage command of its own**, for any language or tool. The measurement belongs to that skill, and a second measurement made here would be a different number from the one the project's own gate reports.
 
 What is yours is the comparison, and only when the project has declared a threshold stricter than the default:
 

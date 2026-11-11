@@ -11,6 +11,17 @@ import { loadPersonas, loadPluginsConfig, loadPrompts } from '../lib/parser';
 //
 // These assertions run against the real generated SKILL.md, because `$0` is the
 // generated form of `{{component_name}}` and the undefined path only exists there.
+//
+// 2026-11-11: the 2026-11-09 fix pointed every argument-less run at ONE fixed filename,
+// which acceptance 6 then failed on its second clause -- "two features never share an
+// artifact path" (spec §6.6b). Two features verified in one project both wrote
+// `llm/construction/quality/coverage-report.md`, so the second erased the evidence the
+// first was verified on. Three live runs refused the rule rather than destroy evidence,
+// each inventing its own filename, which made the evidence path non-deterministic too.
+// The fix mirrors the sibling `constellize-design:code-generation-plan`: a per-subject
+// slug taken from the argument or from what the caller described inline, with the fixed
+// path kept only for the case where nothing at all can be named. `verify` now also
+// SUPPLIES the feature name, so the common path is deterministic rather than inferred.
 
 const CRAFT = 'constellize:craft';
 const PROMPT_ID = 'validate-test-coverage';
@@ -37,15 +48,19 @@ describe('the generated test-coverage skill names a defined report path', () => 
     expect('llm/construction/quality/coverage-report.md').not.toMatch(/\$/);
   });
 
-  it('says the fixed path is for when no component name was supplied', () => {
+  it('reaches the fixed path only when nothing at all can be named', () => {
     expect(skill).toMatch(
-      /When no component name was supplied the slug is empty, and the report goes to the fixed path `llm\/construction\/quality\/coverage-report\.md`/
+      /Only when no component or feature can be identified at all does the report go to the fixed path `llm\/construction\/quality\/coverage-report\.md`/
     );
+    // The rule that failed acceptance 6: the fixed path as the ORDINARY outcome of a
+    // delegated run. It must not come back in any form.
+    expect(skill).not.toMatch(/When no component name was supplied the slug is empty/);
+    expect(skill).not.toMatch(/That is the ordinary case when another skill delegates to this one/);
   });
 
-  it('explains why a delegated run has no component name, so the rule is not arbitrary', () => {
+  it('takes the name from the inline description when no argument was supplied', () => {
     expect(skill).toMatch(
-      /a delegating caller often supplies no argument in that position/
+      /otherwise from \*\*the component or feature the caller described inline\*\*/
     );
     // The mechanism, stated correctly: an unsupplied placeholder stays literal. A delegated
     // skill CAN be given positionals -- the Skill tool takes an args parameter -- so the old
@@ -53,7 +68,16 @@ describe('the generated test-coverage skill names a defined report path', () => 
     expect(skill).toMatch(
       /an indexed placeholder that receives no argument stays in the text literally/
     );
+    expect(skill).toMatch(/means no name arrived, not that there is nothing to name/);
     expect(skill).not.toMatch(/receives no positional arguments at all/);
+  });
+
+  // The clause acceptance 6 exists to enforce, in the words of §6.6b.
+  it('keeps one report per subject, and forbids one feature overwriting another', () => {
+    expect(skill).toMatch(/One report per subject is the point of the per-subject filename/);
+    expect(skill).toMatch(
+      /two features must never slug to the same name, and a report must never overwrite another feature's/
+    );
   });
 
   it('forbids the literal argument placeholder in the report filename', () => {
@@ -69,9 +93,10 @@ describe('the generated test-coverage skill names a defined report path', () => 
     expect(skill).not.toContain('a literal `$0`');
   });
 
-  it('treats prose passed where a component name belongs as absent', () => {
+  it('treats prose passed where a component name belongs as a fragment', () => {
     expect(skill).toMatch(/Arguments are split on whitespace/);
-    expect(skill).toMatch(/treat it as absent and use the fixed path/);
+    expect(skill).toMatch(/prefer what the caller described inline/);
+    expect(skill).not.toMatch(/treat it as absent and use the fixed path/);
   });
 
   it('forbids the stray characters that produced coverage-report-expand-codes:.md', () => {
@@ -89,18 +114,23 @@ describe('the generated test-coverage skill names a defined report path', () => 
   // on its own, not defer the fixed one to a block further up.
   it('names both paths in the output-format instruction, not only in the context block', () => {
     const outputFormat = skill.slice(skill.indexOf('<output-format>'), skill.indexOf('</output-format>'));
-    expect(outputFormat).toContain('`llm/construction/quality/coverage-report-$0.md`');
+    expect(outputFormat).toContain('`llm/construction/quality/coverage-report-<slug>.md`');
     expect(outputFormat).toMatch(
-      /or `llm\/construction\/quality\/coverage-report\.md` when no component name was supplied/
+      /or `llm\/construction\/quality\/coverage-report\.md` only when none can be identified at all/
     );
   });
 
-  // The default path is unchanged: a caller that does supply a component still gets
-  // the per-component report it got before the fix.
-  it('keeps the per-component default path for a caller that supplies one', () => {
+  it('states the per-subject path in the context block as the default', () => {
     expect(skill).toContain(
-      'And outputs coverage report to `llm/construction/quality/coverage-report-$0.md`'
+      'And outputs coverage report to `llm/construction/quality/coverage-report-<slug>.md`'
     );
+  });
+
+  // The shape that produced the defect: a documented path with the placeholder still in it.
+  // 7 of 12 live runs copied it verbatim. It must not survive anywhere in the skill.
+  it('never documents the report path with the placeholder still in it', () => {
+    expect(skill).not.toContain('coverage-report-$0.md');
+    expect(skill).not.toMatch(/coverage-report-\$\d/);
   });
 });
 
@@ -232,6 +262,52 @@ describe('the sentences the printed book quotes from code-generation-plan', () =
   it('keeps the body sentence the preview excerpts', () => {
     expect(prompt().content).toContain(
       'Create a detailed implementation plan for "{{gap_to_implement}}" in {{system_name}} that is shaped by constellation context, not generic patterns.'
+    );
+  });
+});
+
+// The determinism half of the fix. Inline derivation alone leaves the filename to the
+// delegate's judgement, and three live runs picked three different names for the same
+// report -- the fixture's own progress.md ended up citing two of them. `verify` knows the
+// feature name (it resolved `llm/features/<name>.md` in Phase 1), so it passes it, and the
+// per-feature path becomes a consequence of the call rather than an inference about it.
+describe('constellize-feature:verify supplies the name the report path is built from', () => {
+  const FEATURE = 'constellize:feature';
+  const VERIFY = path.join('plugins', 'constellize-feature', 'skills', 'verify', 'SKILL.md');
+
+  let verify: string;
+  let verifyOut: string;
+
+  beforeAll(() => {
+    verifyOut = fs.mkdtempSync(path.join(os.tmpdir(), 'verify-path-'));
+    const plugins = loadPluginsConfig('content').plugins;
+    const feature = plugins.find(p => p.id === FEATURE)!;
+    generatePlugin(feature, loadPrompts('content'), loadPersonas('content'), plugins, verifyOut, 'content');
+    verify = fs.readFileSync(path.join(verifyOut, VERIFY), 'utf-8');
+  });
+
+  afterAll(() => {
+    fs.rmSync(verifyOut, { recursive: true, force: true });
+  });
+
+  it('passes the feature name as the first argument of the gate 1 delegation', () => {
+    expect(verify).toMatch(
+      /Invoke `constellize-craft:test-coverage`, \*\*passing the feature name as its first argument\*\*/
+    );
+  });
+
+  it('says what the argument is for, so a later edit cannot drop it as decoration', () => {
+    expect(verify).toMatch(/keeps the report it writes at a per-feature path/);
+    expect(verify).toMatch(
+      /two features verified in one project would otherwise write the same report and overwrite each other's evidence/
+    );
+  });
+
+  // Gate 1 still consumes the verdict rather than re-measuring: the argument changes where
+  // the delegate WRITES, not who measures.
+  it('still delegates the measurement rather than taking it over', () => {
+    expect(verify).toMatch(
+      /Gate 1 consumes that verdict; it never runs a coverage command of its own/
     );
   });
 });
